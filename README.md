@@ -11,6 +11,13 @@ STOQ busca solucionar estos problemas proporcionando una plataforma moderna que 
 
 ---
 
+## Características
+
+- **Autenticación**: Incluye componentes de login y registro (signup) para el acceso seguro de usuarios al sistema.
+- **Página Principal**: Página de inicio que proporciona una vista general del inventario y funcionalidades principales del sistema.
+
+---
+
 ## Tecnologías:frontend
 
 - Angular
