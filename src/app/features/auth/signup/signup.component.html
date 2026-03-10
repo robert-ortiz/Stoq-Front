@@ -1,0 +1,144 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <a routerLink="../login" class="back-link" aria-label="Volver">
+      ← VOLVER
+    </a>
+
+    <!-- Logo and Title -->
+    <div class="logo-section">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3-8c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3z"/>
+          <rect x="8" y="11" width="8" height="2" rx="1"/>
+        </svg>
+      </div>
+      <h1 class="logo-text">Stoq</h1>
+      <p class="subtitle">Crear Nueva Cuenta</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="fullName" class="form-label">Nombre Completo</label>
+        <input
+          id="fullName"
+          type="text"
+          formControlName="fullName"
+          class="form-input"
+          placeholder="Juan Pérez"
+          [class.input-error]="fullName?.invalid && fullName?.touched"
+          aria-label="Nombre completo"
+        />
+        @if (fullName?.invalid && fullName?.touched) {
+          <span class="error-text" role="alert">
+            @if (fullName?.errors?.['required']) {
+              Nombre es requerido
+            } @else if (fullName?.errors?.['minlength']) {
+              Debe tener al menos 3 caracteres
+            }
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">Correo Electrónico</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-input"
+          placeholder="correo@ejemplo.com"
+          [class.input-error]="email?.invalid && email?.touched"
+          aria-label="Correo electrónico"
+        />
+        @if (email?.invalid && email?.touched) {
+          <span class="error-text" role="alert">
+            @if (email?.errors?.['required']) {
+              Correo es requerido
+            } @else if (email?.errors?.['email']) {
+              Debe ser un email válido
+            }
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="company" class="form-label">Empresa</label>
+        <input
+          id="company"
+          type="text"
+          formControlName="company"
+          class="form-input"
+          placeholder="Nombre de tu empresa"
+          aria-label="Empresa"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          class="form-input"
+          placeholder="Mínimo 6 caracteres"
+          [class.input-error]="password?.invalid && password?.touched"
+          aria-label="Contraseña"
+        />
+        @if (password?.invalid && password?.touched) {
+          <span class="error-text" role="alert">
+            @if (password?.errors?.['required']) {
+              Contraseña es requerida
+            } @else if (password?.errors?.['minlength']) {
+              Debe tener al menos 6 caracteres
+            }
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          formControlName="confirmPassword"
+          class="form-input"
+          placeholder="Confirma tu contraseña"
+          [class.input-error]="(confirmPassword?.invalid && confirmPassword?.touched) || form.errors?.['mismatch']"
+          aria-label="Confirmar contraseña"
+        />
+        @if (form.errors?.['mismatch'] && confirmPassword?.touched) {
+          <span class="error-text" role="alert">
+            Las contraseñas no coinciden
+          </span>
+        }
+      </div>
+
+      @if (errorMessage) {
+        <div class="error-message" role="alert">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <button
+        type="submit"
+        class="btn-submit"
+        [disabled]="form.invalid || isLoading"
+        aria-label="Crear cuenta"
+      >
+        @if (isLoading) {
+          <span class="spinner"></span>
+        } @else {
+          CREAR CUENTA
+        }
+      </button>
+    </form>
+
+    <div class="footer-section">
+      <p>¿Ya tienes una cuenta?</p>
+      <a routerLink="../login" class="forgot-password-link" aria-label="Iniciar sesión">
+        INICIAR SESIÓN
+      </a>
+    </div>
+  </div>
+</div>

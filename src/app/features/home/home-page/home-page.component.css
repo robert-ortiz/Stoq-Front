@@ -1,0 +1,135 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+.home-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #000;
+}
+
+.logo-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.brand {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.nav-actions a {
+  margin-left: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.btn-link {
+  color: #333;
+  border: 1px solid #333;
+}
+
+.btn-link:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.btn-primary {
+  background: #000;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #222;
+}
+
+.home-card {
+  flex:1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.logo-icon-large svg {
+  width: 80px;
+  height: 80px;
+}
+
+.home-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 16px 0 8px;
+}
+
+.home-subtitle {
+  font-size: 14px;
+  color: #666;
+  max-width: 600px;
+}
+
+.action-buttons {
+  margin-top: 32px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-secondary,
+.btn-primary {
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-secondary {
+  border: 1px solid #000;
+  color: #000;
+}
+
+.btn-secondary:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.btn-primary {
+  background: #000;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #222;
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .nav-actions {
+    margin-top: 8px;
+  }
+}

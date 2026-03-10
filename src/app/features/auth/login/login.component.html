@@ -1,0 +1,92 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <!-- Logo and Title -->
+    <div class="logo-section">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3-8c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3z"/>
+          <rect x="8" y="11" width="8" height="2" rx="1"/>
+        </svg>
+      </div>
+      <h1 class="logo-text">Stoq</h1>
+      <p class="subtitle">Iniciar Sesión</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- Username Input -->
+      <div class="form-group">
+        <label for="username" class="form-label">Usuario</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          class="form-input"
+          placeholder="Ingrese su usuario"
+          [class.input-error]="username?.invalid && username?.touched"
+          aria-label="Usuario"
+        />
+        @if (username?.invalid && username?.touched) {
+          <span class="error-text" role="alert">
+            @if (username?.errors?.['required']) {
+              Usuario es requerido
+            } @else if (username?.errors?.['minlength']) {
+              Usuario debe tener al menos 3 caracteres
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Password Input -->
+      <div class="form-group">
+        <label for="password" class="form-label">Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          class="form-input"
+          placeholder="Ingrese su contraseña"
+          [class.input-error]="password?.invalid && password?.touched"
+          aria-label="Contraseña"
+        />
+        @if (password?.invalid && password?.touched) {
+          <span class="error-text" role="alert">
+            @if (password?.errors?.['required']) {
+              Contraseña es requerida
+            } @else if (password?.errors?.['minlength']) {
+              Contraseña debe tener al menos 6 caracteres
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Error Message -->
+      @if (errorMessage) {
+        <div class="error-message" role="alert">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn-submit"
+        [disabled]="form.invalid || isLoading"
+        aria-label="Iniciar sesión"
+      >
+        @if (isLoading) {
+          <span class="spinner"></span>
+        } @else {
+          INICIAR SESIÓN
+        }
+      </button>
+    </form>
+
+    <!-- Forgot Password Link -->
+    <div class="footer-section">
+      <a href="#" class="forgot-password-link" aria-label="¿Olvidaste tu contraseña?">
+        ¿Olvidaste tu contraseña?
+      </a>
+    </div>
+  </div>
+</div>
