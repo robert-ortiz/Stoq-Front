@@ -16,25 +16,59 @@
     <!-- Form -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
-        <label for="fullName" class="form-label">Nombre Completo</label>
+        <label for="firstName" class="form-label">Nombre</label>
         <input
-          id="fullName"
+          id="firstName"
           type="text"
-          formControlName="fullName"
+          formControlName="firstName"
           class="form-input"
-          placeholder="Juan Pérez"
-          [class.input-error]="fullName?.invalid && fullName?.touched"
-          aria-label="Nombre completo"
+          placeholder="Juan"
+          [class.input-error]="firstName?.invalid && firstName?.touched"
+          aria-label="Nombre"
         />
-        @if (fullName?.invalid && fullName?.touched) {
+        @if (firstName?.invalid && firstName?.touched) {
           <span class="error-text" role="alert">
-            @if (fullName?.errors?.['required']) {
+            @if (firstName?.errors?.['required']) {
               Nombre es requerido
-            } @else if (fullName?.errors?.['minlength']) {
-              Debe tener al menos 3 caracteres
+            } @else if (firstName?.errors?.['minlength']) {
+              Debe tener al menos 1 caracter
             }
           </span>
         }
+      </div>
+
+      <div class="form-group">
+        <label for="lastName1" class="form-label">Primer Apellido</label>
+        <input
+          id="lastName1"
+          type="text"
+          formControlName="lastName1"
+          class="form-input"
+          placeholder="Pérez"
+          [class.input-error]="lastName1?.invalid && lastName1?.touched"
+          aria-label="Primer apellido"
+        />
+        @if (lastName1?.invalid && lastName1?.touched) {
+          <span class="error-text" role="alert">
+            @if (lastName1?.errors?.['required']) {
+              Primer apellido es requerido
+            } @else if (lastName1?.errors?.['minlength']) {
+              Debe tener al menos 1 caracter
+            }
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="lastName2" class="form-label">Segundo Apellido (Opcional)</label>
+        <input
+          id="lastName2"
+          type="text"
+          formControlName="lastName2"
+          class="form-input"
+          placeholder="Gómez"
+          aria-label="Segundo apellido"
+        />
       </div>
 
       <div class="form-group">

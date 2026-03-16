@@ -28,7 +28,9 @@ export class SignupComponent {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group(
       {
-        fullName: ['', [Validators.required, Validators.minLength(3)]],
+        firstName: ['', [Validators.required, Validators.minLength(1)]],
+        lastName1: ['', [Validators.required, Validators.minLength(1)]],
+        lastName2: ['', []],
         email: ['', [Validators.required, Validators.email]],
         company: ['', []],
         password: ['', [Validators.required, Validators.minLength(6)]],
@@ -41,15 +43,22 @@ export class SignupComponent {
   onSubmit(): void {
     if (this.form.valid) {
       this.isLoading = true;
-      const { fullName, email, company, password } = this.form.value;
+      const { firstName, lastName1, lastName2, email, company, password } = this.form.value;
+      const fullName = `${firstName} ${lastName1}${lastName2 ? ' ' + lastName2 : ''}`;
       console.log('Signup attempt:', { fullName, email, company, password });
       // TODO: call registration service
       setTimeout(() => (this.isLoading = false), 1500);
     }
   }
 
-  get fullName() {
-    return this.form.get('fullName');
+  get firstName() {
+    return this.form.get('firstName');
+  }
+  get lastName1() {
+    return this.form.get('lastName1');
+  }
+  get lastName2() {
+    return this.form.get('lastName2');
   }
   get email() {
     return this.form.get('email');
