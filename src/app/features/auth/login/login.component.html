@@ -17,22 +17,22 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
       <!-- Username Input -->
       <div class="form-group">
-        <label for="username" class="form-label">Usuario</label>
+        <label for="username" class="form-label">Correo</label>
         <input
           id="username"
           type="text"
           formControlName="username"
           class="form-input"
-          placeholder="Ingrese su usuario"
+          placeholder="Ingrese su correo"
           [class.input-error]="username?.invalid && username?.touched"
-          aria-label="Usuario"
+          aria-label="Correo"
         />
         @if (username?.invalid && username?.touched) {
           <span class="error-text" role="alert">
             @if (username?.errors?.['required']) {
-              Usuario es requerido
+              Correo es requerido
             } @else if (username?.errors?.['minlength']) {
-              Usuario debe tener al menos 3 caracteres
+              Correo debe tener al menos 3 caracteres
             }
           </span>
         }
