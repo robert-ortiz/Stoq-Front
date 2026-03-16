@@ -8,6 +8,13 @@ export const routes: Routes = [
     component: HomePageComponent
   },
   {
+    path: 'productos',
+    loadComponent: () =>
+      import('./features/product-catalog/product-catalog.component').then(
+        (m) => m.ProductCatalogComponent
+      )
+  },
+  {
     path: 'auth',
     children: [
       {

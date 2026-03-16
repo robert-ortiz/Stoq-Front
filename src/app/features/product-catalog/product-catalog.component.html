@@ -1,0 +1,186 @@
+<header class="catalog-header">
+  <div class="catalog-title">
+    <h1>Stoq - Productos y Catálogo</h1>
+  </div>
+  <nav class="catalog-nav">
+    <button type="button" class="btn-nav" (click)="onLogout()">Cerrar Sesión</button>
+    <button type="button" class="btn-nav" disabled>Alertas</button>
+    <button type="button" class="btn-nav" disabled>Inventario</button>
+    <button type="button" class="btn-nav" disabled>Reportes</button>
+  </nav>
+</header>
+
+<main class="catalog-main">
+  <section class="catalog-actions">
+    <div class="actions-left">
+      <button class="btn-primary" type="button" (click)="openAddProduct()">+ AGREGAR PRODUCTO</button>
+      <button class="btn-secondary" type="button" (click)="openManageCategories()">GESTIONAR CATEGORÍAS</button>
+    </div>
+  </section>
+
+  <section class="catalog-filters">
+    <h2 class="section-title">Búsqueda y Filtros</h2>
+    <form [formGroup]="filterForm" class="filters-form" autocomplete="off" novalidate>
+      <div class="filter-grid">
+        <label class="filter-field">
+          <span class="filter-label">Buscar</span>
+          <input
+            type="text"
+            formControlName="search"
+            placeholder="Código o nombre..."
+            class="filter-input"
+          />
+        </label>
+
+        <label class="filter-field">
+          <span class="filter-label">Categoría</span>
+          <input type="text" formControlName="category" placeholder="Categoría" class="filter-input" />
+        </label>
+
+        <label class="filter-field">
+          <span class="filter-label">Estado Stock</span>
+          <select formControlName="stockStatus" class="filter-input">
+            <option value="">Todos</option>
+            <option value="normal">Normal</option>
+            <option value="crítico">Crítico</option>
+          </select>
+        </label>
+      </div>
+    </form>
+  </section>
+
+  <section class="catalog-table">
+    <ng-container *ngIf="filteredProducts.length > 0; else emptyState">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Unidad</th>
+              <th>Stock Mín</th>
+              <th>Stock Actual</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of filteredProducts">
+              <td>{{ product.code }}</td>
+              <td>{{ product.name }}</td>
+              <td>{{ product.category }}</td>
+              <td>{{ product.unit }}</td>
+              <td>{{ product.stockMin }}</td>
+              <td>{{ product.stockActual }}</td>
+              <td>
+                <span [ngClass]="getStatusClass(product)">{{ getStatus(product) }}</span>
+              </td>
+              <td>
+                <button class="btn-icon" title="Editar" aria-label="Editar {{ product.name }}">
+                  ✏️
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <div class="empty-state-icon" aria-hidden="true">📦</div>
+        <div class="empty-state-text">
+          <p>No hay productos aún.</p>
+          <p>Cuando conectes tu backend, los productos aparecerán aquí automáticamente.</p>
+        </div>
+      </div>
+    </ng-template>
+  </section>
+
+  <!-- Add Product Modal -->
+  <div class="modal-backdrop" *ngIf="showAddModal" (click)="closeAddProduct()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h3>Agregar Producto</h3>
+        <button class="btn-close" type="button" aria-label="Cerrar" (click)="closeAddProduct()">×</button>
+      </header>
+
+      <form [formGroup]="addProductForm" class="modal-form" (ngSubmit)="submitAddProduct()" autocomplete="off">
+        <div class="form-group">
+          <label>Código</label>
+          <input type="text" formControlName="code" readonly />
+        </div>
+
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" formControlName="name" placeholder="Nombre del producto" />
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Categoría</label>
+            <input type="text" formControlName="category" placeholder="Categoría" />
+          </div>
+          <div class="form-group">
+            <label>Unidad</label>
+            <input type="text" formControlName="unit" placeholder="Unidad, Kg, Lt..." />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Stock Mínimo</label>
+          <input type="number" formControlName="stockMin" min="0" />
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" (click)="closeAddProduct()">CANCELAR</button>
+          <button type="submit" class="btn-primary">GUARDAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Categories Modal -->
+  <div class="modal-backdrop" *ngIf="showCategoriesModal" (click)="closeManageCategories()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h3>Gestionar Categorías</h3>
+        <button class="btn-close" type="button" aria-label="Cerrar" (click)="closeManageCategories()">×</button>
+      </header>
+
+      <form [formGroup]="categoryForm" class="modal-form" (ngSubmit)="addCategory()" autocomplete="off">
+        <div class="form-group">
+          <label>Nueva Categoría</label>
+          <div class="input-with-button">
+            <input type="text" formControlName="name" placeholder="Nombre de categoría" />
+            <button type="submit" class="btn-icon" title="Agregar categoría" aria-label="Agregar categoría">
+              +
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div class="categories-list">
+        <h4>Categorías existentes</h4>
+        <ng-container *ngIf="categories.length; else emptyCategories">
+          <ul>
+            <li *ngFor="let category of categories">
+              <span>{{ category }}</span>
+              <button type="button" class="btn-icon" (click)="removeCategory(category)" title="Eliminar categoría">
+                🗑️
+              </button>
+            </li>
+          </ul>
+        </ng-container>
+        <ng-template #emptyCategories>
+          <p class="empty-text">No hay categorías aún. Agrega una para comenzar.</p>
+        </ng-template>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" (click)="closeManageCategories()">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</main>
