@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 function passwordMatchValidator(group: FormGroup) {
   const password = group.get('password')?.value;
@@ -24,6 +25,8 @@ export class SignupComponent {
   form: FormGroup;
   isLoading = false;
   errorMessage = '';
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group(
@@ -43,11 +46,31 @@ export class SignupComponent {
   onSubmit(): void {
     if (this.form.valid) {
       this.isLoading = true;
+      this.errorMessage = '';
+      
       const { firstName, lastName1, lastName2, email, company, password } = this.form.value;
       const fullName = `${firstName} ${lastName1}${lastName2 ? ' ' + lastName2 : ''}`;
-      console.log('Signup attempt:', { fullName, email, company, password });
-      // TODO: call registration service
-      setTimeout(() => (this.isLoading = false), 1500);
+      
+      const signupData = {
+        nombre: fullName,
+        correo: email,
+        empresa: company || '',
+        contrasena: password,
+        rol: 'USER' // Rol por defecto
+      };
+
+      this.authService.signup(signupData).subscribe({
+        next: (response) => {
+          localStorage.setItem('token', response.token);
+          this.isLoading = false;
+          this.router.navigate(['/home']);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = error.error?.message || 'Error al crear la cuenta. Intenta de nuevo.';
+          console.error('Signup error:', error);
+        }
+      });
     }
   }
 
