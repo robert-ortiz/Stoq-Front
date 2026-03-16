@@ -3,17 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface LoginRequest {
-  username: string;
-  password: string;
+  username: string; // El formulario usa username
+  password: string; // El formulario usa password
 }
 
+export interface SignupRequest {
+  nombre: string;
+  correo: string;
+  empresa: string;
+  contrasena: string;
+  rol: string;
+}
+
+// Adaptado a lo que responde el LoginResponseDTO de tu backend
 export interface LoginResponse {
-  access_token: string;
-  user: {
-    id: string;
-    username: string;
-    email: string;
-  };
+  token: string; 
 }
 
 @Injectable({
@@ -21,23 +25,32 @@ export interface LoginResponse {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = '/api/auth';
+  // Cambiamos a la URL completa de tu servidor local
+  private apiUrl = 'http://localhost:8080/api/auth';
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
+    // Transformamos los datos del Front al formato que exige el Back
+    const payloadBackend = {
+      correo: credentials.username,
+      contrasena: credentials.password
+    };
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, payloadBackend);
+  }
+
+  signup(data: SignupRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/register`, data);
   }
 
   logout(): void {
-    // Clear auth data from storage
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user');
+    // Limpiamos el token correcto
+    localStorage.removeItem('token');
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('access_token');
+    return !!localStorage.getItem('token');
   }
 
   getToken(): string | null {
-    return localStorage.getItem('access_token');
+    return localStorage.getItem('token');
   }
 }

@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 function passwordMatchValidator(group: FormGroup) {
   const password = group.get('password')?.value;
@@ -24,11 +25,15 @@ export class SignupComponent {
   form: FormGroup;
   isLoading = false;
   errorMessage = '';
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group(
       {
-        fullName: ['', [Validators.required, Validators.minLength(3)]],
+        firstName: ['', [Validators.required, Validators.minLength(1)]],
+        lastName1: ['', [Validators.required, Validators.minLength(1)]],
+        lastName2: ['', []],
         email: ['', [Validators.required, Validators.email]],
         company: ['', []],
         password: ['', [Validators.required, Validators.minLength(6)]],
@@ -41,15 +46,42 @@ export class SignupComponent {
   onSubmit(): void {
     if (this.form.valid) {
       this.isLoading = true;
-      const { fullName, email, company, password } = this.form.value;
-      console.log('Signup attempt:', { fullName, email, company, password });
-      // TODO: call registration service
-      setTimeout(() => (this.isLoading = false), 1500);
+      this.errorMessage = '';
+      
+      const { firstName, lastName1, lastName2, email, company, password } = this.form.value;
+      const fullName = `${firstName} ${lastName1}${lastName2 ? ' ' + lastName2 : ''}`;
+      
+      const signupData = {
+        nombre: fullName,
+        correo: email,
+        empresa: company || '',
+        contrasena: password,
+        rol: 'USER' // Rol por defecto
+      };
+
+      this.authService.signup(signupData).subscribe({
+        next: (response) => {
+          localStorage.setItem('token', response.token);
+          this.isLoading = false;
+          this.router.navigate(['/home']);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = error.error?.message || 'Error al crear la cuenta. Intenta de nuevo.';
+          console.error('Signup error:', error);
+        }
+      });
     }
   }
 
-  get fullName() {
-    return this.form.get('fullName');
+  get firstName() {
+    return this.form.get('firstName');
+  }
+  get lastName1() {
+    return this.form.get('lastName1');
+  }
+  get lastName2() {
+    return this.form.get('lastName2');
   }
   get email() {
     return this.form.get('email');
