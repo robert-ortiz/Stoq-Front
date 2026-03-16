@@ -36,6 +36,7 @@ export class SignupComponent {
         lastName2: ['', []],
         email: ['', [Validators.required, Validators.email]],
         company: ['', []],
+        role: ['OPERADOR', [Validators.required]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required]]
       },
@@ -48,7 +49,7 @@ export class SignupComponent {
       this.isLoading = true;
       this.errorMessage = '';
       
-      const { firstName, lastName1, lastName2, email, company, password } = this.form.value;
+      const { firstName, lastName1, lastName2, email, company, role, password } = this.form.value;
       const fullName = `${firstName} ${lastName1}${lastName2 ? ' ' + lastName2 : ''}`;
       
       const signupData = {
@@ -56,7 +57,7 @@ export class SignupComponent {
         correo: email,
         empresa: company || '',
         contrasena: password,
-        rol: 'USER' // Rol por defecto
+        rol: role
       };
 
       this.authService.signup(signupData).subscribe({
@@ -88,6 +89,9 @@ export class SignupComponent {
   }
   get company() {
     return this.form.get('company');
+  }
+  get role() {
+    return this.form.get('role');
   }
   get password() {
     return this.form.get('password');
