@@ -1,0 +1,113 @@
+<div class="user-edit-wrapper">
+  <div class="user-edit-card">
+    <a routerLink="/productos" class="back-link" aria-label="Volver a productos">
+      ← VOLVER
+    </a>
+
+    <div class="header-section">
+      <h1>Editar Usuario</h1>
+      <p>
+        @if (isOwnAccount) {
+          Actualiza la información principal de tu cuenta.
+        } @else {
+          Gestiona los datos principales del usuario seleccionado.
+        }
+      </p>
+    </div>
+
+    @if (errorMessage) {
+      <div class="alert alert-error" role="alert">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="alert alert-success" role="status">
+        {{ successMessage }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="user-edit-form" novalidate>
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input
+          id="nombre"
+          type="text"
+          formControlName="nombre"
+          placeholder="Nombre"
+          [class.input-error]="nombre?.invalid && nombre?.touched"
+        />
+        @if (nombre?.invalid && nombre?.touched) {
+          <span class="field-error">
+            @if (nombre?.errors?.['required']) {
+              El nombre es obligatorio.
+            } @else if (nombre?.errors?.['minlength']) {
+              El nombre debe tener al menos 2 caracteres.
+            }
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="correo">Correo</label>
+        <input
+          id="correo"
+          type="email"
+          formControlName="correo"
+          placeholder="correo@ejemplo.com"
+          [class.input-error]="correo?.invalid && correo?.touched"
+        />
+        @if (correo?.invalid && correo?.touched) {
+          <span class="field-error">
+            @if (correo?.errors?.['required']) {
+              El correo es obligatorio.
+            } @else if (correo?.errors?.['email']) {
+              Ingresa un correo valido.
+            }
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="empresa">Empresa</label>
+        <input id="empresa" type="text" formControlName="empresa" placeholder="Empresa" />
+      </div>
+
+      <div class="form-group">
+        <label for="estado">Estado</label>
+        <select id="estado" formControlName="estado">
+          <option [ngValue]="true">Activo</option>
+          <option [ngValue]="false">Inactivo</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="rol">Rol</label>
+        <select id="rol" formControlName="rol">
+          <option value="OPERADOR">Operador</option>
+          <option value="ADMIN">Administrador</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn-primary" [disabled]="form.invalid || isSaving || isDeleting || isLoading">
+          @if (isSaving) {
+            Guardando...
+          } @else {
+            Guardar cambios
+          }
+        </button>
+
+        <button type="button" class="btn-danger" (click)="onDelete()" [disabled]="isDeleting || isSaving || isLoading">
+          @if (isDeleting) {
+            Eliminando...
+          } @else if (isOwnAccount) {
+            Eliminar cuenta
+          } @else {
+            Eliminar usuario
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
-function passwordMatchValidator(group: FormGroup) {
-  const password = group.get('password')?.value;
-  const confirm = group.get('confirmPassword')?.value;
-  return password === confirm ? null : { mismatch: true };
+function validadorCoincidenciaContrasena(group: FormGroup) {
+  const contrasena = group.get('contrasena')?.value;
+  const confirmarContrasena = group.get('confirmarContrasena')?.value;
+  return contrasena === confirmarContrasena ? null : { mismatch: true };
 }
 
 @Component({
@@ -31,16 +31,16 @@ export class SignupComponent {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group(
       {
-        firstName: ['', [Validators.required, Validators.minLength(1)]],
-        lastName1: ['', [Validators.required, Validators.minLength(1)]],
-        lastName2: ['', []],
-        email: ['', [Validators.required, Validators.email]],
-        company: ['', []],
-        role: ['OPERADOR', [Validators.required]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        confirmPassword: ['', [Validators.required]]
+        nombre: ['', [Validators.required, Validators.minLength(1)]],
+        apellido1: ['', [Validators.required, Validators.minLength(1)]],
+        apellido2: ['', []],
+        correo: ['', [Validators.required, Validators.email]],
+        empresa: ['', []],
+        rol: ['OPERADOR', [Validators.required]],
+        contrasena: ['', [Validators.required, Validators.minLength(6)]],
+        confirmarContrasena: ['', [Validators.required]]
       },
-      { validators: passwordMatchValidator }
+      { validators: validadorCoincidenciaContrasena }
     );
   }
 
@@ -49,22 +49,22 @@ export class SignupComponent {
       this.isLoading = true;
       this.errorMessage = '';
       
-      const { firstName, lastName1, lastName2, email, company, role, password } = this.form.value;
-      const fullName = `${firstName} ${lastName1}${lastName2 ? ' ' + lastName2 : ''}`;
+      const { nombre, apellido1, apellido2, correo, empresa, rol, contrasena } = this.form.value;
+      const nombreCompleto = `${nombre} ${apellido1}${apellido2 ? ' ' + apellido2 : ''}`;
       
       const signupData = {
-        nombre: fullName,
-        correo: email,
-        empresa: company || '',
-        contrasena: password,
-        rol: role
+        nombre: nombreCompleto,
+        correo,
+        empresa: empresa || '',
+        contrasena,
+        rol
       };
 
       this.authService.signup(signupData).subscribe({
         next: (response) => {
           localStorage.setItem('token', response.token);
           this.isLoading = false;
-          this.router.navigate(['/home']);
+          this.router.navigate(['/productos']);
         },
         error: (error) => {
           this.isLoading = false;
@@ -75,28 +75,28 @@ export class SignupComponent {
     }
   }
 
-  get firstName() {
-    return this.form.get('firstName');
+  get nombre() {
+    return this.form.get('nombre');
   }
-  get lastName1() {
-    return this.form.get('lastName1');
+  get apellido1() {
+    return this.form.get('apellido1');
   }
-  get lastName2() {
-    return this.form.get('lastName2');
+  get apellido2() {
+    return this.form.get('apellido2');
   }
-  get email() {
-    return this.form.get('email');
+  get correo() {
+    return this.form.get('correo');
   }
-  get company() {
-    return this.form.get('company');
+  get empresa() {
+    return this.form.get('empresa');
   }
-  get role() {
-    return this.form.get('role');
+  get rol() {
+    return this.form.get('rol');
   }
-  get password() {
-    return this.form.get('password');
+  get contrasena() {
+    return this.form.get('contrasena');
   }
-  get confirmPassword() {
-    return this.form.get('confirmPassword');
+  get confirmarContrasena() {
+    return this.form.get('confirmarContrasena');
   }
 }
