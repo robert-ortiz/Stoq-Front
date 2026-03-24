@@ -1,3 +1,2 @@
-// Shared components index
-// Add component exports here
+export * from './form-shell/form-shell.component';
 

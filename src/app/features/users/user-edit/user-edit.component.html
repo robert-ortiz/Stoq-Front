@@ -1,19 +1,12 @@
-<div class="user-edit-wrapper">
-  <div class="user-edit-card">
-    <a routerLink="/productos" class="back-link" aria-label="Volver a productos">
-      ← VOLVER
-    </a>
-
-    <div class="header-section">
-      <h1>Editar Usuario</h1>
-      <p>
-        @if (isOwnAccount) {
-          Actualiza la información principal de tu cuenta.
-        } @else {
-          Gestiona los datos principales del usuario seleccionado.
-        }
-      </p>
-    </div>
+<section
+  appFormShell
+  [title]="'Editar Usuario'"
+  [subtitle]="isOwnAccount ? 'Actualiza la información principal de tu cuenta.' : 'Gestiona los datos principales del usuario seleccionado.'"
+  [backRoute]="'/productos'"
+  [backLabel]="'VOLVER'"
+  [showLogo]="false"
+>
+  <div shell-body>
 
     @if (errorMessage) {
       <div class="alert alert-error" role="alert">
@@ -84,6 +77,7 @@
       <div class="form-group">
         <label for="rol">Rol</label>
         <select id="rol" formControlName="rol">
+          <option value="USER">Usuario</option>
           <option value="OPERADOR">Operador</option>
           <option value="ADMIN">Administrador</option>
         </select>
@@ -110,4 +104,4 @@
       </div>
     </form>
   </div>
-</div>
+</section>

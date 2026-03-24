@@ -1,20 +1,11 @@
-<div class="login-wrapper">
-  <div class="login-card">
-    <a routerLink="/" class="back-link" aria-label="Volver">
-      ← VOLVER
-    </a>
-
-    <!-- Logo and Title -->
-    <div class="logo-section">
-      <div class="logo-icon">
-        <img src="/Logo.png" alt="Stoq" width="40" height="40" />
-      </div>
-      <h1 class="logo-text">Stoq</h1>
-      <p class="subtitle">Iniciar Sesión</p>
-    </div>
-
-    <!-- Form -->
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+<section
+  appFormShell
+  [title]="'Stoq'"
+  [subtitle]="'Iniciar Sesión'"
+  [backRoute]="'/'"
+  [backLabel]="'VOLVER'"
+>
+    <form shell-body [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
       <!-- Correo -->
       <div class="form-group">
         <label for="correo" class="form-label">Correo</label>
@@ -83,11 +74,9 @@
       </button>
     </form>
 
-    <!-- Forgot Password Link -->
-    <div class="footer-section">
+    <div shell-footer class="footer-section">
       <a href="#" class="forgot-password-link" aria-label="¿Olvidaste tu contraseña?">
         ¿Olvidaste tu contraseña?
       </a>
     </div>
-  </div>
-</div>
+</section>

@@ -1,4 +1,26 @@
-/* Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700&display=swap');
+
+:root {
+  --bg: #f2f7f7;
+  --surface: #ffffff;
+  --surface-2: #e9f1f1;
+  --text: #17333a;
+  --text-soft: #48626a;
+  --primary: #0b7285;
+  --primary-strong: #095c6b;
+  --primary-soft: #d6eef2;
+  --accent: #e89c2e;
+  --danger: #c0392b;
+  --danger-soft: #ffe8e4;
+  --success: #1f7a4f;
+  --success-soft: #e5f6ed;
+  --border: #c8dbdf;
+  --focus: #0b7285;
+  --shadow-1: 0 14px 40px rgba(11, 114, 133, 0.14);
+  --shadow-2: 0 8px 24px rgba(23, 51, 58, 0.08);
+  --radius-m: 12px;
+  --radius-l: 18px;
+}
 
 * {
   margin: 0;
@@ -10,20 +32,20 @@ html,
 body {
   width: 100%;
   height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #333333;
-  background: #f5f5f5;
 }
 
 body {
   overflow-x: hidden;
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 10% 10%, #e6f6f8 0%, transparent 35%),
+    radial-gradient(circle at 80% 0%, #fff1dd 0%, transparent 40%),
+    var(--bg);
 }
 
-/* Typography */
 h1,
 h2,
 h3,
@@ -31,100 +53,64 @@ h4,
 h5,
 h6 {
   margin: 0;
-  font-weight: 600;
+  font-family: 'Sora', 'Manrope', sans-serif;
   line-height: 1.2;
-}
-
-h1 {
-  font-size: 32px;
-}
-
-h2 {
-  font-size: 28px;
-}
-
-h3 {
-  font-size: 24px;
-}
-
-h4 {
-  font-size: 20px;
-}
-
-h5 {
-  font-size: 16px;
-}
-
-h6 {
-  font-size: 14px;
+  color: var(--text);
 }
 
 p {
   margin: 0;
+  color: var(--text-soft);
 }
 
-/* Links */
 a {
-  color: #9b8ab8;
+  color: var(--primary);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: #7a6fa0;
+  color: var(--primary-strong);
 }
 
-a:focus {
-  outline: 2px solid #9b8ab8;
-  outline-offset: 2px;
-}
-
-/* Forms */
 input,
 textarea,
-select {
-  font-family: inherit;
-  font-size: inherit;
+select,
+button {
+  font: inherit;
 }
 
 button {
-  font-family: inherit;
-  font-size: inherit;
   cursor: pointer;
 }
 
-/* Remove default button styles */
-button:focus-visible {
-  outline: 2px solid #9b8ab8;
+button:disabled {
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--focus) 45%, white);
   outline-offset: 2px;
 }
 
-/* Scrollbar Styling */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #e8f0f0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #b3b3b3;
-  border-radius: 4px;
+  background: #9fbdc3;
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #999999;
+  background: #769fa7;
 }
 
-/* Focus Visible */
-:focus-visible {
-  outline: 2px solid #9b8ab8;
-  outline-offset: 2px;
-}
-
-/* Utility Classes */
 .sr-only {
   position: absolute;
   width: 1px;

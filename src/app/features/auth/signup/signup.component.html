@@ -1,20 +1,11 @@
-<div class="login-wrapper">
-  <div class="login-card">
-    <a routerLink="../login" class="back-link" aria-label="Volver">
-      ← VOLVER
-    </a>
-
-    <!-- Logo and Title -->
-    <div class="logo-section">
-      <div class="logo-icon">
-        <img src="/Logo.png" alt="Stoq" width="40" height="40" />
-      </div>
-      <h1 class="logo-text">Stoq</h1>
-      <p class="subtitle">Crear Nueva Cuenta</p>
-    </div>
-
-    <!-- Form -->
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+<section
+  appFormShell
+  [title]="'Stoq'"
+  [subtitle]="'Crear Nueva Cuenta'"
+  [backRoute]="'../login'"
+  [backLabel]="'VOLVER'"
+>
+    <form shell-body [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
         <label for="nombre" class="form-label">Nombre</label>
         <input
@@ -113,6 +104,7 @@
           class="form-input"
           aria-label="Rol"
         >
+          <option value="USER">Usuario</option>
           <option value="OPERADOR">Operador</option>
           <option value="ADMIN">Administrador</option>
         </select>
@@ -183,11 +175,10 @@
       </button>
     </form>
 
-    <div class="footer-section">
+    <div shell-footer class="footer-section">
       <p>¿Ya tienes una cuenta?</p>
       <a routerLink="../login" class="forgot-password-link" aria-label="Iniciar sesión">
         INICIAR SESIÓN
       </a>
     </div>
-  </div>
-</div>
+</section>

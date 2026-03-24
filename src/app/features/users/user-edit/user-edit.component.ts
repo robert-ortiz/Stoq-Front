@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
+import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
 
 @Component({
   selector: 'app-user-edit',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent],
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +35,7 @@ export class UserEditComponent implements OnInit {
     correo: ['', [Validators.required, Validators.email]],
     empresa: ['', []],
     estado: [true, []],
-    rol: [{ value: 'OPERADOR', disabled: this.isOwnAccount }, [Validators.required]]
+    rol: [{ value: 'USER', disabled: this.isOwnAccount }, [Validators.required]]
   });
 
   ngOnInit(): void {
@@ -56,7 +57,7 @@ export class UserEditComponent implements OnInit {
           correo: user.correo ?? '',
           empresa: user.empresa ?? '',
           estado: user.estado ?? true,
-          rol: user.rol ?? 'OPERADOR'
+          rol: user.rol ?? 'USER'
         });
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -85,7 +86,7 @@ export class UserEditComponent implements OnInit {
       correo: raw.correo?.trim().toLowerCase() ?? '',
       empresa: raw.empresa?.trim() ?? '',
       estado: raw.estado ?? true,
-      rol: raw.rol ?? 'OPERADOR'
+      rol: raw.rol ?? 'USER'
     };
 
     const request$ = this.isOwnAccount
