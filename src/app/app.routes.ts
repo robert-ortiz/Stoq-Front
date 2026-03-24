@@ -15,6 +15,20 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'usuarios/editar',
+    loadComponent: () =>
+      import('./features/users/user-edit/user-edit.component').then(
+        (m) => m.UserEditComponent
+      )
+  },
+  {
+    path: 'usuarios/:id/editar',
+    loadComponent: () =>
+      import('./features/users/user-edit/user-edit.component').then(
+        (m) => m.UserEditComponent
+      )
+  },
+  {
     path: 'auth',
     children: [
       {

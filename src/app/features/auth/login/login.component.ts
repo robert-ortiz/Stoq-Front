@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-// Asegúrate de que esta ruta apunte correctamente a donde guardaste el servicio
 import { AuthService } from '../../../../app/core/services/auth.service';
 @Component({
   selector: 'app-login',
@@ -21,14 +20,14 @@ export class LoginComponent {
   errorMessage = '';
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef // Inyectamos esto para actualizar la vista manualmente
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      correo: ['', [Validators.required, Validators.email]],
+      contrasena: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -45,27 +44,22 @@ export class LoginComponent {
     // Llamada real al backend
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        console.log('Login exitoso. Token:', response.token);
-        
-        // Guardamos el token en localStorage
         localStorage.setItem('token', response.token);
-        
+
         this.isLoading = false;
-        this.cdr.markForCheck(); // Le avisamos a Angular que detenga la animación de carga
-        
-        // Navegamos al catálogo de productos
+        this.cdr.markForCheck();
+
         this.router.navigate(['/productos']);
       },
       error: (err) => {
         console.error('Error al iniciar sesión:', err);
-        // Si el backend lanza error 401 o 403, mostramos este mensaje
         this.errorMessage = 'Correo o contraseña incorrectos';
         this.isLoading = false;
-        this.cdr.markForCheck(); // Le avisamos a Angular que muestre el mensaje de error
+        this.cdr.markForCheck();
       }
     });
   }
 
-  get username() { return this.form.get('username'); }
-  get password() { return this.form.get('password'); }
+  get correo() { return this.form.get('correo'); }
+  get contrasena() { return this.form.get('contrasena'); }
 }

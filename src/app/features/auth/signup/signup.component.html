@@ -16,21 +16,21 @@
     <!-- Form -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
-        <label for="firstName" class="form-label">Nombre</label>
+        <label for="nombre" class="form-label">Nombre</label>
         <input
-          id="firstName"
+          id="nombre"
           type="text"
-          formControlName="firstName"
+          formControlName="nombre"
           class="form-input"
           placeholder="Juan"
-          [class.input-error]="firstName?.invalid && firstName?.touched"
+          [class.input-error]="nombre?.invalid && nombre?.touched"
           aria-label="Nombre"
         />
-        @if (firstName?.invalid && firstName?.touched) {
+        @if (nombre?.invalid && nombre?.touched) {
           <span class="error-text" role="alert">
-            @if (firstName?.errors?.['required']) {
+            @if (nombre?.errors?.['required']) {
               Nombre es requerido
-            } @else if (firstName?.errors?.['minlength']) {
+            } @else if (nombre?.errors?.['minlength']) {
               Debe tener al menos 1 caracter
             }
           </span>
@@ -38,33 +38,33 @@
       </div>
 
       <div class="form-group">
-        <label for="lastName1" class="form-label">Primer Apellido</label>
+        <label for="apellido1" class="form-label">Primer Apellido</label>
         <input
-          id="lastName1"
+          id="apellido1"
           type="text"
-          formControlName="lastName1"
+          formControlName="apellido1"
           class="form-input"
           placeholder="Pérez"
-          [class.input-error]="lastName1?.invalid && lastName1?.touched"
+          [class.input-error]="apellido1?.invalid && apellido1?.touched"
           aria-label="Primer apellido"
         />
-        @if (lastName1?.invalid && lastName1?.touched) {
+        @if (apellido1?.invalid && apellido1?.touched) {
           <span class="error-text" role="alert">
-            @if (lastName1?.errors?.['required']) {
+            @if (apellido1?.errors?.['required']) {
               Primer apellido es requerido
-            } @else if (lastName1?.errors?.['minlength']) {
+            } @else if (apellido1?.errors?.['minlength']) {
               Debe tener al menos 1 caracter
             }
           </span>
         }
       </div>
 
-      <!-- <div class="form-group">
+      <div class="form-group">
         <label for="lastName2" class="form-label">Segundo Apellido (Opcional)</label>
         <input
-          id="lastName2"
+          id="apellido2"
           type="text"
-          formControlName="lastName2"
+          formControlName="apellido2"
           class="form-input"
           placeholder="Gómez"
           aria-label="Segundo apellido"
@@ -72,21 +72,21 @@
       </div> -->
 
       <div class="form-group">
-        <label for="email" class="form-label">Correo Electrónico</label>
+        <label for="correo" class="form-label">Correo Electrónico</label>
         <input
-          id="email"
+          id="correo"
           type="email"
-          formControlName="email"
+          formControlName="correo"
           class="form-input"
           placeholder="correo@ejemplo.com"
-          [class.input-error]="email?.invalid && email?.touched"
+          [class.input-error]="correo?.invalid && correo?.touched"
           aria-label="Correo electrónico"
         />
-        @if (email?.invalid && email?.touched) {
+        @if (correo?.invalid && correo?.touched) {
           <span class="error-text" role="alert">
-            @if (email?.errors?.['required']) {
+            @if (correo?.errors?.['required']) {
               Correo es requerido
-            } @else if (email?.errors?.['email']) {
+            } @else if (correo?.errors?.['email']) {
               Debe ser un email válido
             }
           </span>
@@ -94,11 +94,11 @@
       </div>
 
       <div class="form-group">
-        <label for="company" class="form-label">Empresa</label>
+        <label for="empresa" class="form-label">Empresa</label>
         <input
-          id="company"
+          id="empresa"
           type="text"
-          formControlName="company"
+          formControlName="empresa"
           class="form-input"
           placeholder="Nombre de tu empresa"
           aria-label="Empresa"
@@ -106,17 +106,17 @@
       </div>
 
       <div class="form-group">
-        <label for="role" class="form-label">Rol</label>
+        <label for="rol" class="form-label">Rol</label>
         <select
-          id="role"
-          formControlName="role"
+          id="rol"
+          formControlName="rol"
           class="form-input"
           aria-label="Rol"
         >
           <option value="OPERADOR">Operador</option>
           <option value="ADMIN">Administrador</option>
         </select>
-        @if (role?.invalid && role?.touched) {
+        @if (rol?.invalid && rol?.touched) {
           <span class="error-text" role="alert">
             El rol es requerido
           </span>
@@ -124,21 +124,21 @@
       </div>
 
       <div class="form-group">
-        <label for="password" class="form-label">Contraseña</label>
+        <label for="contrasena" class="form-label">Contraseña</label>
         <input
-          id="password"
+          id="contrasena"
           type="password"
-          formControlName="password"
+          formControlName="contrasena"
           class="form-input"
           placeholder="Mínimo 6 caracteres"
-          [class.input-error]="password?.invalid && password?.touched"
+          [class.input-error]="contrasena?.invalid && contrasena?.touched"
           aria-label="Contraseña"
         />
-        @if (password?.invalid && password?.touched) {
+        @if (contrasena?.invalid && contrasena?.touched) {
           <span class="error-text" role="alert">
-            @if (password?.errors?.['required']) {
+            @if (contrasena?.errors?.['required']) {
               Contraseña es requerida
-            } @else if (password?.errors?.['minlength']) {
+            } @else if (contrasena?.errors?.['minlength']) {
               Debe tener al menos 6 caracteres
             }
           </span>
@@ -146,17 +146,17 @@
       </div>
 
       <div class="form-group">
-        <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+        <label for="confirmarContrasena" class="form-label">Confirmar Contraseña</label>
         <input
-          id="confirmPassword"
+          id="confirmarContrasena"
           type="password"
-          formControlName="confirmPassword"
+          formControlName="confirmarContrasena"
           class="form-input"
           placeholder="Confirma tu contraseña"
-          [class.input-error]="(confirmPassword?.invalid && confirmPassword?.touched) || form.errors?.['mismatch']"
+          [class.input-error]="(confirmarContrasena?.invalid && confirmarContrasena?.touched) || form.errors?.['mismatch']"
           aria-label="Confirmar contraseña"
         />
-        @if (form.errors?.['mismatch'] && confirmPassword?.touched) {
+        @if (form.errors?.['mismatch'] && confirmarContrasena?.touched) {
           <span class="error-text" role="alert">
             Las contraseñas no coinciden
           </span>

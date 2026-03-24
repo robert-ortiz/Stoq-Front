@@ -15,46 +15,46 @@
 
     <!-- Form -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
-      <!-- Username Input -->
+      <!-- Correo -->
       <div class="form-group">
-        <label for="username" class="form-label">Correo</label>
+        <label for="correo" class="form-label">Correo</label>
         <input
-          id="username"
+          id="correo"
           type="text"
-          formControlName="username"
+          formControlName="correo"
           class="form-input"
           placeholder="Ingrese su correo"
-          [class.input-error]="username?.invalid && username?.touched"
+          [class.input-error]="correo?.invalid && correo?.touched"
           aria-label="Correo"
         />
-        @if (username?.invalid && username?.touched) {
+        @if (correo?.invalid && correo?.touched) {
           <span class="error-text" role="alert">
-            @if (username?.errors?.['required']) {
+            @if (correo?.errors?.['required']) {
               Correo es requerido
-            } @else if (username?.errors?.['minlength']) {
-              Correo debe tener al menos 3 caracteres
+            } @else if (correo?.errors?.['email']) {
+              Debe ser un correo válido
             }
           </span>
         }
       </div>
 
-      <!-- Password Input -->
+      <!-- Contrasena -->
       <div class="form-group">
-        <label for="password" class="form-label">Contraseña</label>
+        <label for="contrasena" class="form-label">Contraseña</label>
         <input
-          id="password"
+          id="contrasena"
           type="password"
-          formControlName="password"
+          formControlName="contrasena"
           class="form-input"
           placeholder="Ingrese su contraseña"
-          [class.input-error]="password?.invalid && password?.touched"
+          [class.input-error]="contrasena?.invalid && contrasena?.touched"
           aria-label="Contraseña"
         />
-        @if (password?.invalid && password?.touched) {
+        @if (contrasena?.invalid && contrasena?.touched) {
           <span class="error-text" role="alert">
-            @if (password?.errors?.['required']) {
+            @if (contrasena?.errors?.['required']) {
               Contraseña es requerida
-            } @else if (password?.errors?.['minlength']) {
+            } @else if (contrasena?.errors?.['minlength']) {
               Contraseña debe tener al menos 6 caracteres
             }
           </span>
