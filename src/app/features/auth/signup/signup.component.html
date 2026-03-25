@@ -69,7 +69,7 @@
           placeholder="Gómez"
           aria-label="Segundo apellido"
         />
-      </div> -->
+      </div> 
 
       <div class="form-group">
         <label for="correo" class="form-label">Correo Electrónico</label>
@@ -115,6 +115,7 @@
         >
           <option value="OPERADOR">Operador</option>
           <option value="ADMIN">Administrador</option>
+          <option value="GERENTE">Gerente</option>
         </select>
         @if (rol?.invalid && rol?.touched) {
           <span class="error-text" role="alert">
