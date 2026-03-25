@@ -2,7 +2,10 @@
   display: block;
   width: 100%;
   min-height: 100vh;
-  background: #ffffff;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(11, 114, 133, 0.14), transparent 32%),
+    radial-gradient(circle at 85% 10%, rgba(232, 156, 46, 0.18), transparent 34%),
+    var(--bg);
 }
 
 .home-wrapper {
@@ -15,7 +18,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 32px;
+  padding: 18px 32px;
 }
 
 .logo-link {
@@ -23,7 +26,7 @@
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  color: #000;
+  color: var(--text);
 }
 
 .logo-icon svg {
@@ -33,43 +36,72 @@
 
 .brand {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .nav-actions a {
   margin-left: 16px;
   font-size: 13px;
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 4px;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 999px;
   text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 .btn-link {
-  color: #333;
-  border: 1px solid #333;
+  color: var(--text);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.74);
 }
 
 .btn-link:hover {
-  background: rgba(0,0,0,0.05);
+  border-color: var(--primary);
+  color: var(--primary-strong);
+  background: rgba(214, 238, 242, 0.8);
 }
 
 .btn-primary {
-  background: #000;
+  background: linear-gradient(145deg, var(--primary), var(--primary-strong));
   color: #fff;
+  box-shadow: 0 10px 18px rgba(9, 92, 107, 0.24);
 }
 
 .btn-primary:hover {
-  background: #222;
+  filter: brightness(1.05);
+  transform: translateY(-1px);
 }
 
 .home-card {
-  flex:1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 48px 24px;
+  justify-content: center;
+  padding: 48px 24px 72px;
+}
+
+.logo-section {
+  max-width: 760px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(200, 219, 223, 0.9);
+  border-radius: 24px;
+  padding: 36px 28px;
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(4px);
+  animation: fadeRise 0.5s ease-out;
+}
+
+@keyframes fadeRise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .logo-icon-large svg {
@@ -78,15 +110,17 @@
 }
 
 .home-title {
-  font-size: 24px;
-  font-weight: 600;
-  margin: 16px 0 8px;
+  font-size: clamp(1.7rem, 4vw, 2.35rem);
+  font-weight: 700;
+  margin: 16px 0 12px;
+  color: var(--text);
 }
 
 .home-subtitle {
-  font-size: 14px;
-  color: #666;
-  max-width: 600px;
+  font-size: 1rem;
+  color: var(--text-soft);
+  max-width: 640px;
+  margin: 0 auto;
 }
 
 .action-buttons {
@@ -100,36 +134,50 @@
 .btn-secondary,
 .btn-primary {
   padding: 12px 24px;
-  border-radius: 4px;
+  border-radius: 999px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
 }
 
 .btn-secondary {
-  border: 1px solid #000;
-  color: #000;
+  border: 1px solid var(--border);
+  color: var(--text);
+  background: #ffffff;
 }
 
 .btn-secondary:hover {
-  background: rgba(0,0,0,0.05);
+  border-color: var(--primary);
+  color: var(--primary-strong);
+  background: rgba(214, 238, 242, 0.8);
 }
 
 .btn-primary {
-  background: #000;
+  background: linear-gradient(145deg, var(--primary), var(--primary-strong));
   color: #fff;
 }
 
 .btn-primary:hover {
-  background: #222;
+  filter: brightness(1.05);
 }
 
 @media (max-width: 600px) {
   .topbar {
     flex-direction: column;
     align-items: flex-start;
+    padding: 16px;
   }
+
   .nav-actions {
     margin-top: 8px;
+  }
+
+  .nav-actions a {
+    margin-left: 0;
+    margin-right: 10px;
+  }
+
+  .logo-section {
+    padding: 30px 18px;
   }
 }

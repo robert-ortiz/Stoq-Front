@@ -1,0 +1,31 @@
+<section class="form-shell-wrapper">
+  <div class="form-shell-card">
+    @if (backRoute) {
+      <a [routerLink]="backRoute" class="form-shell-back-link" aria-label="Volver">
+        ← {{ backLabel }}
+      </a>
+    }
+
+    <header class="form-shell-header">
+      @if (showLogo) {
+        <div class="form-shell-logo-icon" aria-hidden="true">
+          <img src="/Logo.png" alt="" width="40" height="40" />
+        </div>
+      }
+
+      <h1 class="form-shell-title">{{ title }}</h1>
+
+      @if (subtitle) {
+        <p class="form-shell-subtitle">{{ subtitle }}</p>
+      }
+    </header>
+
+    <div class="form-shell-body">
+      <ng-content select="[shell-body]"></ng-content>
+    </div>
+
+    <div class="form-shell-footer">
+      <ng-content select="[shell-footer]"></ng-content>
+    </div>
+  </div>
+</section>

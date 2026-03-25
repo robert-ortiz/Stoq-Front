@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
 
 function validadorCoincidenciaContrasena(group: FormGroup) {
   const contrasena = group.get('contrasena')?.value;
@@ -13,7 +14,7 @@ function validadorCoincidenciaContrasena(group: FormGroup) {
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +37,7 @@ export class SignupComponent {
         apellido2: ['', []],
         correo: ['', [Validators.required, Validators.email]],
         empresa: ['', []],
-        rol: ['OPERADOR', [Validators.required]],
+        rol: ['USER', [Validators.required]],
         contrasena: ['', [Validators.required, Validators.minLength(6)]],
         confirmarContrasena: ['', [Validators.required]]
       },
