@@ -28,6 +28,7 @@
           placeholder="Juan Pérez"
           [class.input-error]="fullName?.invalid && fullName?.touched"
           aria-label="Nombre completo"
+          autocomplete="name"
         />
         @if (fullName?.invalid && fullName?.touched) {
           <span class="error-text" role="alert">
@@ -50,6 +51,7 @@
           placeholder="correo@ejemplo.com"
           [class.input-error]="email?.invalid && email?.touched"
           aria-label="Correo electrónico"
+          autocomplete="email"
         />
         @if (email?.invalid && email?.touched) {
           <span class="error-text" role="alert">
@@ -71,20 +73,56 @@
           class="form-input"
           placeholder="Nombre de tu empresa"
           aria-label="Empresa"
+          autocomplete="organization"
         />
       </div>
 
       <div class="form-group">
-        <label for="password" class="form-label">Contraseña</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
+        <label for="role" class="form-label">Rol</label>
+        <select
+          id="role"
+          formControlName="role"
           class="form-input"
-          placeholder="Mínimo 6 caracteres"
-          [class.input-error]="password?.invalid && password?.touched"
-          aria-label="Contraseña"
-        />
+          [class.input-error]="role?.invalid && role?.touched"
+          aria-label="Rol"
+        >
+          @for (rol of roles; track rol) {
+            <option [value]="rol">{{ rol }}</option>
+          }
+        </select>
+        @if (role?.invalid && role?.touched) {
+          <span class="error-text" role="alert">
+            El rol es requerido
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Contraseña</label>
+        <div class="password-field">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            class="form-input"
+            placeholder="Mínimo 6 caracteres"
+            [class.input-error]="password?.invalid && password?.touched"
+            aria-label="Contraseña"
+            autocomplete="new-password"
+          />
+          <button
+            type="button"
+            class="btn-toggle-password"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            @if (showPassword) {
+              Ocultar
+            } @else {
+              Mostrar
+            }
+          </button>
+        </div>
         @if (password?.invalid && password?.touched) {
           <span class="error-text" role="alert">
             @if (password?.errors?.['required']) {
@@ -94,19 +132,39 @@
             }
           </span>
         }
+        @if (form.errors?.['weakPassword'] && password?.touched) {
+          <span class="error-text" role="alert">
+            Debe incluir al menos una mayuscula y un numero
+          </span>
+        }
       </div>
 
       <div class="form-group">
         <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
-        <input
-          id="confirmPassword"
-          type="password"
-          formControlName="confirmPassword"
-          class="form-input"
-          placeholder="Confirma tu contraseña"
-          [class.input-error]="(confirmPassword?.invalid && confirmPassword?.touched) || form.errors?.['mismatch']"
-          aria-label="Confirmar contraseña"
-        />
+        <div class="password-field">
+          <input
+            id="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            class="form-input"
+            placeholder="Confirma tu contraseña"
+            [class.input-error]="(confirmPassword?.invalid && confirmPassword?.touched) || form.errors?.['mismatch']"
+            aria-label="Confirmar contraseña"
+            autocomplete="new-password"
+          />
+          <button
+            type="button"
+            class="btn-toggle-password"
+            (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="showConfirmPassword ? 'Ocultar confirmacion de contraseña' : 'Mostrar confirmacion de contraseña'"
+          >
+            @if (showConfirmPassword) {
+              Ocultar
+            } @else {
+              Mostrar
+            }
+          </button>
+        </div>
         @if (form.errors?.['mismatch'] && confirmPassword?.touched) {
           <span class="error-text" role="alert">
             Las contraseñas no coinciden
@@ -114,8 +172,14 @@
         }
       </div>
 
+      @if (successMessage) {
+        <div class="success-message" role="status" aria-live="polite">
+          {{ successMessage }}
+        </div>
+      }
+
       @if (errorMessage) {
-        <div class="error-message" role="alert">
+        <div class="error-message" role="alert" aria-live="assertive">
           {{ errorMessage }}
         </div>
       }

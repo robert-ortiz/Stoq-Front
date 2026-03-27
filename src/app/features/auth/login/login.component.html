@@ -14,24 +14,25 @@
 
     <!-- Form -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
-      <!-- Username Input -->
+      <!-- Email Input -->
       <div class="form-group">
-        <label for="username" class="form-label">Usuario</label>
+        <label for="correo" class="form-label">Correo Electrónico</label>
         <input
-          id="username"
-          type="text"
-          formControlName="username"
+          id="correo"
+          type="email"
+          formControlName="correo"
           class="form-input"
-          placeholder="Ingrese su usuario"
-          [class.input-error]="username?.invalid && username?.touched"
-          aria-label="Usuario"
+          placeholder="correo@empresa.com"
+          [class.input-error]="correo?.invalid && correo?.touched"
+          aria-label="Correo electrónico"
+          autocomplete="email"
         />
-        @if (username?.invalid && username?.touched) {
+        @if (correo?.invalid && correo?.touched) {
           <span class="error-text" role="alert">
-            @if (username?.errors?.['required']) {
-              Usuario es requerido
-            } @else if (username?.errors?.['minlength']) {
-              Usuario debe tener al menos 3 caracteres
+            @if (correo?.errors?.['required']) {
+              Correo es requerido
+            } @else if (correo?.errors?.['email']) {
+              Ingresa un correo valido
             }
           </span>
         }
@@ -40,15 +41,30 @@
       <!-- Password Input -->
       <div class="form-group">
         <label for="password" class="form-label">Contraseña</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          class="form-input"
-          placeholder="Ingrese su contraseña"
-          [class.input-error]="password?.invalid && password?.touched"
-          aria-label="Contraseña"
-        />
+        <div class="password-field">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            class="form-input"
+            placeholder="Ingrese su contraseña"
+            [class.input-error]="password?.invalid && password?.touched"
+            aria-label="Contraseña"
+            autocomplete="current-password"
+          />
+          <button
+            type="button"
+            class="btn-toggle-password"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            @if (showPassword) {
+              Ocultar
+            } @else {
+              Mostrar
+            }
+          </button>
+        </div>
         @if (password?.invalid && password?.touched) {
           <span class="error-text" role="alert">
             @if (password?.errors?.['required']) {
@@ -62,7 +78,7 @@
 
       <!-- Error Message -->
       @if (errorMessage) {
-        <div class="error-message" role="alert">
+        <div class="error-message" role="alert" aria-live="assertive">
           {{ errorMessage }}
         </div>
       }
