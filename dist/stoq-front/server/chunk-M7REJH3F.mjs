@@ -1,2 +1,0 @@
-import './polyfills.server.mjs';
-import{Da as n,b as o,e as r}from"./chunk-P3T6QQE4.mjs";var i=class e{http=r(n);apiUrl="http://localhost:8080/api/auth";login(t){return this.http.post(`${this.apiUrl}/login`,t)}signup(t){return this.http.post(`${this.apiUrl}/register`,t)}logout(){localStorage.removeItem("token")}isAuthenticated(){return!!localStorage.getItem("token")}getToken(){return localStorage.getItem("token")}static \u0275fac=function(s){return new(s||e)};static \u0275prov=o({token:e,factory:e.\u0275fac,providedIn:"root"})};export{i as a};
