@@ -2,6 +2,5 @@
   command = "npm run build"
   publish = "dist/stoq-front"
 
-[[plugins]]
-  package = "@netlify/angular-runtime"
-  disabled = true
+[build.environment]
+  NETLIFY_SKIP_PLUGIN_INSTALL = "true"
