@@ -1,0 +1,215 @@
+<section class="lista-productos-page app-page app-shell">
+  <header class="lista-header app-toolbar">
+    <div class="app-title-block">
+      <h1>Lista de Productos</h1>
+      <p>Listado conectado al backend con búsqueda dinámica, paginación y acciones CRUD.</p>
+    </div>
+
+    <div class="header-actions app-actions">
+      <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="toggleCrear()">
+        {{ mostrarCrear ? 'Cancelar' : 'Nuevo producto' }}
+      </button>
+      <a routerLink="/usuarios/editar" class="btn-secondary app-btn app-btn-secondary">Mi perfil</a>
+      <a routerLink="/auth/login" class="btn-secondary app-btn app-btn-secondary">Cerrar sesión</a>
+    </div>
+  </header>
+
+  @if (success) {
+    <p class="state-message success app-message app-message-success">{{ success }}</p>
+  }
+
+  @if (mostrarCrear) {
+    <section class="create-card app-card">
+      <h2>Crear producto</h2>
+
+      @if (createError) {
+        <p class="state-message error app-message app-message-error">{{ createError }}</p>
+      }
+
+      <form [formGroup]="createForm" (ngSubmit)="crearProducto()" class="create-form" novalidate>
+        <div class="field app-field">
+          <label for="codigo" class="app-field-label">Codigo</label>
+          <input id="codigo" class="app-input" type="text" formControlName="codigo" placeholder="Ej: PROD010" />
+          @if (codigo?.invalid && codigo?.touched) {
+            <span class="field-error">El codigo es obligatorio.</span>
+          }
+        </div>
+
+        <div class="field app-field">
+          <label for="nombre" class="app-field-label">Nombre</label>
+          <input id="nombre" class="app-input" type="text" formControlName="nombre" placeholder="Nombre del producto" />
+          @if (nombre?.invalid && nombre?.touched) {
+            <span class="field-error">
+              @if (nombre?.errors?.['required']) {
+                El nombre es obligatorio.
+              } @else if (nombre?.errors?.['minlength']) {
+                El nombre debe tener al menos 2 caracteres.
+              }
+            </span>
+          }
+        </div>
+
+        <div class="field app-field">
+          <label for="categoriaId" class="app-field-label">Categoria</label>
+          <select id="categoriaId" class="app-select" formControlName="categoriaId">
+            <option value="">Selecciona una categoria</option>
+            @for (categoria of categorias; track categoria.id) {
+              <option [value]="categoria.id">{{ categoria.nombre }}</option>
+            }
+          </select>
+          @if (categoriaId?.invalid && categoriaId?.touched) {
+            <span class="field-error">La categoria es obligatoria.</span>
+          }
+        </div>
+
+        <div class="field app-field">
+          <label for="unidadId" class="app-field-label">Unidad</label>
+          <select id="unidadId" class="app-select" formControlName="unidadId">
+            <option value="">Selecciona una unidad</option>
+            @for (unidad of unidades; track unidad.id) {
+              <option [value]="unidad.id">{{ unidad.abreviatura }} - {{ unidad.nombre }}</option>
+            }
+          </select>
+          @if (unidadId?.invalid && unidadId?.touched) {
+            <span class="field-error">La unidad es obligatoria.</span>
+          }
+        </div>
+
+        <div class="field app-field">
+          <label for="stock_inicial" class="app-field-label">Stock inicial</label>
+          <input id="stock_inicial" class="app-input" type="number" formControlName="stock_inicial" min="0" />
+          @if (stockInicial?.invalid && stockInicial?.touched) {
+            <span class="field-error">
+              @if (stockInicial?.errors?.['required']) {
+                El stock inicial es obligatorio.
+              } @else if (stockInicial?.errors?.['min']) {
+                El stock inicial debe ser 0 o mayor.
+              }
+            </span>
+          }
+        </div>
+
+        <div class="field app-field">
+          <label for="stock_minimo" class="app-field-label">Stock minimo</label>
+          <input id="stock_minimo" class="app-input" type="number" formControlName="stock_minimo" min="0" />
+          @if (stockMinimo?.invalid && stockMinimo?.touched) {
+            <span class="field-error">
+              @if (stockMinimo?.errors?.['required']) {
+                El stock minimo es obligatorio.
+              } @else if (stockMinimo?.errors?.['min']) {
+                El stock minimo debe ser 0 o mayor.
+              }
+            </span>
+          }
+        </div>
+
+        <div class="create-actions">
+          <button type="submit" class="btn-primary app-btn app-btn-primary" [disabled]="createForm.invalid || creando">
+            {{ creando ? 'Guardando...' : 'Crear producto' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  }
+
+  <section class="search-card app-card">
+    <label for="buscarProducto" class="app-field-label">Buscar producto</label>
+    <input
+      id="buscarProducto"
+      type="text"
+      class="app-input"
+      [formControl]="searchControl"
+      placeholder="Buscar por codigo, nombre, categoria o unidad"
+    />
+  </section>
+
+  <section class="table-card app-card">
+    @if (cargando) {
+      <p class="state-message">Cargando productos...</p>
+    } @else if (error) {
+      <p class="state-message error">{{ error }}</p>
+    } @else if (!productosFiltrados.length) {
+      <p class="state-message">No se encontraron productos para el filtro aplicado.</p>
+    } @else {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Codigo</th>
+              <th>Nombre</th>
+              <th>Categoria</th>
+              <th>Unidad</th>
+              <th>Stock actual</th>
+              <th>Stock minimo</th>
+              <th>Estado</th>
+              <th>Accion</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (producto of productosPaginados; track producto.id) {
+              <tr>
+                <td>{{ producto.codigo }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.categoria }}</td>
+                <td>{{ producto.unidad }}</td>
+                <td>{{ producto.stockActual }}</td>
+                <td>{{ producto.stockMinimo }}</td>
+                <td>
+                  <span class="badge" [class.inactive]="!producto.estado">
+                    {{ producto.estado ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td>
+                  <button type="button" class="btn-edit app-btn app-btn-secondary" (click)="irAEditar(producto)">
+                    Editar
+                  </button>
+                  <button type="button" class="btn-delete app-btn app-btn-danger" (click)="solicitarEliminarProducto(producto)">
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="pagination-footer">
+        <p>
+          Mostrando {{ desdeRegistro }}-{{ hastaRegistro }} de {{ productosFiltrados.length }}
+        </p>
+
+        <div class="pagination-buttons">
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="paginaAnterior()" [disabled]="paginaActual <= 1">
+            Anterior
+          </button>
+          <span>Pagina {{ paginaActual }} de {{ totalPaginas }}</span>
+          <button
+            type="button"
+            class="btn-secondary app-btn app-btn-secondary"
+            (click)="paginaSiguiente()"
+            [disabled]="paginaActual >= totalPaginas"
+          >
+            Siguiente
+          </button>
+        </div>
+      </footer>
+    }
+  </section>
+
+  @if (mostrarModalEliminar && productoAEliminar) {
+    <div class="modal-backdrop" (click)="cancelarEliminarProducto()">
+      <section class="confirm-modal" (click)="$event.stopPropagation()">
+        <h3>Confirmar eliminación</h3>
+        <p>
+          Se eliminará el producto <strong>{{ productoAEliminar.nombre }}</strong>.
+          Esta acción no se puede deshacer.
+        </p>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="cancelarEliminarProducto()">Cancelar</button>
+          <button type="button" class="btn-delete app-btn app-btn-danger" (click)="confirmarEliminarProducto()">Eliminar</button>
+        </div>
+      </section>
+    </div>
+  }
+</section>

@@ -10,8 +10,15 @@ export const routes: Routes = [
   {
     path: 'productos',
     loadComponent: () =>
-      import('./features/product-catalog/product-catalog.component').then(
-        (m) => m.ProductCatalogComponent
+      import('./features/productos/lista-productos/lista-productos.component').then(
+        (m) => m.ListaProductosComponent
+      )
+  },
+  {
+    path: 'productos/:id/editar',
+    loadComponent: () =>
+      import('./features/productos/editar-producto/editar-producto.component').then(
+        (m) => m.EditarProductoComponent
       )
   },
   {

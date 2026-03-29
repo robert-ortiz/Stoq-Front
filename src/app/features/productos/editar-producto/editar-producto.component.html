@@ -1,0 +1,96 @@
+<section class="editar-page app-page">
+  <div class="card app-card">
+    <h1>Editar producto</h1>
+
+    @if (cargando) {
+      <p class="helper">Cargando datos del producto...</p>
+    } @else {
+      <p class="helper">Producto seleccionado: {{ productoId }}</p>
+
+      @if (error) {
+        <p class="message error app-message app-message-error">{{ error }}</p>
+      }
+
+      @if (success) {
+        <p class="message success app-message app-message-success">{{ success }}</p>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="edit-form" novalidate>
+        <div class="field app-field">
+          <label for="codigo" class="app-field-label">Codigo</label>
+          <input id="codigo" class="app-input" type="text" formControlName="codigo" placeholder="Codigo del producto" />
+          @if (codigo?.invalid && codigo?.touched) {
+            <span class="field-error">El codigo es obligatorio.</span>
+          }
+        </div>
+
+        <div class="field app-field">
+          <label for="nombre" class="app-field-label">Nombre</label>
+          <input id="nombre" class="app-input" type="text" formControlName="nombre" placeholder="Nombre del producto" />
+          @if (nombre?.invalid && nombre?.touched) {
+            <span class="field-error">
+              @if (nombre?.errors?.['required']) {
+                El nombre es obligatorio.
+              } @else if (nombre?.errors?.['minlength']) {
+                El nombre debe tener al menos 2 caracteres.
+              }
+            </span>
+          }
+        </div>
+
+        <div class="grid-2">
+          <div class="field app-field">
+            <label for="categoriaId" class="app-field-label">Categoria</label>
+            <select id="categoriaId" class="app-select" formControlName="categoriaId">
+              <option value="">Selecciona una categoria</option>
+              @for (categoria of categorias; track categoria.id) {
+                <option [value]="categoria.id">{{ categoria.nombre }}</option>
+              }
+            </select>
+            @if (categoriaId?.invalid && categoriaId?.touched) {
+              <span class="field-error">Selecciona una categoria.</span>
+            }
+          </div>
+
+          <div class="field app-field">
+            <label for="unidadId" class="app-field-label">Unidad</label>
+            <select id="unidadId" class="app-select" formControlName="unidadId">
+              <option value="">Selecciona una unidad</option>
+              @for (unidad of unidades; track unidad.id) {
+                <option [value]="unidad.id">{{ unidad.abreviatura }} - {{ unidad.nombre }}</option>
+              }
+            </select>
+            @if (unidadId?.invalid && unidadId?.touched) {
+              <span class="field-error">Selecciona una unidad.</span>
+            }
+          </div>
+        </div>
+
+        <div class="field app-field">
+          <label for="stock_minimo" class="app-field-label">Stock minimo</label>
+          <input id="stock_minimo" class="app-input" type="number" min="0" formControlName="stock_minimo" />
+          @if (stockMinimo?.invalid && stockMinimo?.touched) {
+            <span class="field-error">
+              @if (stockMinimo?.errors?.['required']) {
+                El stock minimo es obligatorio.
+              } @else if (stockMinimo?.errors?.['min']) {
+                El stock minimo no puede ser negativo.
+              }
+            </span>
+          }
+        </div>
+
+        <div class="actions">
+          <a routerLink="/productos" class="btn-back app-btn app-btn-secondary">Volver al listado</a>
+          <button type="submit" class="btn-save app-btn app-btn-primary" [disabled]="form.invalid || guardando">
+            @if (guardando) {
+              Guardando...
+            } @else {
+              Guardar cambios
+            }
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</section>

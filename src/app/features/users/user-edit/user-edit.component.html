@@ -9,22 +9,23 @@
   <div shell-body>
 
     @if (errorMessage) {
-      <div class="alert alert-error" role="alert">
+      <div class="alert alert-error app-message app-message-error" role="alert">
         {{ errorMessage }}
       </div>
     }
 
     @if (successMessage) {
-      <div class="alert alert-success" role="status">
+      <div class="alert alert-success app-message app-message-success" role="status">
         {{ successMessage }}
       </div>
     }
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="user-edit-form" novalidate>
-      <div class="form-group">
-        <label for="nombre">Nombre</label>
+      <div class="form-group app-field">
+        <label for="nombre" class="app-field-label">Nombre</label>
         <input
           id="nombre"
+          class="app-input"
           type="text"
           formControlName="nombre"
           placeholder="Nombre"
@@ -41,10 +42,11 @@
         }
       </div>
 
-      <div class="form-group">
-        <label for="correo">Correo</label>
+      <div class="form-group app-field">
+        <label for="correo" class="app-field-label">Correo</label>
         <input
           id="correo"
+          class="app-input"
           type="email"
           formControlName="correo"
           placeholder="correo@ejemplo.com"
@@ -61,22 +63,22 @@
         }
       </div>
 
-      <div class="form-group">
-        <label for="empresa">Empresa</label>
-        <input id="empresa" type="text" formControlName="empresa" placeholder="Empresa" />
+      <div class="form-group app-field">
+        <label for="empresa" class="app-field-label">Empresa</label>
+        <input id="empresa" class="app-input" type="text" formControlName="empresa" placeholder="Empresa" />
       </div>
 
-      <div class="form-group">
-        <label for="estado">Estado</label>
-        <select id="estado" formControlName="estado">
+      <div class="form-group app-field">
+        <label for="estado" class="app-field-label">Estado</label>
+        <select id="estado" class="app-select" formControlName="estado">
           <option [ngValue]="true">Activo</option>
           <option [ngValue]="false">Inactivo</option>
         </select>
       </div>
 
-      <div class="form-group">
-        <label for="rol">Rol</label>
-        <select id="rol" formControlName="rol">
+      <div class="form-group app-field">
+        <label for="rol" class="app-field-label">Rol</label>
+        <select id="rol" class="app-select" formControlName="rol">
           <option value="USER">Usuario</option>
           <option value="OPERADOR">Operador</option>
           <option value="ADMIN">Administrador</option>
@@ -84,7 +86,7 @@
       </div>
 
       <div class="actions">
-        <button type="submit" class="btn-primary" [disabled]="form.invalid || isSaving || isDeleting || isLoading">
+        <button type="submit" class="btn-primary app-btn app-btn-primary" [disabled]="form.invalid || isSaving || isDeleting || isLoading">
           @if (isSaving) {
             Guardando...
           } @else {
@@ -92,7 +94,7 @@
           }
         </button>
 
-        <button type="button" class="btn-danger" (click)="onDelete()" [disabled]="isDeleting || isSaving || isLoading">
+        <button type="button" class="btn-danger app-btn app-btn-danger" (click)="onDelete()" [disabled]="isDeleting || isSaving || isLoading">
           @if (isDeleting) {
             Eliminando...
           } @else if (isOwnAccount) {
