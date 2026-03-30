@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { HomePageComponent } from './features/home/home-page/home-page.component';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -9,6 +10,7 @@ export const routes: Routes = [
   },
   {
     path: 'productos',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/productos/lista-productos/lista-productos.component').then(
         (m) => m.ListaProductosComponent
@@ -16,6 +18,7 @@ export const routes: Routes = [
   },
   {
     path: 'productos/:id/editar',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/productos/editar-producto/editar-producto.component').then(
         (m) => m.EditarProductoComponent
@@ -23,6 +26,7 @@ export const routes: Routes = [
   },
   {
     path: 'usuarios/editar',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/users/user-edit/user-edit.component').then(
         (m) => m.UserEditComponent
@@ -30,6 +34,7 @@ export const routes: Routes = [
   },
   {
     path: 'usuarios/:id/editar',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/users/user-edit/user-edit.component').then(
         (m) => m.UserEditComponent
