@@ -21,6 +21,7 @@
   @if (mostrarCrear) {
     <section class="create-card app-card">
       <h2>Crear producto</h2>
+      <p class="helper-note">Categorías y unidades se gestionan con valores preestablecidos sincronizados con backend.</p>
 
       @if (createError) {
         <p class="state-message error app-message app-message-error">{{ createError }}</p>
