@@ -55,42 +55,25 @@ export class ProductoService {
   private http = inject(HttpClient);
   private baseUrl = 'https://stoq-backend-2.onrender.com/api';
 
-private apiUrl = `${this.baseUrl}/productos`;
-private categoriasUrl = `${this.baseUrl}/categorias`;
-private unidadesUrl = `${this.baseUrl}/unidades`;
+  private apiUrl = `${this.baseUrl}/productos`;
+  private categoriasUrl = `${this.baseUrl}/categorias`;
+  private unidadesUrl = `${this.baseUrl}/unidades`;
 
   getProductos(): Observable<ProductoApi[]> {
-  const token = localStorage.getItem('token');
+    return this.http.get<ProductoApi[]>(this.apiUrl);
+  }
 
-  return this.http.get<ProductoApi[]>(this.apiUrl, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
-}
   createProducto(payload: CreateProductoRequest): Observable<ProductoApi> {
-  const token = localStorage.getItem('token');
-
-  return this.http.post<ProductoApi>(this.apiUrl, payload, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
-}
+    return this.http.post<ProductoApi>(this.apiUrl, payload);
+  }
 
   getProductoById(id: string): Observable<ProductoApi> {
     return this.http.get<ProductoApi>(`${this.apiUrl}/${id}`);
   }
 
-updateProducto(id: string, payload: UpdateProductoRequest): Observable<ProductoApi> {
-  const token = localStorage.getItem('token');
-
-  return this.http.put<ProductoApi>(`${this.apiUrl}/${id}`, payload, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
-}
+  updateProducto(id: string, payload: UpdateProductoRequest): Observable<ProductoApi> {
+    return this.http.put<ProductoApi>(`${this.apiUrl}/${id}`, payload);
+  }
 
   getCategorias(): Observable<CategoriaApi[]> {
     return this.http.get<CategoriaApi[]>(this.categoriasUrl);
@@ -100,13 +83,7 @@ updateProducto(id: string, payload: UpdateProductoRequest): Observable<ProductoA
     return this.http.get<UnidadApi[]>(this.unidadesUrl);
   }
 
-deleteProducto(id: string): Observable<void> {
-  const token = localStorage.getItem('token');
-
-  return this.http.delete<void>(`${this.apiUrl}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
-}
+  deleteProducto(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }
