@@ -63,9 +63,9 @@ export interface CreateProductoRequest {
 })
 export class ProductoService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/productos';
-  private categoriasUrl = 'http://localhost:8080/api/categorias';
-  private unidadesUrl = 'http://localhost:8080/api/unidades';
+  private apiUrl = 'https://stoq-backend-2.onrender.com/api/productos';
+  private categoriasUrl = 'https://stoq-backend-2.onrender.com/api/categorias';
+  private unidadesUrl = 'https://stoq-backend-2.onrender.com/api/unidades';
 
   private readonly categoriasPreestablecidas: CreateCategoriaRequest[] = [
     { nombre: 'Alimentos', descripcion: 'Productos alimenticios en general' },
