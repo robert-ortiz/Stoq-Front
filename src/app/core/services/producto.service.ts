@@ -67,6 +67,7 @@ export class ProductoService {
   private categoriasUrl = 'http://localhost:8080/api/categorias';
   private unidadesUrl = 'http://localhost:8080/api/unidades';
 
+<<<<<<< HEAD
   private readonly categoriasPreestablecidas: CreateCategoriaRequest[] = [
     { nombre: 'Alimentos', descripcion: 'Productos alimenticios en general' },
     { nombre: 'Bebidas', descripcion: 'Bebidas y refrescos' },
@@ -82,6 +83,11 @@ export class ProductoService {
     { nombre: 'Caja', abreviatura: 'CJ' },
     { nombre: 'Paquete', abreviatura: 'PQ' }
   ];
+=======
+  private apiUrl = `${this.baseUrl}/productos`;
+  private categoriasUrl = `${this.baseUrl}/categorias`;
+  private unidadesUrl = `${this.baseUrl}/unidades`;
+>>>>>>> be838a3a6be23c797dc31b89d19776594fd31032
 
   getProductos(): Observable<ProductoApi[]> {
     return this.http.get<ProductoApi[]>(this.apiUrl);
@@ -107,6 +113,7 @@ export class ProductoService {
     return this.http.get<UnidadApi[]>(this.unidadesUrl);
   }
 
+<<<<<<< HEAD
   ensureCatalogosPreestablecidos(): Observable<{ categorias: CategoriaApi[]; unidades: UnidadApi[] }> {
     return forkJoin({
       categorias: this.getCategorias(),
@@ -150,3 +157,9 @@ export class ProductoService {
     return (value ?? '').trim().toLowerCase();
   }
 }
+=======
+  deleteProducto(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+}
+>>>>>>> be838a3a6be23c797dc31b89d19776594fd31032
