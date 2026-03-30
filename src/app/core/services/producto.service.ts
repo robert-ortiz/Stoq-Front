@@ -60,20 +60,37 @@ private categoriasUrl = `${this.baseUrl}/categorias`;
 private unidadesUrl = `${this.baseUrl}/unidades`;
 
   getProductos(): Observable<ProductoApi[]> {
-    return this.http.get<ProductoApi[]>(this.apiUrl);
-  }
+  const token = localStorage.getItem('token');
 
+  return this.http.get<ProductoApi[]>(this.apiUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
   createProducto(payload: CreateProductoRequest): Observable<ProductoApi> {
-    return this.http.post<ProductoApi>(this.apiUrl, payload);
-  }
+  const token = localStorage.getItem('token');
+
+  return this.http.post<ProductoApi>(this.apiUrl, payload, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
 
   getProductoById(id: string): Observable<ProductoApi> {
     return this.http.get<ProductoApi>(`${this.apiUrl}/${id}`);
   }
 
-  updateProducto(id: string, payload: UpdateProductoRequest): Observable<ProductoApi> {
-    return this.http.put<ProductoApi>(`${this.apiUrl}/${id}`, payload);
-  }
+updateProducto(id: string, payload: UpdateProductoRequest): Observable<ProductoApi> {
+  const token = localStorage.getItem('token');
+
+  return this.http.put<ProductoApi>(`${this.apiUrl}/${id}`, payload, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
 
   getCategorias(): Observable<CategoriaApi[]> {
     return this.http.get<CategoriaApi[]>(this.categoriasUrl);
@@ -83,7 +100,13 @@ private unidadesUrl = `${this.baseUrl}/unidades`;
     return this.http.get<UnidadApi[]>(this.unidadesUrl);
   }
 
-  deleteProducto(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  }
+deleteProducto(id: string): Observable<void> {
+  const token = localStorage.getItem('token');
+
+  return this.http.delete<void>(`${this.apiUrl}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
 }
