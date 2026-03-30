@@ -194,20 +194,19 @@ export class ListaProductosComponent implements OnInit {
 
     forkJoin({
       productos: this.productoService.getProductos(),
-      categorias: this.productoService.getCategorias(),
-      unidades: this.productoService.getUnidades()
+      catalogos: this.productoService.ensureCatalogosPreestablecidos()
     }).subscribe({
-      next: ({ productos, categorias, unidades }) => {
+      next: ({ productos, catalogos }) => {
         this.productos = productos.map((item) => this.mapearProducto(item));
-        this.categorias = categorias;
-        this.unidades = unidades;
+        this.categorias = catalogos.categorias;
+        this.unidades = catalogos.unidades;
         this.aplicarBusquedaYPaginacion();
         this.cargando = false;
         this.cdr.markForCheck();
       },
       error: () => {
         this.error = 'No se pudieron cargar los productos. Verifica la conexión con el backend.';
-        this.toastService.error('No se pudieron cargar productos, categorias o unidades.');
+        this.toastService.error('No se pudieron cargar o sincronizar productos, categorias y unidades.');
         this.cargando = false;
         this.cdr.markForCheck();
       }
