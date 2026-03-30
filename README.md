@@ -114,3 +114,32 @@ npm run serve:ssr:stoq-front
 - Harold Sejas
 - Osthin Colque
 - Luis Aguilar
+
+## Despliegue en Produccion
+
+Como ultimo cambio importante del proyecto, el frontend fue desplegado en produccion usando Netlify y el flujo principal de publicacion se esta manejando desde la rama `release`.
+
+- Estado de despliegue: activo en Netlify.
+- Rama de referencia para version productiva: `release`.
+- Objetivo cumplido: aplicacion publicada y funcionando en entorno productivo.
+
+### Flujo de Publicacion Recomendado
+
+1. Desarrollar y validar cambios en ramas de trabajo.
+2. Integrar los cambios finales en la rama `release`.
+3. Verificar build de produccion antes del push:
+
+```bash
+npm run build
+```
+
+4. Publicar/actualizar en Netlify mediante la rama `release`.
+5. Validar en la URL productiva que login, signup, rutas y consumo de API funcionen correctamente.
+
+### Checklist Rapido Post-Deploy
+
+- Build de Angular completado sin errores.
+- Variables/configuracion de entorno productivo revisadas.
+- Navegacion principal operativa (`/`, `/auth/login`, `/auth/signup`).
+- Formularios de autenticacion y registro funcionando.
+- Integracion con backend respondiendo en entorno productivo.
