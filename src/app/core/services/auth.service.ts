@@ -26,7 +26,7 @@ export interface LoginResponse {
 export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = 'https://stoq-backend-2.onrender.com';
-
+  
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
   }
