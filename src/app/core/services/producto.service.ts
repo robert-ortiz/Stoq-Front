@@ -53,9 +53,11 @@ export interface CreateProductoRequest {
 })
 export class ProductoService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/productos';
-  private categoriasUrl = 'http://localhost:8080/api/categorias';
-  private unidadesUrl = 'http://localhost:8080/api/unidades';
+  private baseUrl = 'https://stoq-backend-2.onrender.com/api';
+
+private apiUrl = `${this.baseUrl}/productos`;
+private categoriasUrl = `${this.baseUrl}/categorias`;
+private unidadesUrl = `${this.baseUrl}/unidades`;
 
   getProductos(): Observable<ProductoApi[]> {
     return this.http.get<ProductoApi[]>(this.apiUrl);
