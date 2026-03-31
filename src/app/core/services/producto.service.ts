@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { API_BASE_URL } from '../config/api.config';
 
 export interface ProductoApi {
   id: string;
@@ -65,9 +66,9 @@ export interface CreateProductoRequest {
 export class ProductoService {
   private http = inject(HttpClient);
 
-  private apiUrl = 'https://stoq-backend-2.onrender.com/api/productos';
-  private categoriasUrl = 'https://stoq-backend-2.onrender.com/api/categorias';
-  private unidadesUrl = 'https://stoq-backend-2.onrender.com/api/unidades';
+  private apiUrl = `${API_BASE_URL}/api/productos`;
+  private categoriasUrl = `${API_BASE_URL}/api/categorias`;
+  private unidadesUrl = `${API_BASE_URL}/api/unidades`;
 
   private readonly categoriasPreestablecidas: CreateCategoriaRequest[] = [
     { nombre: 'Alimentos', descripcion: 'Productos alimenticios en general' },

@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -69,11 +70,23 @@ export class SignupComponent {
         },
         error: (error) => {
           this.isLoading = false;
-          this.errorMessage = error.error?.message || 'Error al crear la cuenta. Intenta de nuevo.';
+          this.errorMessage = this.resolveErrorMessage(error);
           console.error('Signup error:', error);
         }
       });
     }
+  }
+
+  private resolveErrorMessage(error: HttpErrorResponse): string {
+    if (!error.error) {
+      return 'Error al crear la cuenta. Intenta de nuevo.';
+    }
+
+    if (typeof error.error === 'string') {
+      return error.error;
+    }
+
+    return error.error.message || 'Error al crear la cuenta. Intenta de nuevo.';
   }
 
   get nombre() {

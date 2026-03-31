@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../config/api.config';
 
 export interface EditableUser {
   id: string;
@@ -25,7 +26,7 @@ export interface UpdateUserRequest {
 })
 export class UserService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://stoq-backend-2.onrender.com/api/usuarios';
+  private apiUrl = `${API_BASE_URL}/api/usuarios`;
 
   getCurrentUser(): Observable<EditableUser> {
     return this.http.get<EditableUser>(`${this.apiUrl}/me`);
