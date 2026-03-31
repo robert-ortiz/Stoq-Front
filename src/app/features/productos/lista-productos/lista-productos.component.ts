@@ -23,6 +23,8 @@ interface ProductoRow {
   estado: boolean;
 }
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 @Component({
   selector: 'app-lista-productos',
   standalone: true,
@@ -106,14 +108,27 @@ export class ListaProductosComponent implements OnInit {
     this.success = '';
 
     const raw = this.createForm.getRawValue();
+    const categoriaId = this.extractSingleId(raw.categoriaId);
+    const unidadId = this.extractSingleId(raw.unidadId);
+
+    if (!this.isValidUuid(categoriaId) || !this.isValidUuid(unidadId)) {
+      this.creando = false;
+      this.createError = 'Categoria y unidad deben ser UUID validos (un solo valor por campo).';
+      this.toastService.error('Revisa categoria/unidad: deben enviarse como un solo UUID.');
+      this.cdr.markForCheck();
+      return;
+    }
+
     const payload: CreateProductoRequest = {
       codigo: (raw.codigo ?? '').trim(),
       nombre: (raw.nombre ?? '').trim(),
-      categoriaId: raw.categoriaId ?? '',
-      unidadId: raw.unidadId ?? '',
+      categoriaId,
+      unidadId,
       stock_inicial: raw.stock_inicial ?? 0,
       stock_minimo: raw.stock_minimo ?? 0
     };
+
+    console.log('Payload crear producto', payload);
 
     this.productoService.createProducto(payload).subscribe({
       next: () => {
@@ -311,5 +326,27 @@ export class ListaProductosComponent implements OnInit {
 
   get stockInicial() {
     return this.createForm.get('stock_inicial');
+  }
+
+  private extractSingleId(value: unknown): string {
+    if (typeof value === 'string') {
+      return value.trim();
+    }
+
+    if (Array.isArray(value)) {
+      const first = value[0];
+      return typeof first === 'string' ? first.trim() : '';
+    }
+
+    if (value && typeof value === 'object' && 'id' in value) {
+      const idValue = (value as { id?: unknown }).id;
+      return typeof idValue === 'string' ? idValue.trim() : '';
+    }
+
+    return '';
+  }
+
+  private isValidUuid(value: string): boolean {
+    return UUID_REGEX.test(value);
   }
 }

@@ -6,6 +6,8 @@ import { forkJoin } from 'rxjs';
 import { CategoriaApi, ProductoService, UnidadApi, UpdateProductoRequest } from '../../../core/services/producto.service';
 import { ToastService } from '../../../core/services/toast.service';
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 @Component({
   selector: 'app-editar-producto',
   standalone: true,
@@ -64,13 +66,26 @@ export class EditarProductoComponent implements OnInit {
     this.success = '';
 
     const raw = this.form.getRawValue();
+    const categoriaId = this.extractSingleId(raw.categoriaId);
+    const unidadId = this.extractSingleId(raw.unidadId);
+
+    if (!this.isValidUuid(categoriaId) || !this.isValidUuid(unidadId)) {
+      this.guardando = false;
+      this.error = 'Categoria y unidad deben enviarse como un unico UUID valido.';
+      this.toastService.error('Revisa categoria/unidad: deben enviarse como un solo UUID.');
+      this.cdr.markForCheck();
+      return;
+    }
+
     const payload: UpdateProductoRequest = {
       codigo: raw.codigo?.trim(),
       nombre: raw.nombre?.trim(),
-      categoriaId: raw.categoriaId ?? undefined,
-      unidadId: raw.unidadId ?? undefined,
+      categoriaId,
+      unidadId,
       stock_minimo: raw.stock_minimo ?? undefined
     };
+
+    console.log('Payload editar producto', payload);
 
     this.productoService.updateProducto(this.productoId, payload).subscribe({
       next: () => {
@@ -139,5 +154,27 @@ export class EditarProductoComponent implements OnInit {
 
   get stockMinimo() {
     return this.form.get('stock_minimo');
+  }
+
+  private extractSingleId(value: unknown): string {
+    if (typeof value === 'string') {
+      return value.trim();
+    }
+
+    if (Array.isArray(value)) {
+      const first = value[0];
+      return typeof first === 'string' ? first.trim() : '';
+    }
+
+    if (value && typeof value === 'object' && 'id' in value) {
+      const idValue = (value as { id?: unknown }).id;
+      return typeof idValue === 'string' ? idValue.trim() : '';
+    }
+
+    return '';
+  }
+
+  private isValidUuid(value: string): boolean {
+    return UUID_REGEX.test(value);
   }
 }
