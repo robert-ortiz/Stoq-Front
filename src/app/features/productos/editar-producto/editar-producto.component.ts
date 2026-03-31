@@ -6,8 +6,6 @@ import { forkJoin } from 'rxjs';
 import { CategoriaApi, ProductoService, UnidadApi, UpdateProductoRequest } from '../../../core/services/producto.service';
 import { ToastService } from '../../../core/services/toast.service';
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
 @Component({
   selector: 'app-editar-producto',
   standalone: true,
@@ -27,6 +25,8 @@ export class EditarProductoComponent implements OnInit {
 
   categorias: CategoriaApi[] = [];
   unidades: UnidadApi[] = [];
+  private categoriaIdsDisponibles = new Set<string>();
+  private unidadIdsDisponibles = new Set<string>();
 
   cargando = false;
   guardando = false;
@@ -66,13 +66,13 @@ export class EditarProductoComponent implements OnInit {
     this.success = '';
 
     const raw = this.form.getRawValue();
-    const categoriaId = this.extractSingleId(raw.categoriaId);
-    const unidadId = this.extractSingleId(raw.unidadId);
+    const categoriaId = (raw.categoriaId ?? '').toString().trim();
+    const unidadId = (raw.unidadId ?? '').toString().trim();
 
-    if (!this.isValidUuid(categoriaId) || !this.isValidUuid(unidadId)) {
+    if (!this.categoriaIdsDisponibles.has(categoriaId) || !this.unidadIdsDisponibles.has(unidadId)) {
       this.guardando = false;
-      this.error = 'Categoria y unidad deben enviarse como un unico UUID valido.';
-      this.toastService.error('Revisa categoria/unidad: deben enviarse como un solo UUID.');
+      this.error = 'Categoria o unidad invalida. Selecciona un solo valor valido por campo.';
+      this.toastService.error('Categoria/unidad invalidas o desactualizadas. Recarga e intenta de nuevo.');
       this.cdr.markForCheck();
       return;
     }
@@ -113,8 +113,23 @@ export class EditarProductoComponent implements OnInit {
       unidades: this.productoService.getUnidades()
     }).subscribe({
       next: ({ producto, categorias, unidades }) => {
-        this.categorias = categorias;
-        this.unidades = unidades;
+        this.categorias = categorias.filter((item) => !!item.id);
+        this.unidades = unidades.filter((item) => !!item.id);
+        this.categoriaIdsDisponibles = new Set(
+          this.categorias
+            .map((item) => item.id)
+            .filter((id): id is string => typeof id === 'string' && id.trim().length > 0)
+        );
+        this.unidadIdsDisponibles = new Set(
+          this.unidades
+            .map((item) => item.id)
+            .filter((id): id is string => typeof id === 'string' && id.trim().length > 0)
+        );
+
+        if (!this.categorias.length || !this.unidades.length) {
+          this.error = 'El backend no devolvio IDs validos de categoria/unidad.';
+          this.toastService.error('No hay IDs de catalogo validos para editar productos.');
+        }
 
         this.form.patchValue({
           codigo: producto.codigo ?? '',
@@ -154,27 +169,5 @@ export class EditarProductoComponent implements OnInit {
 
   get stockMinimo() {
     return this.form.get('stock_minimo');
-  }
-
-  private extractSingleId(value: unknown): string {
-    if (typeof value === 'string') {
-      return value.trim();
-    }
-
-    if (Array.isArray(value)) {
-      const first = value[0];
-      return typeof first === 'string' ? first.trim() : '';
-    }
-
-    if (value && typeof value === 'object' && 'id' in value) {
-      const idValue = (value as { id?: unknown }).id;
-      return typeof idValue === 'string' ? idValue.trim() : '';
-    }
-
-    return '';
-  }
-
-  private isValidUuid(value: string): boolean {
-    return UUID_REGEX.test(value);
   }
 }

@@ -22,12 +22,12 @@ export interface ProductoApi {
 }
 
 export interface CategoriaApi {
-  id: string;
+  id?: string;
   nombre: string;
 }
 
 export interface UnidadApi {
-  id: string;
+  id?: string;
   nombre: string;
   abreviatura: string;
 }
