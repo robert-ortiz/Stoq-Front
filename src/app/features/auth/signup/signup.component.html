@@ -104,10 +104,16 @@
           class="form-input"
           aria-label="Rol"
         >
+<<<<<<< Updated upstream
           <option value="USER">Usuario</option>
           <option value="OPERADOR">Operador</option>
           <option value="ADMIN">Administrador</option>
           <option value="GERENTE">Gerente</option>
+=======
+          @for (rol of roles; track rol) {
+            <option [value]="rol">{{ rol }}</option>
+          }
+>>>>>>> Stashed changes
         </select>
         @if (rol?.invalid && rol?.touched) {
           <span class="error-text" role="alert">

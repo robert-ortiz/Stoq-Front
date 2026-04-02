@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
+import { RoleService } from '../../../core/services/role.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
 
 @Component({
@@ -18,6 +20,8 @@ import { FormShellComponent } from '../../../shared/components/form-shell/form-s
 export class UserEditComponent implements OnInit {
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
+  private roleService = inject(RoleService);
+  readonly authService = inject(AuthService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
@@ -29,16 +33,26 @@ export class UserEditComponent implements OnInit {
   isDeleting = false;
   errorMessage = '';
   successMessage = '';
+  roles: string[] = ['ADMIN', 'OPERADOR', 'GERENTE'];
 
   form = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(2)]],
     correo: ['', [Validators.required, Validators.email]],
     empresa: ['', []],
     estado: [true, []],
-    rol: [{ value: 'USER', disabled: this.isOwnAccount }, [Validators.required]]
+    rol: [{ value: 'OPERADOR', disabled: this.isOwnAccount }, [Validators.required]]
   });
 
   ngOnInit(): void {
+    this.roleService.getRoles().subscribe({
+      next: (roles) => {
+        const allowedRoles = roles.map((role) => role.nombre);
+        if (allowedRoles.length > 0) {
+          this.roles = allowedRoles;
+        }
+      }
+    });
+
     this.loadUserData();
   }
 
@@ -57,7 +71,7 @@ export class UserEditComponent implements OnInit {
           correo: user.correo ?? '',
           empresa: user.empresa ?? '',
           estado: user.estado ?? true,
-          rol: user.rol ?? 'USER'
+          rol: user.rol ?? 'OPERADOR'
         });
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -86,7 +100,7 @@ export class UserEditComponent implements OnInit {
       correo: raw.correo?.trim().toLowerCase() ?? '',
       empresa: raw.empresa?.trim() ?? '',
       estado: raw.estado ?? true,
-      rol: raw.rol ?? 'USER'
+      rol: raw.rol ?? 'OPERADOR'
     };
 
     const request$ = this.isOwnAccount
@@ -127,12 +141,12 @@ export class UserEditComponent implements OnInit {
       next: () => {
         this.isDeleting = false;
         if (this.isOwnAccount) {
-          localStorage.removeItem('token');
+          this.authService.logout();
           this.router.navigate(['/auth/login']);
           return;
         }
 
-        this.router.navigate(['/productos']);
+        this.router.navigate(['/admin']);
       },
       error: () => {
         this.isDeleting = false;

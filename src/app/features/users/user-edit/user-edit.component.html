@@ -2,7 +2,7 @@
   appFormShell
   [title]="'Editar Usuario'"
   [subtitle]="isOwnAccount ? 'Actualiza la información principal de tu cuenta.' : 'Gestiona los datos principales del usuario seleccionado.'"
-  [backRoute]="'/productos'"
+  [backRoute]="isOwnAccount ? authService.getLandingRoute() : '/admin'"
   [backLabel]="'VOLVER'"
   [showLogo]="false"
 >
@@ -79,9 +79,9 @@
       <div class="form-group app-field">
         <label for="rol" class="app-field-label">Rol</label>
         <select id="rol" class="app-select" formControlName="rol">
-          <option value="USER">Usuario</option>
-          <option value="OPERADOR">Operador</option>
-          <option value="ADMIN">Administrador</option>
+          @for (rol of roles; track rol) {
+            <option [value]="rol">{{ rol }}</option>
+          }
         </select>
       </div>
 

@@ -1,0 +1,143 @@
+<section class="dashboard-page operator-theme">
+  <header class="hero-panel operator">
+    <div>
+      <p class="eyebrow">Panel operador</p>
+      <h1>Entradas y salidas sin fricción</h1>
+      <p class="lead">
+        Registra movimientos en pocos clics, revisa el stock actual y evita errores con validaciones simples.
+      </p>
+    </div>
+    <div class="hero-actions">
+      <a routerLink="/perfil" class="action primary">Mi perfil</a>
+      <a routerLink="/gerente" class="action secondary">Ver gerente</a>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="loading-state">Cargando inventario...</div>
+  }
+
+  @if (error) {
+    <div class="alert error">{{ error }}</div>
+  }
+
+  <section class="kpi-grid">
+    <article class="kpi-card">
+      <span>Stock actual</span>
+      <strong>{{ totalStockActual }}</strong>
+      <p>Unidades disponibles en el sistema.</p>
+    </article>
+    <article class="kpi-card warning">
+      <span>Críticos</span>
+      <strong>{{ productosCriticos.length }}</strong>
+      <p>Productos que requieren atención.</p>
+    </article>
+    <article class="kpi-card">
+      <span>Movimientos</span>
+      <strong>{{ totalMovimientos }}</strong>
+      <p>Entradas y salidas registradas.</p>
+    </article>
+  </section>
+
+  <section class="content-grid operator-grid">
+    <article class="panel">
+      <div class="panel-header">
+        <h2>Registrar movimiento</h2>
+        <span>Entrada o salida controlada</span>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="registrarMovimiento()" class="movement-form">
+        <label>
+          <span>Producto</span>
+          <select formControlName="productoId">
+            <option value="">Selecciona un producto</option>
+            @for (producto of productos; track producto.id) {
+              <option [value]="producto.id">{{ productoLabel(producto) }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>Tipo</span>
+          <select formControlName="tipoMovimiento">
+            <option value="ENTRADA">Entrada</option>
+            <option value="SALIDA">Salida</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Cantidad</span>
+          <input type="number" formControlName="cantidad" min="1" />
+        </label>
+
+        <label>
+          <span>Motivo</span>
+          <textarea formControlName="motivo" rows="3" placeholder="Ej. ingreso de mercancía / despacho a tienda"></textarea>
+        </label>
+
+        <button class="action primary full-width" type="submit" [disabled]="saving">
+          {{ saving ? 'Registrando...' : 'Registrar movimiento' }}
+        </button>
+      </form>
+
+      @if (success) {
+        <div class="alert success">{{ success }}</div>
+      }
+    </article>
+
+    <article class="panel">
+      <div class="panel-header">
+        <h2>Stock actual y ubicación</h2>
+        <span>Vista rápida del almacén</span>
+      </div>
+      <div class="stock-list">
+        @for (producto of productos; track producto.id) {
+          <div class="stock-item" [class.critical]="(producto.stockActual ?? 0) <= (producto.stockMinimo ?? 0)">
+            <div>
+              <strong>{{ producto.codigo }}</strong>
+              <p>{{ producto.nombre }}</p>
+              <small>{{ producto.ubicacion || 'Ubicación no configurada' }}</small>
+            </div>
+            <div class="stock-values">
+              <span>{{ producto.stockActual ?? 0 }}</span>
+              <small>Mín. {{ producto.stockMinimo ?? 0 }}</small>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="panel full">
+      <div class="panel-header">
+        <h2>Movimientos recientes</h2>
+        <span>Auditoría operativa</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Producto</th>
+              <th>Tipo</th>
+              <th>Cantidad</th>
+              <th>Resultado</th>
+              <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (movimiento of recientes; track movimiento.id) {
+              <tr>
+                <td>{{ formatDate(movimiento.fechaMovimiento) }}</td>
+                <td>{{ movimiento.productoCodigo }} - {{ movimiento.productoNombre }}</td>
+                <td>{{ movimiento.tipoMovimiento }}</td>
+                <td>{{ movimiento.cantidad }}</td>
+                <td>{{ movimiento.stockResultante }}</td>
+                <td>{{ movimiento.motivo }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+</section>

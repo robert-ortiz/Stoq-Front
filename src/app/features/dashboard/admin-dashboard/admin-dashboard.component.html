@@ -1,0 +1,129 @@
+<section class="dashboard-page">
+  <header class="hero-panel">
+    <div>
+      <p class="eyebrow">Panel administrador</p>
+      <h1>Control total del sistema</h1>
+      <p class="lead">
+        Gestiona usuarios, revisa catálogos, supervisa la auditoría y mantén el inventario ordenado desde un solo lugar.
+      </p>
+    </div>
+    <div class="hero-actions">
+      <a routerLink="/auth/signup" class="action primary">Crear usuario</a>
+      <a routerLink="/productos" class="action secondary">Catálogo</a>
+      <a routerLink="/perfil" class="action secondary">Mi perfil</a>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="loading-state">Cargando tablero...</div>
+  }
+
+  @if (error) {
+    <div class="alert error">{{ error }}</div>
+  }
+
+  <section class="kpi-grid">
+    <article class="kpi-card">
+      <span>Usuarios</span>
+      <strong>{{ totalUsuarios }}</strong>
+      <p>Perfiles activos en la plataforma.</p>
+    </article>
+    <article class="kpi-card">
+      <span>Roles</span>
+      <strong>{{ totalRoles }}</strong>
+      <p>ADMIN, OPERADOR y GERENTE.</p>
+    </article>
+    <article class="kpi-card">
+      <span>Productos activos</span>
+      <strong>{{ productosActivos }}</strong>
+      <p>Catálogo disponible para operación.</p>
+    </article>
+    <article class="kpi-card warning">
+      <span>Stock crítico</span>
+      <strong>{{ productosCriticos.length }}</strong>
+      <p>Productos al límite de su stock mínimo.</p>
+    </article>
+  </section>
+
+  <section class="content-grid">
+    <article class="panel">
+      <div class="panel-header">
+        <h2>Usuarios</h2>
+        <span>Alta y edición rápida</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of users; track user.id) {
+              <tr>
+                <td>{{ user.nombre }}</td>
+                <td>{{ user.correo }}</td>
+                <td>{{ user.rol }}</td>
+                <td>{{ user.estado ? 'Activo' : 'Inactivo' }}</td>
+                <td><a [routerLink]="['/usuarios', user.id, 'editar']">Editar</a></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-header">
+        <h2>Roles y permisos</h2>
+        <span>Capacidades reales del negocio</span>
+      </div>
+      <div class="roles-grid">
+        @for (rol of roles; track rol.id) {
+          <article class="role-card">
+            <h3>{{ rol.nombre }}</h3>
+            <p>{{ rol.descripcion }}</p>
+            <ul>
+              @for (permiso of rol.permisos; track permiso) {
+                <li>{{ permiso }}</li>
+              }
+            </ul>
+          </article>
+        }
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-header">
+        <h2>Auditoría reciente</h2>
+        <span>Últimas acciones registradas</span>
+      </div>
+      <div class="table-wrap compact">
+        <table>
+          <thead>
+            <tr>
+              <th>Entidad</th>
+              <th>Operación</th>
+              <th>Usuario</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (log of auditRecentes; track log.id) {
+              <tr>
+                <td>{{ log.entidad }}</td>
+                <td>{{ log.operacion }}</td>
+                <td>{{ log.createdBy }}</td>
+                <td>{{ formatDate(log.createdDate) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+</section>

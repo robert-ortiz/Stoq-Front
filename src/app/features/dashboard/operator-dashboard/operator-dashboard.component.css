@@ -1,0 +1,248 @@
+:host {
+  display: block;
+}
+
+.dashboard-page {
+  min-height: 100vh;
+  padding: 32px;
+  background:
+    radial-gradient(circle at top left, rgba(11, 114, 133, 0.14), transparent 32%),
+    radial-gradient(circle at top right, rgba(88, 157, 167, 0.18), transparent 28%),
+    var(--bg);
+  color: var(--text);
+}
+
+.hero-panel {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-2);
+  margin-bottom: 24px;
+}
+
+.hero-panel.operator {
+  box-shadow: var(--shadow-2);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--primary);
+  font-size: 0.78rem;
+  margin: 0 0 10px;
+}
+
+.hero-panel h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.lead {
+  max-width: 58ch;
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.action {
+  border-radius: 999px;
+  padding: 12px 18px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.primary {
+  background: linear-gradient(145deg, var(--primary), var(--primary-strong));
+  color: #ffffff;
+  border: none;
+}
+
+.secondary {
+  border: 1px solid var(--border);
+  color: var(--text);
+  background: #ffffff;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card,
+.panel,
+.stock-item {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-l);
+}
+
+.kpi-card {
+  padding: 18px;
+}
+
+.kpi-card span,
+.panel-header span,
+.kpi-card p,
+.stock-item small {
+  color: var(--text-soft);
+}
+
+.kpi-card strong {
+  display: block;
+  margin: 10px 0 6px;
+  font-size: 2rem;
+}
+
+.kpi-card.warning strong {
+  color: var(--accent);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.panel {
+  padding: 20px;
+  box-shadow: var(--shadow-2);
+}
+
+.panel.full {
+  grid-column: 1 / -1;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 16px;
+}
+
+.panel-header h2 {
+  margin: 0;
+}
+
+.movement-form {
+  display: grid;
+  gap: 14px;
+}
+
+.movement-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--text);
+}
+
+.movement-form select,
+.movement-form input,
+.movement-form textarea {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  background: #ffffff;
+  color: var(--text);
+  padding: 12px 14px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.stock-list {
+  display: grid;
+  gap: 12px;
+}
+
+.stock-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+}
+
+.stock-item.critical {
+  border-color: color-mix(in srgb, var(--accent) 45%, white);
+  background: #fffaf2;
+}
+
+.stock-item strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.stock-values {
+  text-align: right;
+}
+
+.stock-values span {
+  display: block;
+  font-size: 1.7rem;
+  font-weight: 800;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+}
+
+th,
+td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid #e8f0f1;
+}
+
+th {
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.loading-state,
+.alert {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border-radius: var(--radius-m);
+}
+
+.loading-state {
+  background: var(--primary-soft);
+  color: var(--primary-strong);
+}
+
+.alert.error {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: 1px solid #f5b5ad;
+}
+
+.alert.success {
+  background: var(--success-soft);
+  color: var(--success);
+  border: 1px solid #b9e7cb;
+}
+
+@media (max-width: 900px) {
+  .hero-panel {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

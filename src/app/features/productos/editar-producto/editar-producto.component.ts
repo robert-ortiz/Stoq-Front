@@ -34,6 +34,7 @@ export class EditarProductoComponent implements OnInit {
   form = this.fb.group({
     codigo: ['', [Validators.required]],
     nombre: ['', [Validators.required, Validators.minLength(2)]],
+    ubicacion: ['', []],
     categoriaId: ['', [Validators.required]],
     unidadId: ['', [Validators.required]],
     stock_minimo: [0, [Validators.required, Validators.min(0)]]
@@ -67,8 +68,14 @@ export class EditarProductoComponent implements OnInit {
     const payload: UpdateProductoRequest = {
       codigo: raw.codigo?.trim(),
       nombre: raw.nombre?.trim(),
+<<<<<<< Updated upstream
       categoriaId: raw.categoriaId ?? undefined,
       unidadId: raw.unidadId ?? undefined,
+=======
+      ubicacion: raw.ubicacion?.trim(),
+      categoriaId,
+      unidadId,
+>>>>>>> Stashed changes
       stock_minimo: raw.stock_minimo ?? undefined
     };
 
@@ -104,6 +111,7 @@ export class EditarProductoComponent implements OnInit {
         this.form.patchValue({
           codigo: producto.codigo ?? '',
           nombre: producto.nombre ?? '',
+          ubicacion: producto.ubicacion ?? '',
           categoriaId: producto.categoria?.id ?? '',
           unidadId: producto.unidad?.id ?? '',
           stock_minimo: producto.stockMinimo ?? 0

@@ -1,0 +1,138 @@
+<section class="dashboard-page manager-theme">
+  <header class="hero-panel manager">
+    <div>
+      <p class="eyebrow">Panel gerente</p>
+      <h1>Visión simple para decisiones rápidas</h1>
+      <p class="lead">
+        Revisa stock crítico, top salidas y rotación por rango de fechas con información lista para reuniones.
+      </p>
+    </div>
+    <div class="hero-actions">
+      <a routerLink="/perfil" class="action primary">Mi perfil</a>
+      <a routerLink="/admin" class="action secondary">Admin</a>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="loading-state">Cargando indicadores...</div>
+  }
+
+  @if (error) {
+    <div class="alert error">{{ error }}</div>
+  }
+
+  <section class="kpi-grid">
+    <article class="kpi-card">
+      <span>Stock total</span>
+      <strong>{{ totalStockActual }}</strong>
+      <p>Unidades disponibles en inventario.</p>
+    </article>
+    <article class="kpi-card warning">
+      <span>Stock crítico</span>
+      <strong>{{ stockCritico.length }}</strong>
+      <p>Productos por debajo o en su mínimo.</p>
+    </article>
+    <article class="kpi-card">
+      <span>Movimientos filtrados</span>
+      <strong>{{ totalMovimientos }}</strong>
+      <p>Datos según el rango seleccionado.</p>
+    </article>
+  </section>
+
+  <section class="panel filter-panel">
+    <div class="panel-header">
+      <h2>Filtrar por fecha</h2>
+      <span>Reporte exportable</span>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="registrarFiltro()" class="range-form">
+      <label>
+        <span>Inicio</span>
+        <input type="datetime-local" formControlName="inicio" />
+      </label>
+      <label>
+        <span>Fin</span>
+        <input type="datetime-local" formControlName="fin" />
+      </label>
+      <button type="submit" class="action primary" [disabled]="loadingRange">
+        {{ loadingRange ? 'Filtrando...' : 'Aplicar filtro' }}
+      </button>
+      <button type="button" class="action secondary" (click)="exportarCSV()" [disabled]="!movimientosFiltrados.length">
+        Exportar CSV
+      </button>
+    </form>
+    @if (rangoError) {
+      <div class="alert error small">{{ rangoError }}</div>
+    }
+  </section>
+
+  <section class="content-grid manager-grid">
+    <article class="panel">
+      <div class="panel-header">
+        <h2>Stock crítico</h2>
+        <span>Atención prioritaria</span>
+      </div>
+      <div class="critical-list">
+        @for (producto of stockCritico; track producto.id) {
+          <div class="critical-item">
+            <div>
+              <strong>{{ producto.codigo }} - {{ producto.nombre }}</strong>
+              <p>{{ producto.ubicacion || 'Ubicación no configurada' }}</p>
+            </div>
+            <span>{{ producto.stockActual ?? 0 }} / {{ producto.stockMinimo ?? 0 }}</span>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-header">
+        <h2>Top salidas</h2>
+        <span>Productos más movidos</span>
+      </div>
+      <div class="ranking-list">
+        @for (item of topSalidas; track item.productoCodigo) {
+          <div class="ranking-item">
+            <div>
+              <strong>{{ item.productoCodigo }}</strong>
+              <p>{{ item.productoNombre }}</p>
+            </div>
+            <span>{{ item.cantidad }}</span>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="panel full">
+      <div class="panel-header">
+        <h2>Movimientos del rango</h2>
+        <span>Base para reuniones y decisiones</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Producto</th>
+              <th>Tipo</th>
+              <th>Cantidad</th>
+              <th>Resultado</th>
+              <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (movimiento of movimientosFiltrados; track movimiento.id) {
+              <tr>
+                <td>{{ formatDate(movimiento.fechaMovimiento) }}</td>
+                <td>{{ movimiento.productoCodigo }} - {{ movimiento.productoNombre }}</td>
+                <td>{{ movimiento.tipoMovimiento }}</td>
+                <td>{{ movimiento.cantidad }}</td>
+                <td>{{ movimiento.stockResultante }}</td>
+                <td>{{ movimiento.motivo }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+</section>

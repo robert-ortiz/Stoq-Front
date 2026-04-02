@@ -27,6 +27,10 @@ export class UserService {
   private http = inject(HttpClient);
   private apiUrl = 'https://stoq-backend-2.onrender.com/api/usuarios';
 
+  getUsers(): Observable<EditableUser[]> {
+    return this.http.get<EditableUser[]>(this.apiUrl);
+  }
+
   getCurrentUser(): Observable<EditableUser> {
     return this.http.get<EditableUser>(`${this.apiUrl}/me`);
   }

@@ -51,6 +51,11 @@
         </div>
 
         <div class="field app-field">
+          <label for="ubicacion" class="app-field-label">Ubicacion</label>
+          <input id="ubicacion" class="app-input" type="text" formControlName="ubicacion" placeholder="Ej: Pasillo A / Estante 3" />
+        </div>
+
+        <div class="field app-field">
           <label for="categoriaId" class="app-field-label">Categoria</label>
           <select id="categoriaId" class="app-select" formControlName="categoriaId">
             <option value="">Selecciona una categoria</option>
@@ -138,6 +143,7 @@
             <tr>
               <th>Codigo</th>
               <th>Nombre</th>
+              <th>Ubicacion</th>
               <th>Categoria</th>
               <th>Unidad</th>
               <th>Stock actual</th>
@@ -151,6 +157,7 @@
               <tr>
                 <td>{{ producto.codigo }}</td>
                 <td>{{ producto.nombre }}</td>
+                <td>{{ producto.ubicacion || 'Sin definir' }}</td>
                 <td>{{ producto.categoria }}</td>
                 <td>{{ producto.unidad }}</td>
                 <td>{{ producto.stockActual }}</td>

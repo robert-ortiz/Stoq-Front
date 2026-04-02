@@ -45,12 +45,12 @@ export class LoginComponent {
     // Llamada real al backend
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        localStorage.setItem('token', response.token);
+        this.authService.saveSession(response);
 
         this.isLoading = false;
         this.cdr.markForCheck();
 
-        this.router.navigate(['/productos']);
+        this.router.navigate([this.authService.getLandingRoute()]);
       },
       error: (err) => {
         console.error('Error al iniciar sesión:', err);

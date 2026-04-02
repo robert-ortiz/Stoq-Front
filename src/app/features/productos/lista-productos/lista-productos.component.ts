@@ -16,6 +16,7 @@ interface ProductoRow {
   id: string;
   codigo: string;
   nombre: string;
+  ubicacion: string;
   categoria: string;
   unidad: string;
   stockActual: number;
@@ -42,6 +43,7 @@ export class ListaProductosComponent implements OnInit {
   readonly createForm = this.fb.group({
     codigo: ['', [Validators.required]],
     nombre: ['', [Validators.required, Validators.minLength(2)]],
+    ubicacion: ['', []],
     categoriaId: ['', [Validators.required]],
     unidadId: ['', [Validators.required]],
     stock_inicial: [0, [Validators.required, Validators.min(0)]],
@@ -87,6 +89,7 @@ export class ListaProductosComponent implements OnInit {
       this.createForm.reset({
         codigo: '',
         nombre: '',
+        ubicacion: '',
         categoriaId: '',
         unidadId: '',
         stock_inicial: 0,
@@ -109,8 +112,14 @@ export class ListaProductosComponent implements OnInit {
     const payload: CreateProductoRequest = {
       codigo: (raw.codigo ?? '').trim(),
       nombre: (raw.nombre ?? '').trim(),
+<<<<<<< Updated upstream
       categoriaId: raw.categoriaId ?? '',
       unidadId: raw.unidadId ?? '',
+=======
+      ubicacion: (raw.ubicacion ?? '').trim(),
+      categoriaId,
+      unidadId,
+>>>>>>> Stashed changes
       stock_inicial: raw.stock_inicial ?? 0,
       stock_minimo: raw.stock_minimo ?? 0
     };
@@ -252,6 +261,7 @@ export class ListaProductosComponent implements OnInit {
       id: item.id,
       codigo: item.codigo,
       nombre: item.nombre,
+      ubicacion: item.ubicacion ?? '',
       categoria: item.categoria?.nombre ?? 'Sin categoria',
       unidad: item.unidad?.abreviatura ?? item.unidad?.nombre ?? 'N/A',
       stockActual: item.stockActual ?? 0,
@@ -271,6 +281,7 @@ export class ListaProductosComponent implements OnInit {
       return (
         producto.codigo.toLowerCase().includes(termino) ||
         producto.nombre.toLowerCase().includes(termino) ||
+        producto.ubicacion.toLowerCase().includes(termino) ||
         producto.categoria.toLowerCase().includes(termino) ||
         producto.unidad.toLowerCase().includes(termino)
       );

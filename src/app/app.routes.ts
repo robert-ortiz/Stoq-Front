@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { HomePageComponent } from './features/home/home-page/home-page.component';
-import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -10,7 +9,6 @@ export const routes: Routes = [
   },
   {
     path: 'productos',
-    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/productos/lista-productos/lista-productos.component').then(
         (m) => m.ListaProductosComponent
@@ -18,14 +16,13 @@ export const routes: Routes = [
   },
   {
     path: 'productos/:id/editar',
-    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/productos/editar-producto/editar-producto.component').then(
         (m) => m.EditarProductoComponent
       )
   },
   {
-    path: 'usuarios/editar',
+    path: 'perfil',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/users/user-edit/user-edit.component').then(
@@ -33,11 +30,46 @@ export const routes: Routes = [
       )
   },
   {
-    path: 'usuarios/:id/editar',
-    canActivate: [authGuard],
+    path: 'usuarios/editar',
     loadComponent: () =>
       import('./features/users/user-edit/user-edit.component').then(
         (m) => m.UserEditComponent
+      )
+  },
+{
+  path: 'usuarios/:id/editar',
+  canActivate: [authGuard],
+  data: { roles: ['ADMIN'] },
+  loadComponent: () =>
+    import('./features/users/user-edit/user-edit.component').then(
+      (m) => m.UserEditComponent
+    )
+},
+  {
+    path: 'admin',
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN'] },
+    loadComponent: () =>
+      import('./features/dashboard/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent
+      )
+  },
+  {
+    path: 'operador',
+    canActivate: [authGuard],
+    data: { roles: ['OPERADOR', 'ADMIN'] },
+    loadComponent: () =>
+      import('./features/dashboard/operator-dashboard/operator-dashboard.component').then(
+        (m) => m.OperatorDashboardComponent
+      )
+  },
+  {
+    path: 'gerente',
+    canActivate: [authGuard],
+    data: { roles: ['GERENTE', 'ADMIN'] },
+    loadComponent: () =>
+      import('./features/dashboard/manager-dashboard/manager-dashboard.component').then(
+        (m) => m.ManagerDashboardComponent
       )
   },
   {
