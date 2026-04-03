@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
 import { AuditLogApi, AuditLogService } from '../../../core/services/audit-log.service';
 import { ProductoApi, ProductoService } from '../../../core/services/producto.service';
 import { RoleService, RolApi } from '../../../core/services/role.service';
@@ -20,6 +21,8 @@ export class AdminDashboardComponent implements OnInit {
   private roleService = inject(RoleService);
   private auditService = inject(AuditLogService);
   private productoService = inject(ProductoService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
   users: EditableUser[] = [];
@@ -93,5 +96,10 @@ export class AdminDashboardComponent implements OnInit {
       dateStyle: 'short',
       timeStyle: 'short'
     });
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigateByUrl('/auth/login');
   }
 }

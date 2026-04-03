@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, forkJoin, startWith } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
 import {
   CategoriaApi,
   CreateProductoRequest,
@@ -35,8 +36,10 @@ interface ProductoRow {
 export class ListaProductosComponent implements OnInit {
   private productoService = inject(ProductoService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
+  private authService = inject(AuthService);
   private toastService = inject(ToastService);
 
   readonly searchControl = new FormControl('', { nonNullable: true });
@@ -71,6 +74,10 @@ export class ListaProductosComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarDatosIniciales();
+
+    if (this.route.snapshot.queryParamMap.get('create') === '1') {
+      this.toggleCrear();
+    }
 
     this.searchControl.valueChanges
       .pipe(startWith(''), debounceTime(200), distinctUntilChanged())
@@ -112,14 +119,9 @@ export class ListaProductosComponent implements OnInit {
     const payload: CreateProductoRequest = {
       codigo: (raw.codigo ?? '').trim(),
       nombre: (raw.nombre ?? '').trim(),
-<<<<<<< Updated upstream
-      categoriaId: raw.categoriaId ?? '',
-      unidadId: raw.unidadId ?? '',
-=======
       ubicacion: (raw.ubicacion ?? '').trim(),
-      categoriaId,
-      unidadId,
->>>>>>> Stashed changes
+      categoriaId: (raw.categoriaId ?? '').trim(),
+      unidadId: (raw.unidadId ?? '').trim(),
       stock_inicial: raw.stock_inicial ?? 0,
       stock_minimo: raw.stock_minimo ?? 0
     };
@@ -224,6 +226,11 @@ export class ListaProductosComponent implements OnInit {
 
   irAEditar(producto: ProductoRow): void {
     this.router.navigate(['/productos', producto.id, 'editar']);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigateByUrl('/auth/login');
   }
 
   paginaAnterior(): void {

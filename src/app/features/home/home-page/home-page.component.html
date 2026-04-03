@@ -6,24 +6,77 @@
       </div>
       <span class="brand">Stoq</span>
     </a>
-    <nav class="nav-actions">
-      <a routerLink="/auth/login" class="btn-link app-btn app-btn-secondary">INICIAR SESIÓN</a>
-      <a routerLink="/auth/signup" class="btn-primary app-btn app-btn-primary">REGISTRARSE</a>
-    </nav>
+    @if (!isAuthenticated) {
+      <nav class="nav-actions">
+        <a routerLink="/auth/login" class="btn-link app-btn app-btn-secondary">INICIAR SESIÓN</a>
+        <a routerLink="/auth/signup" class="btn-primary app-btn app-btn-primary">REGISTRARSE</a>
+      </nav>
+    } @else {
+      <nav class="nav-actions">
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToProductos()">PRODUCTOS</button>
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToCrearProducto()">AÑADIR PRODUCTO</button>
+        <button type="button" class="btn-primary app-btn app-btn-primary" (click)="logout()">CERRAR SESIÓN</button>
+      </nav>
+    }
   </header>
   <main class="home-card">
-    <div class="logo-section">
-      <div class="logo-icon-large">
-        <img src="/Logo.png" alt="Stoq" width="80" height="80" />
+    @if (!isAuthenticated) {
+      <div class="logo-section">
+        <div class="logo-icon-large">
+          <img src="/Logo.png" alt="Stoq" width="80" height="80" />
+        </div>
+        <h1 class="home-title">Sistema de Control de Inventario</h1>
+        <p class="home-subtitle">
+          Gestiona tu inventario de manera simple y eficiente. Controla productos, movimientos, alertas y genera reportes en tiempo real.
+        </p>
       </div>
-      <h1 class="home-title">Sistema de Control de Inventario</h1>
-      <p class="home-subtitle">
-        Gestiona tu inventario de manera simple y eficiente. Controla productos, movimientos, alertas y genera reportes en tiempo real.
-      </p>
-    </div>
-    <div class="action-buttons">
-      <a routerLink="/auth/login" class="btn-secondary app-btn app-btn-secondary">INICIAR SESIÓN →</a>
-      <a routerLink="/auth/signup" class="btn-primary app-btn app-btn-primary">CREAR CUENTA →</a>
-    </div>
+
+      <div class="action-buttons">
+        <a routerLink="/auth/login" class="btn-secondary app-btn app-btn-secondary">INICIAR SESIÓN →</a>
+        <a routerLink="/auth/signup" class="btn-primary app-btn app-btn-primary">CREAR CUENTA →</a>
+      </div>
+    } @else {
+      <section class="logo-section user-home" aria-label="Resumen de sesión">
+        <div class="logo-icon-large">
+          <img src="/Logo.png" alt="Stoq" width="80" height="80" />
+        </div>
+        <h1 class="home-title">Bienvenido, {{ displayName }}</h1>
+        <p class="home-subtitle">Ya iniciaste sesión. Desde aquí puedes ir directo al panel correspondiente a tu rol.</p>
+
+        <div class="session-grid">
+          <article class="session-item">
+            <h2>Empresa</h2>
+            <p>{{ company }}</p>
+          </article>
+          <article class="session-item">
+            <h2>Rol</h2>
+            <p>{{ role }}</p>
+          </article>
+        </div>
+
+        <div class="action-buttons">
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToProductos()">VER PRODUCTOS →</button>
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToCrearProducto()">AÑADIR PRODUCTO →</button>
+          <a routerLink="/perfil" class="btn-primary app-btn app-btn-primary">MI PERFIL →</a>
+        </div>
+
+        <div class="panel-links" aria-label="Paneles disponibles">
+          <h2>Paneles disponibles</h2>
+          <div class="panel-links-grid">
+            @if (isAdmin) {
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToAdmin()">Panel Admin</button>
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">Panel Operador</button>
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">Panel Gerente</button>
+            } @else if (isOperator) {
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">Panel Operador</button>
+            } @else if (isManager) {
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">Panel Gerente</button>
+            } @else {
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToProductos()">Ir a Productos</button>
+            }
+          </div>
+        </div>
+      </section>
+    }
   </main>
 </div>

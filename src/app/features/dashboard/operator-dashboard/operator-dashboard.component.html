@@ -8,8 +8,11 @@
       </p>
     </div>
     <div class="hero-actions">
+      <a routerLink="/" class="action secondary">Inicio</a>
+      <a routerLink="/productos" class="action secondary">Productos</a>
+      <a routerLink="/productos" [queryParams]="{ create: 1 }" class="action secondary">Añadir producto</a>
       <a routerLink="/perfil" class="action primary">Mi perfil</a>
-      <a routerLink="/gerente" class="action secondary">Ver gerente</a>
+      <button type="button" class="action secondary" (click)="logout()">Cerrar sesión</button>
     </div>
   </header>
 

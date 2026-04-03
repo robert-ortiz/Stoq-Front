@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
 import { MovimientoApi, MovimientoService } from '../../../core/services/movimiento.service';
 import { ProductoApi, ProductoService } from '../../../core/services/producto.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -20,6 +21,8 @@ export class OperatorDashboardComponent implements OnInit {
   private movimientoService = inject(MovimientoService);
   private toastService = inject(ToastService);
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
   productos: ProductoApi[] = [];
@@ -139,5 +142,10 @@ export class OperatorDashboardComponent implements OnInit {
       dateStyle: 'short',
       timeStyle: 'short'
     });
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigateByUrl('/auth/login');
   }
 }

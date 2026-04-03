@@ -68,14 +68,9 @@ export class EditarProductoComponent implements OnInit {
     const payload: UpdateProductoRequest = {
       codigo: raw.codigo?.trim(),
       nombre: raw.nombre?.trim(),
-<<<<<<< Updated upstream
-      categoriaId: raw.categoriaId ?? undefined,
-      unidadId: raw.unidadId ?? undefined,
-=======
       ubicacion: raw.ubicacion?.trim(),
-      categoriaId,
-      unidadId,
->>>>>>> Stashed changes
+      categoriaId: raw.categoriaId || undefined,
+      unidadId: raw.unidadId || undefined,
       stock_minimo: raw.stock_minimo ?? undefined
     };
 

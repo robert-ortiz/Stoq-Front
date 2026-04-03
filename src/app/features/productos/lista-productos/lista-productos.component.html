@@ -6,11 +6,12 @@
     </div>
 
     <div class="header-actions app-actions">
+      <a routerLink="/" class="btn-secondary app-btn app-btn-secondary">Inicio</a>
       <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="toggleCrear()">
         {{ mostrarCrear ? 'Cancelar' : 'Nuevo producto' }}
       </button>
       <a routerLink="/usuarios/editar" class="btn-secondary app-btn app-btn-secondary">Mi perfil</a>
-      <a routerLink="/auth/login" class="btn-secondary app-btn app-btn-secondary">Cerrar sesión</a>
+      <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="logout()">Cerrar sesión</button>
     </div>
   </header>
 
