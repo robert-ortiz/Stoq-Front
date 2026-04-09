@@ -42,6 +42,20 @@ export interface LoginResponse {
 export interface AuthSession extends LoginResponse {
 }
 
+interface JwtPayload {
+  role?: unknown;
+  rol?: unknown;
+  roles?: unknown;
+  authorities?: unknown;
+  realm_access?: {
+    roles?: unknown;
+  };
+  resource_access?: Record<string, {
+    roles?: unknown;
+  }>;
+  [key: string]: unknown;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -66,7 +80,8 @@ export class AuthService {
 
   saveSession(session: LoginResponse): void {
     const token = session.token ?? session.user?.token ?? '';
-    const role = session.rol ?? session.role ?? session.user?.rol ?? session.user?.role ?? '';
+    const roleFromToken = this.extractRoleFromToken(token);
+    const role = roleFromToken ?? session.rol ?? session.role ?? session.user?.rol ?? session.user?.role ?? '';
     const name = session.nombre ?? session.name ?? session.user?.nombre ?? session.user?.name ?? '';
     const email = session.correo ?? session.email ?? session.user?.correo ?? session.user?.email ?? '';
     const company = session.empresa ?? session.company ?? session.user?.empresa ?? session.user?.company ?? '';
@@ -95,7 +110,25 @@ export class AuthService {
   }
 
   getRole(): string | null {
-    return this.normalizeRole(localStorage.getItem(this.storageKeys.role));
+    const storedRole = this.normalizeRole(localStorage.getItem(this.storageKeys.role));
+
+    if (storedRole) {
+      return storedRole;
+    }
+
+    const token = this.getToken();
+
+    if (!token) {
+      return null;
+    }
+
+    const derivedRole = this.extractRoleFromToken(token);
+
+    if (derivedRole) {
+      localStorage.setItem(this.storageKeys.role, derivedRole);
+    }
+
+    return derivedRole;
   }
 
   getDisplayName(): string | null {
@@ -129,12 +162,97 @@ export class AuthService {
     return allowedRoles.map((item) => this.normalizeRole(item)).includes(role);
   }
 
+  private extractRoleFromToken(token: string | null): string | null {
+    if (!token) {
+      return null;
+    }
+
+    const payload = this.decodeJwtPayload(token);
+
+    if (!payload) {
+      return null;
+    }
+
+    const candidates: unknown[] = [
+      payload.role,
+      payload.rol,
+      payload.roles,
+      payload.authorities,
+      payload.realm_access?.roles
+    ];
+
+    if (payload.resource_access && typeof payload.resource_access === 'object') {
+      for (const entry of Object.values(payload.resource_access)) {
+        candidates.push(entry?.roles);
+      }
+    }
+
+    for (const candidate of candidates) {
+      const role = this.normalizeRole(this.readRoleValue(candidate));
+
+      if (role) {
+        return role;
+      }
+    }
+
+    return null;
+  }
+
+  private readRoleValue(value: unknown): string | null {
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        const nested = this.readRoleValue(item);
+
+        if (nested) {
+          return nested;
+        }
+      }
+
+      return null;
+    }
+
+    if (value && typeof value === 'object') {
+      const record = value as Record<string, unknown>;
+
+      return (
+        this.readRoleValue(record['role']) ??
+        this.readRoleValue(record['rol']) ??
+        this.readRoleValue(record['authority']) ??
+        this.readRoleValue(record['name']) ??
+        this.readRoleValue(record['roles'])
+      );
+    }
+
+    return null;
+  }
+
+  private decodeJwtPayload(token: string): JwtPayload | null {
+    const parts = token.split('.');
+
+    if (parts.length < 2) {
+      return null;
+    }
+
+    try {
+      const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const paddedPayload = payload.padEnd(payload.length + ((4 - (payload.length % 4)) % 4), '=');
+
+      return JSON.parse(atob(paddedPayload)) as JwtPayload;
+    } catch {
+      return null;
+    }
+  }
+
   private normalizeRole(role: string | null): string | null {
     if (!role) {
       return null;
     }
 
-    const normalized = role.trim().toUpperCase();
+    const normalized = role.trim().toUpperCase().replace(/^ROLE_/, '');
 
     if (['ADMIN', 'ADMINISTRADOR', 'ADMINISTRATOR'].includes(normalized)) {
       return 'ADMIN';

@@ -18,13 +18,33 @@ export class HomePageComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  readonly isAuthenticated = this.authService.isAuthenticated();
-  readonly displayName = this.authService.getDisplayName() || 'Usuario';
-  readonly role = this.authService.getRole() || 'SIN ROL';
-  readonly company = this.authService.getCompany() || 'Empresa no disponible';
-  readonly isAdmin = this.role === 'ADMIN';
-  readonly isOperator = this.role === 'OPERADOR';
-  readonly isManager = this.role === 'GERENTE';
+  get isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  get displayName(): string {
+    return this.authService.getDisplayName() || 'Usuario';
+  }
+
+  get role(): string {
+    return this.authService.getRole() || 'SIN ROL';
+  }
+
+  get company(): string {
+    return this.authService.getCompany() || 'Empresa no disponible';
+  }
+
+  get isAdmin(): boolean {
+    return this.role === 'ADMIN';
+  }
+
+  get isOperator(): boolean {
+    return this.role === 'OPERADOR';
+  }
+
+  get isManager(): boolean {
+    return this.role === 'GERENTE';
+  }
 
   goToProductos(): void {
     this.router.navigateByUrl('/productos');

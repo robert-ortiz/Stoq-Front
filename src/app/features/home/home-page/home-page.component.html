@@ -14,6 +14,15 @@
     } @else {
       <nav class="nav-actions">
         <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToProductos()">PRODUCTOS</button>
+        @if (isAdmin) {
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToAdmin()">ADMIN</button>
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">OPERADOR</button>
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">GERENTE</button>
+        } @else if (isOperator) {
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">OPERADOR</button>
+        } @else if (isManager) {
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">GERENTE</button>
+        }
         <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToCrearProducto()">AÑADIR PRODUCTO</button>
         <button type="button" class="btn-primary app-btn app-btn-primary" (click)="logout()">CERRAR SESIÓN</button>
       </nav>

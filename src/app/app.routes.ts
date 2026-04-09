@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { HomePageComponent } from './features/home/home-page/home-page.component';
-import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -24,7 +24,7 @@ export const routes: Routes = [
   },
   {
     path: 'perfil',
-    canActivate: [authGuard],
+    canActivate: [roleGuard],
     loadComponent: () =>
       import('./features/users/user-edit/user-edit.component').then(
         (m) => m.UserEditComponent
@@ -39,7 +39,7 @@ export const routes: Routes = [
   },
 {
   path: 'usuarios/:id/editar',
-  canActivate: [authGuard],
+  canActivate: [roleGuard],
   data: { roles: ['ADMIN'] },
   loadComponent: () =>
     import('./features/users/user-edit/user-edit.component').then(
@@ -48,7 +48,7 @@ export const routes: Routes = [
 },
   {
     path: 'admin',
-    canActivate: [authGuard],
+    canActivate: [roleGuard],
     data: { roles: ['ADMIN'] },
     loadComponent: () =>
       import('./features/dashboard/admin-dashboard/admin-dashboard.component').then(
@@ -57,7 +57,7 @@ export const routes: Routes = [
   },
   {
     path: 'operador',
-    canActivate: [authGuard],
+    canActivate: [roleGuard],
     data: { roles: ['OPERADOR', 'ADMIN'] },
     loadComponent: () =>
       import('./features/dashboard/operator-dashboard/operator-dashboard.component').then(
@@ -66,7 +66,7 @@ export const routes: Routes = [
   },
   {
     path: 'gerente',
-    canActivate: [authGuard],
+    canActivate: [roleGuard],
     data: { roles: ['GERENTE', 'ADMIN'] },
     loadComponent: () =>
       import('./features/dashboard/manager-dashboard/manager-dashboard.component').then(

@@ -50,7 +50,7 @@ export class LoginComponent {
         this.isLoading = false;
         this.cdr.markForCheck();
 
-        this.router.navigate([this.authService.getLandingRoute()]);
+        this.router.navigateByUrl(this.authService.getLandingRoute());
       },
       error: (err) => {
         console.error('Error al iniciar sesión:', err);
