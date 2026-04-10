@@ -1,0 +1,138 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Registro de Salida de Productos</h1>
+    <p class="subtitle">Retirar productos del inventario</p>
+  </div>
+
+  <div class="form-wrapper">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="salida-form">
+      <!-- Mensajes de estado -->
+      <div *ngIf="error" class="alert alert-error">
+        <strong>Error:</strong> {{ error }}
+      </div>
+
+      <div *ngIf="success" class="alert alert-success">
+        <strong>Éxito:</strong> {{ success }}
+      </div>
+
+      <!-- Sección: Seleccionar Producto -->
+      <div class="form-section">
+        <h2>1. Seleccionar Producto</h2>
+
+        <div *ngIf="cargandoProductos" class="loading">
+          Cargando productos...
+        </div>
+
+        <div *ngIf="!cargandoProductos" class="form-group">
+          <label for="productoId">Producto <span class="required">*</span></label>
+          <select
+            id="productoId"
+            formControlName="productoId"
+            (change)="onProductoChange()"
+            class="form-control"
+            [class.is-invalid]="
+              form.get('productoId')?.invalid && form.get('productoId')?.touched
+            "
+          >
+            <option value="">Selecciona un producto...</option>
+            <option *ngFor="let p of productos" [value]="p.id">
+              {{ p.codigo }} - {{ p.nombre }}
+            </option>
+          </select>
+          <small *ngIf="form.get('productoId')?.invalid && form.get('productoId')?.touched"
+            >Este campo es requerido</small
+          >
+        </div>
+
+        <!-- Detalles del producto seleccionado -->
+        <div *ngIf="productoSeleccionado" class="product-details">
+          <div class="detail-row">
+            <span class="label">Código:</span>
+            <span class="value">{{ productoSeleccionado.codigo }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Stock Actual:</span>
+            <span class="value stock" [class.low-stock]="(productoSeleccionado.stockActual || 0) === 0">
+              {{ productoSeleccionado.stockActual || 0 }}
+              {{ productoSeleccionado.unidad?.abreviatura || 'unidades' }}
+            </span>
+          </div>
+          <div *ngIf="productoSeleccionado.categoria" class="detail-row">
+            <span class="label">Categoría:</span>
+            <span class="value">{{ productoSeleccionado.categoria.nombre }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección: Cantidad de Salida -->
+      <div *ngIf="productoSeleccionado" class="form-section">
+        <h2>2. Cantidad de Salida</h2>
+
+        <div class="form-group">
+          <label for="cantidad">Cantidad <span class="required">*</span></label>
+          <input
+            id="cantidad"
+            type="number"
+            formControlName="cantidad"
+            (input)="onCantidadChange()"
+            min="0"
+            class="form-control"
+            [class.is-invalid]="form.get('cantidad')?.invalid && form.get('cantidad')?.touched"
+            placeholder="Ingresa la cantidad a retirar"
+          />
+          <small *ngIf="form.get('cantidad')?.invalid && form.get('cantidad')?.touched">
+            La cantidad debe ser mayor a 0
+          </small>
+        </div>
+
+        <!-- Alerta de validación de stock -->
+        <app-stock-alert
+          *ngIf="validacionActual"
+          [validacion]="validacionActual"
+        ></app-stock-alert>
+      </div>
+
+      <!-- Sección: Motivo -->
+      <div *ngIf="productoSeleccionado" class="form-section">
+        <h2>3. Motivo de la Salida</h2>
+
+        <div class="form-group">
+          <label for="motivo">Motivo <span class="required">*</span></label>
+          <textarea
+            id="motivo"
+            formControlName="motivo"
+            class="form-control"
+            [class.is-invalid]="form.get('motivo')?.invalid && form.get('motivo')?.touched"
+            placeholder="Describe el motivo de la salida (ej: Venta a cliente, Devolución, Uso interno)"
+            rows="3"
+          ></textarea>
+          <small *ngIf="form.get('motivo')?.invalid && form.get('motivo')?.touched">
+            El motivo debe tener al menos 5 caracteres
+          </small>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div *ngIf="productoSeleccionado" class="form-actions">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="
+            !validacionActual?.permitido || form.invalid || guardando
+          "
+        >
+          <span *ngIf="!guardando">Registrar Salida</span>
+          <span *ngIf="guardando">Registrando...</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="onCancel()"
+          [disabled]="guardando"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

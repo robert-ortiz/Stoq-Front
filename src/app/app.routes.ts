@@ -23,6 +23,15 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'salidas/registro',
+    canActivate: [roleGuard],
+    data: { roles: ['OPERADOR', 'ADMIN'] },
+    loadComponent: () =>
+      import('./features/salidas/registro-salida/registro-salida.component').then(
+        (m) => m.RegistroSalidaComponent
+      )
+  },
+  {
     path: 'perfil',
     canActivate: [roleGuard],
     loadComponent: () =>

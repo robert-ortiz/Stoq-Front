@@ -25,6 +25,19 @@ export interface CreateMovimientoRequest {
   motivo: string;
 }
 
+export interface CreateSalidaRequest {
+  productoId: string;
+  cantidad: number;
+  motivo: string;
+}
+
+export interface ValidacionSalida {
+  permitido: boolean;
+  stockActual: number;
+  cantidadSolicitada: number;
+  mensaje: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -44,5 +57,34 @@ export class MovimientoService {
 
   createMovimiento(payload: CreateMovimientoRequest): Observable<MovimientoApi> {
     return this.http.post<MovimientoApi>(this.apiUrl, payload);
+  }
+
+  createSalida(payload: CreateSalidaRequest): Observable<MovimientoApi> {
+    const request: CreateMovimientoRequest = {
+      ...payload,
+      tipoMovimiento: 'SALIDA'
+    };
+    return this.createMovimiento(request);
+  }
+
+  validarSalida(cantidad: number, stockActual: number): ValidacionSalida {
+    const permitido = cantidad > 0 && cantidad <= stockActual;
+    const mensaje = this.obtenerMensajeValidacion(cantidad, stockActual);
+    return {
+      permitido,
+      stockActual,
+      cantidadSolicitada: cantidad,
+      mensaje
+    };
+  }
+
+  private obtenerMensajeValidacion(cantidad: number, stockActual: number): string {
+    if (cantidad <= 0) {
+      return 'La cantidad debe ser mayor a 0';
+    }
+    if (cantidad > stockActual) {
+      return `Stock insuficiente. Stock actual: ${stockActual}. Intenta con ${stockActual} o menos.`;
+    }
+    return 'OK';
   }
 }
