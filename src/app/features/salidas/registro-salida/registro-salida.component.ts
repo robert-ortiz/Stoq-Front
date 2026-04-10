@@ -116,7 +116,7 @@ export class RegistroSalidaComponent implements OnInit {
     this.movimientoService.createSalida(payload).subscribe({
       next: () => {
         this.guardando = false;
-        this.toastService.showSuccess('Salida registrada correctamente.');
+        this.toastService.success('Salida registrada correctamente.');
         this.form.reset();
         this.productoSeleccionado = null;
         this.validacionActual = null;
@@ -134,7 +134,7 @@ export class RegistroSalidaComponent implements OnInit {
         this.guardando = false;
         const errorMsg = err?.error?.message || 'Error al registrar la salida.';
         this.error = errorMsg;
-        this.toastService.showError(errorMsg);
+        this.toastService.error(errorMsg);
         this.cdr.markForCheck();
       }
     });
