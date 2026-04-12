@@ -1,0 +1,174 @@
+.movimientos-page {
+  display: grid;
+  gap: 12px;
+}
+
+.filters-card,
+.table-card,
+.kpi-preview,
+.state-card {
+  padding: 14px;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.filter-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filters-feedback {
+  margin-top: 10px;
+  color: var(--primary-strong);
+  font-weight: 600;
+}
+
+.kpi-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.kpi-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: 10px;
+  background: #fbfefe;
+  display: grid;
+  gap: 3px;
+}
+
+.kpi-label {
+  color: var(--text-soft);
+  font-size: 0.82rem;
+}
+
+.kpi-item strong {
+  font-size: 1.2rem;
+}
+
+.top-products p {
+  display: grid;
+  gap: 3px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-bottom: 1px solid #e8f0f1;
+  text-align: left;
+  padding: 10px;
+  font-size: 0.88rem;
+  vertical-align: top;
+}
+
+th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-soft);
+}
+
+.tipo-chip {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: color-mix(in srgb, var(--success) 18%, white);
+  color: var(--success);
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.tipo-chip.tipo-salida {
+  background: color-mix(in srgb, var(--danger) 18%, white);
+  color: var(--danger);
+}
+
+.user-mail {
+  display: block;
+  color: var(--text-soft);
+  font-size: 0.78rem;
+}
+
+.pagination-footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pagination-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skeleton-group {
+  display: grid;
+  gap: 8px;
+}
+
+.skeleton-row {
+  height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #edf4f5 0%, #f8fbfb 45%, #edf4f5 100%);
+  background-size: 220% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+.state-card {
+  display: grid;
+  gap: 8px;
+}
+
+.state-card.inner {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-m);
+}
+
+.state-card.denied {
+  border-color: #f5b5ad;
+  background: var(--danger-soft);
+}
+
+.state-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.state-description {
+  color: var(--text-soft);
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -20% 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .pagination-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

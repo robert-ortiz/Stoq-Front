@@ -1,0 +1,185 @@
+<section class="movimientos-page app-page app-shell">
+  <header class="app-toolbar">
+    <div class="app-title-block">
+      <h1>Movimientos de Inventario</h1>
+      <p>Consulta operativa de entradas y salidas. Vista de solo lectura para administración.</p>
+    </div>
+
+    <div class="app-actions">
+      <a routerLink="/productos" class="app-btn app-btn-secondary">Volver a productos</a>
+      <a routerLink="/usuarios/editar" class="app-btn app-btn-secondary">Mi perfil</a>
+    </div>
+  </header>
+
+  @if (verificandoPermisos()) {
+    <section class="app-card state-card" aria-live="polite" aria-busy="true">
+      <p class="state-title">Validando permisos...</p>
+      <p class="state-description">Estamos revisando tu rol para habilitar este módulo.</p>
+    </section>
+  } @else if (!esAdmin()) {
+    <section class="app-card state-card denied" role="alert">
+      <h2>Acceso restringido</h2>
+      <p class="state-description">Tu usuario no tiene permisos ADMIN para consultar movimientos de inventario.</p>
+      <a routerLink="/productos" class="app-btn app-btn-secondary">Regresar al módulo de productos</a>
+    </section>
+  } @else {
+    <section class="app-card filters-card" aria-label="Filtros de movimientos">
+      <div class="filters-grid">
+        <div class="app-field">
+          <label for="buscar" class="app-field-label">Buscar</label>
+          <input
+            id="buscar"
+            type="text"
+            class="app-input"
+            [formControl]="buscarControl"
+            placeholder="Producto, código, usuario o motivo"
+          />
+        </div>
+
+        <div class="app-field">
+          <label for="tipo" class="app-field-label">Tipo de movimiento</label>
+          <select id="tipo" class="app-select" [formControl]="tipoControl">
+            @for (tipo of tiposDisponibles(); track tipo) {
+              <option [value]="tipo">{{ tipo === 'TODOS' ? 'Todos' : tipo }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="app-field">
+          <label for="fechaInicio" class="app-field-label">Fecha inicio</label>
+          <input id="fechaInicio" type="datetime-local" class="app-input" [formControl]="fechaInicioControl" />
+        </div>
+
+        <div class="app-field">
+          <label for="fechaFin" class="app-field-label">Fecha fin</label>
+          <input id="fechaFin" type="datetime-local" class="app-input" [formControl]="fechaFinControl" />
+        </div>
+      </div>
+
+      <div class="filter-actions">
+        <button type="button" class="app-btn app-btn-primary" (click)="aplicarFiltros()">Aplicar filtros</button>
+        <button type="button" class="app-btn app-btn-secondary" (click)="limpiarFiltros()" [disabled]="!hayFiltrosActivos()">
+          Limpiar filtros
+        </button>
+      </div>
+
+      @if (hayFiltrosActivos()) {
+        <p class="filters-feedback" role="status">Filtros activos sobre {{ movimientosFiltrados().length }} movimientos.</p>
+      }
+    </section>
+
+    <section class="app-card kpi-preview" aria-label="Resumen operativo rápido">
+      <div class="kpi-item">
+        <span class="kpi-label">Total entradas</span>
+        <strong>{{ resumenOperativo().totales.entradas }}</strong>
+      </div>
+
+      <div class="kpi-item">
+        <span class="kpi-label">Total salidas</span>
+        <strong>{{ resumenOperativo().totales.salidas }}</strong>
+      </div>
+
+      <div class="kpi-item top-products">
+        <span class="kpi-label">Top productos con movimiento</span>
+        <p>
+          @if (!resumenOperativo().productosTop.length) {
+            Sin datos para ranking.
+          } @else {
+            @for (producto of resumenOperativo().productosTop; track producto.productoId; let i = $index) {
+              <span>{{ i + 1 }}. {{ producto.productoCodigo }} ({{ producto.totalMovimientos }})</span>
+            }
+          }
+        </p>
+      </div>
+    </section>
+
+    <section class="app-card table-card" aria-label="Tabla de movimientos">
+      @if (cargando()) {
+        <div class="skeleton-group" aria-hidden="true">
+          @for (row of [1, 2, 3, 4, 5, 6]; track row) {
+            <div class="skeleton-row"></div>
+          }
+        </div>
+      } @else if (error()) {
+        <div class="state-card inner" role="alert">
+          <h2>Error al consultar movimientos</h2>
+          <p class="state-description">{{ error() }}</p>
+          <button type="button" class="app-btn app-btn-secondary" (click)="reintentar()">Reintentar</button>
+        </div>
+      } @else if (!movimientosFiltrados().length) {
+        <div class="state-card inner" role="status">
+          <h2>Sin resultados</h2>
+          <p class="state-description">No hay movimientos con los filtros actuales. Ajusta los criterios para continuar.</p>
+          <button type="button" class="app-btn app-btn-secondary" (click)="limpiarFiltros()" [disabled]="!hayFiltrosActivos()">
+            Limpiar filtros
+          </button>
+        </div>
+      } @else {
+        <div class="table-wrapper">
+          <table>
+            <caption class="sr-only">Listado de movimientos de inventario</caption>
+            <thead>
+              <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Producto</th>
+                <th scope="col">Código</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Stock ant.</th>
+                <th scope="col">Stock res.</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Motivo</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (movimiento of movimientosPaginados(); track trackByMovimiento($index, movimiento)) {
+                <tr>
+                  <td>{{ movimiento.fechaMovimiento | date: 'dd/MM/yyyy HH:mm' }}</td>
+                  <td>
+                    <span class="tipo-chip" [class.tipo-salida]="movimiento.tipoMovimiento.toUpperCase() === 'SALIDA'">
+                      {{ movimiento.tipoMovimiento }}
+                    </span>
+                  </td>
+                  <td>{{ movimiento.productoNombre }}</td>
+                  <td>{{ movimiento.productoCodigo }}</td>
+                  <td>{{ movimiento.cantidad }}</td>
+                  <td>{{ movimiento.stockAnterior }}</td>
+                  <td>{{ movimiento.stockResultante }}</td>
+                  <td>
+                    <strong>{{ movimiento.usuarioNombre }}</strong>
+                    <span class="user-mail">{{ movimiento.usuarioCorreo }}</span>
+                  </td>
+                  <td>{{ movimiento.motivo || 'Sin motivo' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <footer class="pagination-footer" aria-label="Paginación de movimientos">
+          <p>Mostrando {{ desdeRegistro() }}-{{ hastaRegistro() }} de {{ movimientosFiltrados().length }}</p>
+
+          <div class="pagination-actions">
+            <button
+              type="button"
+              class="app-btn app-btn-secondary"
+              (click)="paginaAnterior()"
+              [disabled]="obtenerPaginaActual() <= 1"
+            >
+              Anterior
+            </button>
+            <span>Pagina {{ obtenerPaginaActual() }} de {{ totalPaginas() }}</span>
+            <button
+              type="button"
+              class="app-btn app-btn-secondary"
+              (click)="paginaSiguiente()"
+              [disabled]="obtenerPaginaActual() >= totalPaginas()"
+            >
+              Siguiente
+            </button>
+          </div>
+        </footer>
+      }
+    </section>
+  }
+</section>

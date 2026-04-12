@@ -25,6 +25,14 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'movimientos',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/movimientos/lista-movimientos/lista-movimientos.component').then(
+        (m) => m.ListaMovimientosComponent
+      )
+  },
+  {
     path: 'usuarios/editar',
     canActivate: [authGuard],
     loadComponent: () =>

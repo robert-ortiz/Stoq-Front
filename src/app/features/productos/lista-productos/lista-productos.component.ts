@@ -11,6 +11,8 @@ import {
   UnidadApi
 } from '../../../core/services/producto.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { UserService } from '../../../core/services/user.service';
 
 interface ProductoRow {
   id: string;
@@ -37,6 +39,8 @@ export class ListaProductosComponent implements OnInit {
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject(ToastService);
+  private userService = inject(UserService);
+  private authService = inject(AuthService);
 
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly createForm = this.fb.group({
@@ -68,9 +72,11 @@ export class ListaProductosComponent implements OnInit {
   paginaActual = 1;
   readonly tamanoPagina = 8;
   totalPaginas = 1;
+  puedeVerMovimientos = false;
 
   ngOnInit(): void {
     this.cargarDatosIniciales();
+    this.cargarAccesoMovimientos();
 
     this.searchControl.valueChanges
       .pipe(startWith(''), debounceTime(200), distinctUntilChanged())
@@ -342,5 +348,18 @@ export class ListaProductosComponent implements OnInit {
 
   get stockInicial() {
     return this.createForm.get('stock_inicial');
+  }
+
+  private cargarAccesoMovimientos(): void {
+    this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        this.puedeVerMovimientos = user.rol?.trim().toUpperCase() === 'ADMIN';
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.puedeVerMovimientos = this.authService.isAdminFromToken();
+        this.cdr.markForCheck();
+      }
+    });
   }
 }

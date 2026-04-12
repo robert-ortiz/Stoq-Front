@@ -9,6 +9,9 @@
       <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="toggleCrear()">
         {{ mostrarCrear ? 'Cancelar' : 'Nuevo producto' }}
       </button>
+      @if (puedeVerMovimientos) {
+        <a routerLink="/movimientos" class="btn-secondary app-btn app-btn-secondary">Movimientos</a>
+      }
       <a routerLink="/usuarios/editar" class="btn-secondary app-btn app-btn-secondary">Mi perfil</a>
       <a routerLink="/auth/login" class="btn-secondary app-btn app-btn-secondary">Cerrar sesión</a>
     </div>
