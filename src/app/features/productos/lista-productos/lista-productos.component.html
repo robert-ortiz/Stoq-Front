@@ -2,11 +2,11 @@
   <header class="lista-header app-toolbar">
     <div class="app-title-block">
       <h1>Lista de Productos</h1>
-      <p>Listado conectado al backend con búsqueda dinámica, paginación y acciones CRUD.</p>
     </div>
 
     <div class="header-actions app-actions">
       <a routerLink="/" class="btn-secondary app-btn app-btn-secondary">Inicio</a>
+      <a routerLink="/salidas/registro" class="btn-secondary app-btn app-btn-secondary">Registrar Salida</a>
       <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="toggleCrear()">
         {{ mostrarCrear ? 'Cancelar' : 'Nuevo producto' }}
       </button>
