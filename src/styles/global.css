@@ -24,6 +24,42 @@ body {
     var(--bg);
 }
 
+body.theme-admin,
+.theme-admin {
+  --primary: #0b7285;
+  --primary-strong: #095c6b;
+  --primary-soft: #d6eef2;
+  --accent: #e89c2e;
+  --focus: #0b7285;
+}
+
+body.theme-operador,
+.theme-operador {
+  --primary: #1f7a4f;
+  --primary-strong: #16563a;
+  --primary-soft: #e5f6ed;
+  --accent: #2b9e6a;
+  --focus: #1f7a4f;
+}
+
+body.theme-gerente,
+.theme-gerente {
+  --primary: #9b5f00;
+  --primary-strong: #7a4a00;
+  --primary-soft: #fff1dd;
+  --accent: #e89c2e;
+  --focus: #9b5f00;
+}
+
+body.theme-default,
+.theme-default {
+  --primary: #0b7285;
+  --primary-strong: #095c6b;
+  --primary-soft: #d6eef2;
+  --accent: #e89c2e;
+  --focus: #0b7285;
+}
+
 h1,
 h2,
 h3,
