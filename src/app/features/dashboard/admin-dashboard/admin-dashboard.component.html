@@ -1,13 +1,13 @@
-<section class="dashboard-page">
-  <header class="hero-panel">
+<section class="dashboard-layout admin-theme">
+  <header class="dashboard-hero dashboard-card">
     <div>
-      <p class="eyebrow">Panel administrador</p>
+      <p class="dashboard-eyebrow">Panel administrador</p>
       <h1>Control total del sistema</h1>
-      <p class="lead">
+      <p class="dashboard-lead">
         Gestiona usuarios, revisa catálogos, supervisa la auditoría y mantén el inventario ordenado desde un solo lugar.
       </p>
     </div>
-    <div class="hero-actions">
+    <div class="dashboard-actions">
       <a routerLink="/" class="action secondary">Inicio</a>
       <a routerLink="/auth/signup" class="action primary">Crear usuario</a>
       <a routerLink="/productos" class="action secondary">Catálogo</a>
@@ -18,39 +18,39 @@
   </header>
 
   @if (loading) {
-    <div class="loading-state">Cargando tablero...</div>
+    <div class="dashboard-state loading">Cargando tablero...</div>
   }
 
   @if (error) {
-    <div class="alert error">{{ error }}</div>
+    <div class="dashboard-state error">{{ error }}</div>
   }
 
-  <section class="kpi-grid">
-    <article class="kpi-card">
+  <section class="dashboard-kpi-grid">
+    <article class="dashboard-kpi-card dashboard-card">
       <span>Usuarios</span>
       <strong>{{ totalUsuarios }}</strong>
       <p>Perfiles activos en la plataforma.</p>
     </article>
-    <article class="kpi-card">
+    <article class="dashboard-kpi-card dashboard-card">
       <span>Roles</span>
       <strong>{{ totalRoles }}</strong>
       <p>ADMIN, OPERADOR y GERENTE.</p>
     </article>
-    <article class="kpi-card">
+    <article class="dashboard-kpi-card dashboard-card">
       <span>Productos activos</span>
       <strong>{{ productosActivos }}</strong>
       <p>Catálogo disponible para operación.</p>
     </article>
-    <article class="kpi-card warning">
+    <article class="dashboard-kpi-card dashboard-card warning">
       <span>Stock crítico</span>
       <strong>{{ productosCriticos.length }}</strong>
       <p>Productos al límite de su stock mínimo.</p>
     </article>
   </section>
 
-  <section class="content-grid">
-    <article class="panel">
-      <div class="panel-header">
+  <section class="dashboard-content-grid">
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
         <h2>Usuarios</h2>
         <span>Alta y edición rápida</span>
       </div>
@@ -80,8 +80,8 @@
       </div>
     </article>
 
-    <article class="panel">
-      <div class="panel-header">
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
         <h2>Roles y permisos</h2>
         <span>Capacidades reales del negocio</span>
       </div>
@@ -100,8 +100,8 @@
       </div>
     </article>
 
-    <article class="panel">
-      <div class="panel-header">
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
         <h2>Auditoría reciente</h2>
         <span>Últimas acciones registradas</span>
       </div>

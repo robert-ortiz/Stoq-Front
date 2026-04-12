@@ -1,13 +1,13 @@
-<section class="dashboard-page manager-theme">
-  <header class="hero-panel manager">
+<section class="dashboard-layout manager-theme">
+  <header class="dashboard-hero dashboard-card manager">
     <div>
-      <p class="eyebrow">Panel gerente</p>
+      <p class="dashboard-eyebrow">Panel gerente</p>
       <h1>Visión simple para decisiones rápidas</h1>
-      <p class="lead">
+      <p class="dashboard-lead">
         Revisa stock crítico, top salidas y rotación por rango de fechas con información lista para reuniones.
       </p>
     </div>
-    <div class="hero-actions">
+    <div class="dashboard-actions">
       <a routerLink="/" class="action secondary">Inicio</a>
       <a routerLink="/productos" class="action secondary">Productos</a>
       <a routerLink="/productos" [queryParams]="{ create: 1 }" class="action secondary">Añadir producto</a>
@@ -17,33 +17,33 @@
   </header>
 
   @if (loading) {
-    <div class="loading-state">Cargando indicadores...</div>
+    <div class="dashboard-state loading">Cargando indicadores...</div>
   }
 
   @if (error) {
-    <div class="alert error">{{ error }}</div>
+    <div class="dashboard-state error">{{ error }}</div>
   }
 
-  <section class="kpi-grid">
-    <article class="kpi-card">
+  <section class="dashboard-kpi-grid">
+    <article class="dashboard-kpi-card dashboard-card">
       <span>Stock total</span>
       <strong>{{ totalStockActual }}</strong>
       <p>Unidades disponibles en inventario.</p>
     </article>
-    <article class="kpi-card warning">
+    <article class="dashboard-kpi-card dashboard-card warning">
       <span>Stock crítico</span>
       <strong>{{ stockCritico.length }}</strong>
       <p>Productos por debajo o en su mínimo.</p>
     </article>
-    <article class="kpi-card">
+    <article class="dashboard-kpi-card dashboard-card">
       <span>Movimientos filtrados</span>
       <strong>{{ totalMovimientos }}</strong>
       <p>Datos según el rango seleccionado.</p>
     </article>
   </section>
 
-  <section class="panel filter-panel">
-    <div class="panel-header">
+  <section class="dashboard-panel dashboard-card filter-panel">
+    <div class="dashboard-panel-header">
       <h2>Filtrar por fecha</h2>
       <span>Reporte exportable</span>
     </div>
@@ -64,13 +64,13 @@
       </button>
     </form>
     @if (rangoError) {
-      <div class="alert error small">{{ rangoError }}</div>
+      <div class="dashboard-state error small">{{ rangoError }}</div>
     }
   </section>
 
-  <section class="content-grid manager-grid">
-    <article class="panel">
-      <div class="panel-header">
+  <section class="dashboard-content-grid manager-grid">
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
         <h2>Stock crítico</h2>
         <span>Atención prioritaria</span>
       </div>
@@ -87,8 +87,8 @@
       </div>
     </article>
 
-    <article class="panel">
-      <div class="panel-header">
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
         <h2>Top salidas</h2>
         <span>Productos más movidos</span>
       </div>
@@ -105,8 +105,8 @@
       </div>
     </article>
 
-    <article class="panel full">
-      <div class="panel-header">
+    <article class="dashboard-panel dashboard-card dashboard-panel-full">
+      <div class="dashboard-panel-header">
         <h2>Movimientos del rango</h2>
         <span>Base para reuniones y decisiones</span>
       </div>

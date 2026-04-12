@@ -1,13 +1,13 @@
-<section class="dashboard-page operator-theme">
-  <header class="hero-panel operator">
+<section class="dashboard-layout operator-theme">
+  <header class="dashboard-hero dashboard-card operator">
     <div>
-      <p class="eyebrow">Panel operador</p>
+      <p class="dashboard-eyebrow">Panel operador</p>
       <h1>Entradas y salidas sin fricción</h1>
-      <p class="lead">
+      <p class="dashboard-lead">
         Registra movimientos en pocos clics, revisa el stock actual y evita errores con validaciones simples.
       </p>
     </div>
-    <div class="hero-actions">
+    <div class="dashboard-actions">
       <a routerLink="/" class="action secondary">Inicio</a>
       <a routerLink="/productos" class="action secondary">Productos</a>
       <a routerLink="/productos" [queryParams]="{ create: 1 }" class="action secondary">Añadir producto</a>
@@ -17,34 +17,34 @@
   </header>
 
   @if (loading) {
-    <div class="loading-state">Cargando inventario...</div>
+    <div class="dashboard-state loading">Cargando inventario...</div>
   }
 
   @if (error) {
-    <div class="alert error">{{ error }}</div>
+    <div class="dashboard-state error">{{ error }}</div>
   }
 
-  <section class="kpi-grid">
-    <article class="kpi-card">
+  <section class="dashboard-kpi-grid">
+    <article class="dashboard-kpi-card dashboard-card">
       <span>Stock actual</span>
       <strong>{{ totalStockActual }}</strong>
       <p>Unidades disponibles en el sistema.</p>
     </article>
-    <article class="kpi-card warning">
+    <article class="dashboard-kpi-card dashboard-card warning">
       <span>Críticos</span>
       <strong>{{ productosCriticos.length }}</strong>
       <p>Productos que requieren atención.</p>
     </article>
-    <article class="kpi-card">
+    <article class="dashboard-kpi-card dashboard-card">
       <span>Movimientos</span>
       <strong>{{ totalMovimientos }}</strong>
       <p>Entradas y salidas registradas.</p>
     </article>
   </section>
 
-  <section class="content-grid operator-grid">
-    <article class="panel">
-      <div class="panel-header">
+  <section class="dashboard-content-grid operator-grid">
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
         <h2>Registrar movimiento</h2>
         <span>Entrada o salida controlada</span>
       </div>
@@ -88,8 +88,8 @@
       }
     </article>
 
-    <article class="panel">
-      <div class="panel-header">
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
         <h2>Stock actual y ubicación</h2>
         <span>Vista rápida del almacén</span>
       </div>
@@ -110,8 +110,8 @@
       </div>
     </article>
 
-    <article class="panel full">
-      <div class="panel-header">
+    <article class="dashboard-panel dashboard-card dashboard-panel-full">
+      <div class="dashboard-panel-header">
         <h2>Movimientos recientes</h2>
         <span>Auditoría operativa</span>
       </div>
