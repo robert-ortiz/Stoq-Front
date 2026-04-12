@@ -31,6 +31,12 @@ export interface CreateSalidaRequest {
   motivo: string;
 }
 
+export interface CreateEntradaRequest {
+  productoId: string;
+  cantidad: number;
+  motivo: string;
+}
+
 export interface ValidacionSalida {
   permitido: boolean;
   stockActual: number;
@@ -63,6 +69,14 @@ export class MovimientoService {
     const request: CreateMovimientoRequest = {
       ...payload,
       tipoMovimiento: 'SALIDA'
+    };
+    return this.createMovimiento(request);
+  }
+
+  createEntrada(payload: CreateEntradaRequest): Observable<MovimientoApi> {
+    const request: CreateMovimientoRequest = {
+      ...payload,
+      tipoMovimiento: 'ENTRADA'
     };
     return this.createMovimiento(request);
   }

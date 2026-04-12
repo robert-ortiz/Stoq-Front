@@ -32,6 +32,15 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'entradas/registro',
+    canActivate: [roleGuard],
+    data: { roles: ['OPERADOR', 'ADMIN'] },
+    loadComponent: () =>
+      import('./features/entradas/registro-entrada/registro-entrada.component').then(
+        (m) => m.RegistroEntradaComponent
+      )
+  },
+  {
     path: 'perfil',
     canActivate: [roleGuard],
     loadComponent: () =>

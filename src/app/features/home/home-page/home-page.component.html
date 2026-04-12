@@ -23,6 +23,7 @@
         } @else if (isManager) {
           <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">GERENTE</button>
         }
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToRegistrarEntrada()">REGISTRAR ENTRADA</button>
         <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToCrearProducto()">AÑADIR PRODUCTO</button>
         <button type="button" class="btn-primary app-btn app-btn-primary" (click)="logout()">CERRAR SESIÓN</button>
       </nav>
@@ -65,6 +66,7 @@
 
         <div class="action-buttons">
           <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToProductos()">VER PRODUCTOS →</button>
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToRegistrarEntrada()">REGISTRAR ENTRADA →</button>
           <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToCrearProducto()">AÑADIR PRODUCTO →</button>
           <a routerLink="/perfil" class="btn-primary app-btn app-btn-primary">MI PERFIL →</a>
         </div>

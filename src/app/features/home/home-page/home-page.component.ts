@@ -54,6 +54,10 @@ export class HomePageComponent {
     this.router.navigate(['/productos'], { queryParams: { create: 1 } });
   }
 
+  goToRegistrarEntrada(): void {
+    this.router.navigateByUrl('/entradas/registro');
+  }
+
   goToAdmin(): void {
     this.router.navigateByUrl('/admin');
   }
