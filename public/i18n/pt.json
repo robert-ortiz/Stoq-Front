@@ -320,7 +320,10 @@
     "REQUESTED_AMOUNT": "Quantidade solicitada",
     "DIFFERENCE": "Diferença",
     "UNITS": "unidades",
-    "MISSING_UNITS": "{{value}} unidades em falta"
+    "MISSING_UNITS": "{{value}} unidades em falta",
+    "INVALID_QUANTITY": "A quantidade deve ser maior que 0",
+    "INSUFFICIENT_STOCK_DETAIL": "Estoque insuficiente. Estoque atual: {{stockActual}}. Tente com {{stockActual}} ou menos.",
+    "OK_MESSAGE": "Validação correta."
   },
   "HOME": {
     "BRAND_ARIA": "Início do Stoq",
@@ -345,6 +348,12 @@
       "WELCOME_USER": "Bem-vindo, {{name}}",
       "SUBTITLE": "Você já iniciou sessão. A partir daqui, pode ir direto ao painel correspondente ao seu perfil.",
       "COMPANY": "Empresa",
+      "DEFAULT_USER": "Usuário",
+      "DEFAULT_ROLE": "Sem função",
+      "DEFAULT_COMPANY": "Empresa não disponível",
+      "ROLE_ADMIN": "Administrador",
+      "ROLE_OPERATOR": "Operador",
+      "ROLE_MANAGER": "Gerente",
       "ROLE": "Função",
       "VIEW_PRODUCTS_CTA": "VER PRODUTOS →",
       "REGISTER_ENTRY_CTA": "REGISTRAR ENTRADA →",

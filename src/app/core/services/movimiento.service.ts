@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../config/api.config';
 
@@ -49,6 +50,7 @@ export interface ValidacionSalida {
 })
 export class MovimientoService {
   private http = inject(HttpClient);
+  private translateService = inject(TranslateService);
   private apiUrl = `${API_BASE_URL}/api/movimientos`;
 
   getMovimientos(): Observable<MovimientoApi[]> {
@@ -94,11 +96,13 @@ export class MovimientoService {
 
   private obtenerMensajeValidacion(cantidad: number, stockActual: number): string {
     if (cantidad <= 0) {
-      return 'La cantidad debe ser mayor a 0';
+      return this.translateService.instant('STOCK_ALERT.INVALID_QUANTITY');
     }
     if (cantidad > stockActual) {
-      return `Stock insuficiente. Stock actual: ${stockActual}. Intenta con ${stockActual} o menos.`;
+      return this.translateService.instant('STOCK_ALERT.INSUFFICIENT_STOCK_DETAIL', {
+        stockActual
+      });
     }
-    return 'OK';
+    return this.translateService.instant('STOCK_ALERT.OK_MESSAGE');
   }
 }
