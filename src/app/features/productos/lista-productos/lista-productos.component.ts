@@ -370,7 +370,7 @@ export class ListaProductosComponent implements OnInit {
   private cargarAccesoMovimientos(): void {
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
-        const role = user.rol?.trim().toUpperCase() ?? null;
+        const role = this.authService.syncRole(user.rol);
         this.puedeVerMovimientos = role === 'ADMIN';
         this.puedeRegistrarMovimientos = role === 'ADMIN' || role === 'OPERADOR';
         this.cdr.markForCheck();

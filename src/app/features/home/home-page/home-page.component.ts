@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-home-page',
@@ -15,21 +16,51 @@ import { AuthService } from '../../../core/services/auth.service';
     class: 'home-container'
   }
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit {
   private authService = inject(AuthService);
+  private userService = inject(UserService);
   private router = inject(Router);
   private translateService = inject(TranslateService);
+
+  private backendDisplayName: string | null = null;
+  private backendCompany: string | null = null;
+  private backendRole: string | null = null;
+
+  ngOnInit(): void {
+    if (!this.isAuthenticated) {
+      return;
+    }
+
+    this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        const normalizedRole = this.authService.syncRole(user.rol);
+
+        this.backendDisplayName = user.nombre?.trim() || null;
+        this.backendCompany = user.empresa?.trim() || null;
+        this.backendRole = normalizedRole;
+
+        this.authService.syncUserProfile({
+          nombre: this.backendDisplayName,
+          empresa: this.backendCompany,
+          rol: this.backendRole
+        });
+      },
+      error: () => {
+        this.backendRole = this.authService.getRole();
+      }
+    });
+  }
 
   get isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
   }
 
   get displayName(): string {
-    return this.authService.getDisplayName() || this.translateService.instant('HOME.AUTH.DEFAULT_USER');
+    return this.backendDisplayName || this.authService.getDisplayName() || this.translateService.instant('HOME.AUTH.DEFAULT_USER');
   }
 
   get role(): string {
-    return this.authService.getRole() || 'NO_ROLE';
+    return this.backendRole || this.authService.getRole() || 'NO_ROLE';
   }
 
   get roleLabel(): string {
@@ -46,7 +77,7 @@ export class HomePageComponent {
   }
 
   get company(): string {
-    return this.authService.getCompany() || this.translateService.instant('HOME.AUTH.DEFAULT_COMPANY');
+    return this.backendCompany || this.authService.getCompany() || this.translateService.instant('HOME.AUTH.DEFAULT_COMPANY');
   }
 
   get isAdmin(): boolean {

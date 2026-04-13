@@ -173,6 +173,27 @@ export class AuthService {
     return derivedRole;
   }
 
+  syncRole(role: string | null | undefined): string | null {
+    const normalized = this.normalizeRole(role ?? null);
+
+    if (normalized) {
+      localStorage.setItem(this.storageKeys.role, normalized);
+      return normalized;
+    }
+
+    localStorage.removeItem(this.storageKeys.role);
+    return null;
+  }
+
+  syncUserProfile(profile: { nombre?: string | null; empresa?: string | null; rol?: string | null }): void {
+    const name = (profile.nombre ?? '').trim();
+    const company = (profile.empresa ?? '').trim();
+
+    localStorage.setItem(this.storageKeys.name, name);
+    localStorage.setItem(this.storageKeys.company, company);
+    this.syncRole(profile.rol);
+  }
+
   getDisplayName(): string | null {
     return localStorage.getItem(this.storageKeys.name);
   }
