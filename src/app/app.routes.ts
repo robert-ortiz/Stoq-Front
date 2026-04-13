@@ -11,6 +11,7 @@ export const routes: Routes = [
   },
   {
     path: 'productos',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/productos/lista-productos/lista-productos.component').then(
         (m) => m.ListaProductosComponent
@@ -18,6 +19,7 @@ export const routes: Routes = [
   },
   {
     path: 'productos/:id/editar',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/productos/editar-producto/editar-producto.component').then(
         (m) => m.EditarProductoComponent
@@ -60,11 +62,8 @@ export const routes: Routes = [
   },
   {
     path: 'usuarios/editar',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/users/user-edit/user-edit.component').then(
-        (m) => m.UserEditComponent
-      )
+    redirectTo: 'perfil',
+    pathMatch: 'full'
   },
   {
     path: 'usuarios/:id/editar',

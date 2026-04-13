@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../../../app/core/services/auth.service';
 import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
 @Component({
@@ -26,7 +26,6 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private translateService: TranslateService,
     private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({

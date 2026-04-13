@@ -78,6 +78,7 @@ export class ListaProductosComponent implements OnInit {
   readonly tamanoPagina = 8;
   totalPaginas = 1;
   puedeVerMovimientos = false;
+  puedeRegistrarMovimientos = false;
 
   ngOnInit(): void {
     this.cargarDatosIniciales();
@@ -144,8 +145,6 @@ export class ListaProductosComponent implements OnInit {
       stock_inicial: raw.stock_inicial ?? 0,
       stock_minimo: raw.stock_minimo ?? 0
     };
-
-    console.log('Payload crear producto', payload);
 
     this.productoService.createProducto(payload).subscribe({
       next: () => {
@@ -371,11 +370,14 @@ export class ListaProductosComponent implements OnInit {
   private cargarAccesoMovimientos(): void {
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
-        this.puedeVerMovimientos = user.rol?.trim().toUpperCase() === 'ADMIN';
+        const role = user.rol?.trim().toUpperCase() ?? null;
+        this.puedeVerMovimientos = role === 'ADMIN';
+        this.puedeRegistrarMovimientos = role === 'ADMIN' || role === 'OPERADOR';
         this.cdr.markForCheck();
       },
       error: () => {
         this.puedeVerMovimientos = this.authService.isAdminFromToken();
+        this.puedeRegistrarMovimientos = this.authService.hasAnyRole(['ADMIN', 'OPERADOR']);
         this.cdr.markForCheck();
       }
     });

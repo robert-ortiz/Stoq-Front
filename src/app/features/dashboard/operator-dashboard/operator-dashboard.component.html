@@ -8,9 +8,9 @@
       </p>
     </div>
     <div class="dashboard-actions">
-      <a routerLink="/" class="action secondary">{{ 'COMMON.HOME' | translate }}</a>
       <a routerLink="/productos" class="action secondary">{{ 'COMMON.PRODUCTS' | translate }}</a>
-      <a routerLink="/productos" [queryParams]="{ create: 1 }" class="action secondary">{{ 'COMMON.ADD_PRODUCT' | translate }}</a>
+      <a routerLink="/entradas/registro" class="action secondary">{{ 'COMMON.REGISTER_ENTRY' | translate }}</a>
+      <a routerLink="/salidas/registro" class="action secondary">{{ 'COMMON.REGISTER_EXIT' | translate }}</a>
       <a routerLink="/perfil" class="action primary">{{ 'COMMON.MY_PROFILE' | translate }}</a>
       <button type="button" class="action secondary" (click)="logout()">{{ 'COMMON.LOGOUT' | translate }}</button>
     </div>

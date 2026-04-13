@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, startWith } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { MovimientoInventario, MovimientoService } from '../../../core/services/movimiento.service';
@@ -24,6 +24,7 @@ export class ListaMovimientosComponent implements OnInit {
   private userService = inject(UserService);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
+  private router = inject(Router);
 
   readonly buscarControl = new FormControl('', { nonNullable: true });
   readonly tipoControl = new FormControl('TODOS', { nonNullable: true });
@@ -198,6 +199,11 @@ export class ListaMovimientosComponent implements OnInit {
 
   reintentar(): void {
     this.cargarMovimientos();
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigateByUrl('/auth/login');
   }
 
   paginaAnterior(): void {

@@ -39,9 +39,6 @@ export interface LoginResponse {
   };
 }
 
-export interface AuthSession extends LoginResponse {
-}
-
 interface JwtPayload {
   role?: unknown;
   rol?: unknown;

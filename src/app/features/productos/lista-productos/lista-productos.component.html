@@ -5,16 +5,17 @@
     </div>
 
     <div class="header-actions app-actions">
-      <a routerLink="/" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.HOME' | translate }}</a>
-      <a routerLink="/entradas/registro" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.REGISTER_ENTRY' | translate }}</a>
-      <a routerLink="/salidas/registro" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.REGISTER_EXIT' | translate }}</a>
-      <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="toggleCrear()">
+      @if (puedeRegistrarMovimientos) {
+        <a routerLink="/entradas/registro" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.REGISTER_ENTRY' | translate }}</a>
+        <a routerLink="/salidas/registro" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.REGISTER_EXIT' | translate }}</a>
+      }
+      <button type="button" class="btn-primary app-btn app-btn-primary" (click)="toggleCrear()">
         {{ mostrarCrear ? ('COMMON.CANCEL' | translate) : ('PRODUCTS.LIST.NEW_PRODUCT' | translate) }}
       </button>
       @if (puedeVerMovimientos) {
         <a routerLink="/movimientos" class="btn-secondary app-btn app-btn-secondary">Movimientos</a>
       }
-      <a routerLink="/usuarios/editar" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.MY_PROFILE' | translate }}</a>
+      <a routerLink="/perfil" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.MY_PROFILE' | translate }}</a>
       <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="logout()">{{ 'COMMON.LOGOUT' | translate }}</button>
     </div>
   </header>

@@ -89,8 +89,6 @@ export class EditarProductoComponent implements OnInit {
       stock_minimo: raw.stock_minimo ?? undefined
     };
 
-    console.log('Payload editar producto', payload);
-
     this.productoService.updateProducto(this.productoId, payload).subscribe({
       next: () => {
         this.guardando = false;

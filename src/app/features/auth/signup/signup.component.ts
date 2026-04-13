@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { RoleService } from '../../../core/services/role.service';
 import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
@@ -32,7 +32,6 @@ export class SignupComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private roleService = inject(RoleService);
-  private translateService = inject(TranslateService);
   roles: string[] = ['ADMIN', 'OPERADOR', 'GERENTE'];
 
   constructor(private fb: FormBuilder) {
