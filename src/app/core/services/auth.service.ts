@@ -70,27 +70,72 @@ export class AuthService {
     company: 'company_name'
   };
   
-  login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
+  login(credentials: LoginRequest): Observable<string> {
+    return this.http.post(`${this.apiUrl}/login`, credentials, {
+      responseType: 'text'
+    });
   }
 
-  signup(data: SignupRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/register`, data);
+  signup(data: SignupRequest): Observable<string> {
+    return this.http.post(`${this.apiUrl}/register`, data, {
+      responseType: 'text'
+    });
   }
 
-  saveSession(session: LoginResponse): void {
-    const token = session.token ?? session.user?.token ?? '';
+  saveSession(session: LoginResponse | string): void {
+    const normalizedSession = this.normalizeSession(session);
+    const token = normalizedSession.token ?? '';
     const roleFromToken = this.extractRoleFromToken(token);
-    const role = roleFromToken ?? session.rol ?? session.role ?? session.user?.rol ?? session.user?.role ?? '';
-    const name = session.nombre ?? session.name ?? session.user?.nombre ?? session.user?.name ?? '';
-    const email = session.correo ?? session.email ?? session.user?.correo ?? session.user?.email ?? '';
-    const company = session.empresa ?? session.company ?? session.user?.empresa ?? session.user?.company ?? '';
+    const role = roleFromToken ?? normalizedSession.rol ?? normalizedSession.role ?? normalizedSession.user?.rol ?? normalizedSession.user?.role ?? '';
+    const name = normalizedSession.nombre ?? normalizedSession.name ?? normalizedSession.user?.nombre ?? normalizedSession.user?.name ?? '';
+    const email = normalizedSession.correo ?? normalizedSession.email ?? normalizedSession.user?.correo ?? normalizedSession.user?.email ?? '';
+    const company = normalizedSession.empresa ?? normalizedSession.company ?? normalizedSession.user?.empresa ?? normalizedSession.user?.company ?? '';
 
     localStorage.setItem(this.storageKeys.token, token);
     localStorage.setItem(this.storageKeys.role, this.normalizeRole(role) ?? '');
     localStorage.setItem(this.storageKeys.name, name);
     localStorage.setItem(this.storageKeys.email, email);
     localStorage.setItem(this.storageKeys.company, company);
+  }
+
+  private normalizeSession(session: LoginResponse | string): LoginResponse {
+    if (typeof session === 'string') {
+      const token = this.extractTokenFromText(session);
+
+      return {
+        token: token ?? session.trim()
+      };
+    }
+
+    return session;
+  }
+
+  private extractTokenFromText(value: string): string | null {
+    const trimmed = value.trim();
+
+    if (!trimmed) {
+      return null;
+    }
+
+    try {
+      const parsed = JSON.parse(trimmed) as { token?: unknown; accessToken?: unknown; jwt?: unknown };
+
+      if (typeof parsed.token === 'string' && parsed.token.trim()) {
+        return parsed.token.trim();
+      }
+
+      if (typeof parsed.accessToken === 'string' && parsed.accessToken.trim()) {
+        return parsed.accessToken.trim();
+      }
+
+      if (typeof parsed.jwt === 'string' && parsed.jwt.trim()) {
+        return parsed.jwt.trim();
+      }
+    } catch {
+      return trimmed;
+    }
+
+    return trimmed;
   }
 
   logout(): void {
