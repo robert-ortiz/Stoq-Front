@@ -38,7 +38,8 @@
     "PREVIOUS": "Anterior",
     "NEXT": "Próxima",
     "ERROR": "Erro",
-    "SUCCESS": "Sucesso"
+    "SUCCESS": "Sucesso",
+    "CLOSE_NOTIFICATION": "Fechar notificação"
   },
   "LANGUAGE": {
     "LABEL": "Idioma",
@@ -286,7 +287,40 @@
       "ERROR_LOAD_PRODUCTS": "Não foi possível carregar os produtos. Tente mais tarde.",
       "ERROR_INVALID_STOCK": "A saída não é válida. Verifique o estoque disponível."
     }
+  },
+  "USER": {
+    "EDIT": {
+      "TITLE": "Editar Usuário",
+      "SUBTITLE_OWN": "Atualize as principais informações da sua conta.",
+      "SUBTITLE_ADMIN": "Gerencie os dados principais do usuário selecionado.",
+      "NAME_PLACEHOLDER": "Nome",
+      "NAME_REQUIRED": "O nome é obrigatório.",
+      "NAME_MIN": "O nome deve ter pelo menos 2 caracteres.",
+      "EMAIL_PLACEHOLDER": "email@exemplo.com",
+      "EMAIL_REQUIRED": "O email é obrigatório.",
+      "EMAIL_INVALID": "Digite um email válido.",
+      "COMPANY_PLACEHOLDER": "Empresa",
+      "SAVE_CHANGES": "Salvar alterações",
+      "DELETING": "Excluindo...",
+      "DELETE_ACCOUNT": "Excluir conta",
+      "DELETE_USER": "Excluir usuário",
+      "DELETE_TARGET_ACCOUNT": "sua conta",
+      "DELETE_TARGET_USER": "este usuário",
+      "CONFIRM_DELETE": "Tem certeza de que deseja excluir {{target}}? Esta ação não pode ser desfeita.",
+      "SUCCESS_UPDATE": "Dados atualizados com sucesso.",
+      "ERROR_LOAD": "Não foi possível carregar as informações do usuário.",
+      "ERROR_UPDATE": "Não foi possível atualizar o usuário. Tente novamente.",
+      "ERROR_DELETE": "Não foi possível excluir o usuário. Tente novamente."
     }
+  },
+  "STOCK_ALERT": {
+    "VALID_TITLE": "Quantidade válida",
+    "INVALID_TITLE": "Estoque insuficiente",
+    "CURRENT_STOCK": "Estoque atual",
+    "REQUESTED_AMOUNT": "Quantidade solicitada",
+    "DIFFERENCE": "Diferença",
+    "UNITS": "unidades",
+    "MISSING_UNITS": "{{value}} unidades em falta"
   },
   "HOME": {
     "BRAND_ARIA": "Início do Stoq",

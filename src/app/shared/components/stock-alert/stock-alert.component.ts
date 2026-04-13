@@ -1,33 +1,34 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ValidacionSalida } from '../../../core/services/movimiento.service';
 
 @Component({
   selector: 'app-stock-alert',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   template: `
     <div class="stock-validation" [class.valid]="validacion.permitido" [class.invalid]="!validacion.permitido">
       <div class="alert-header">
         <span class="icon" [class.success]="validacion.permitido" [class.error]="!validacion.permitido">
           {{ validacion.permitido ? '✓' : '!' }}
         </span>
-        <span class="title">{{ validacion.permitido ? 'Cantidad válida' : 'Stock insuficiente' }}</span>
+        <span class="title">{{ validacion.permitido ? ('STOCK_ALERT.VALID_TITLE' | translate) : ('STOCK_ALERT.INVALID_TITLE' | translate) }}</span>
       </div>
 
       <div class="alert-body">
         <div class="info-row">
-          <span class="info-label">Stock actual:</span>
-          <span class="info-value">{{ validacion.stockActual }} unidades</span>
+          <span class="info-label">{{ 'STOCK_ALERT.CURRENT_STOCK' | translate }}:</span>
+          <span class="info-value">{{ validacion.stockActual }} {{ 'STOCK_ALERT.UNITS' | translate }}</span>
         </div>
         <div class="info-row">
-          <span class="info-label">Cantidad solicitada:</span>
-          <span class="info-value">{{ validacion.cantidadSolicitada }} unidades</span>
+          <span class="info-label">{{ 'STOCK_ALERT.REQUESTED_AMOUNT' | translate }}:</span>
+          <span class="info-value">{{ validacion.cantidadSolicitada }} {{ 'STOCK_ALERT.UNITS' | translate }}</span>
         </div>
         <div class="info-row" *ngIf="!validacion.permitido">
-          <span class="info-label">Diferencia:</span>
+          <span class="info-label">{{ 'STOCK_ALERT.DIFFERENCE' | translate }}:</span>
           <span class="info-value error">
-            {{ validacion.cantidadSolicitada - validacion.stockActual }} unidades faltantes
+            {{ 'STOCK_ALERT.MISSING_UNITS' | translate: { value: (validacion.cantidadSolicitada - validacion.stockActual) } }}
           </span>
         </div>
       </div>

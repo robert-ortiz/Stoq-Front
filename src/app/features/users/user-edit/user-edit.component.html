@@ -1,9 +1,9 @@
 <section
   appFormShell
-  [title]="'Editar Usuario'"
-  [subtitle]="isOwnAccount ? 'Actualiza la información principal de tu cuenta.' : 'Gestiona los datos principales del usuario seleccionado.'"
+  [title]="'USER.EDIT.TITLE' | translate"
+  [subtitle]="isOwnAccount ? ('USER.EDIT.SUBTITLE_OWN' | translate) : ('USER.EDIT.SUBTITLE_ADMIN' | translate)"
   [backRoute]="isOwnAccount ? authService.getLandingRoute() : '/admin'"
-  [backLabel]="'VOLVER'"
+  [backLabel]="'COMMON.BACK' | translate"
   [showLogo]="false"
 >
   <div shell-body>
@@ -22,62 +22,62 @@
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="user-edit-form" novalidate>
       <div class="form-group app-field">
-        <label for="nombre" class="app-field-label">Nombre</label>
+        <label for="nombre" class="app-field-label">{{ 'COMMON.NAME' | translate }}</label>
         <input
           id="nombre"
           class="app-input"
           type="text"
           formControlName="nombre"
-          placeholder="Nombre"
+          [placeholder]="'USER.EDIT.NAME_PLACEHOLDER' | translate"
           [class.input-error]="nombre?.invalid && nombre?.touched"
         />
         @if (nombre?.invalid && nombre?.touched) {
           <span class="field-error">
             @if (nombre?.errors?.['required']) {
-              El nombre es obligatorio.
+              {{ 'USER.EDIT.NAME_REQUIRED' | translate }}
             } @else if (nombre?.errors?.['minlength']) {
-              El nombre debe tener al menos 2 caracteres.
+              {{ 'USER.EDIT.NAME_MIN' | translate }}
             }
           </span>
         }
       </div>
 
       <div class="form-group app-field">
-        <label for="correo" class="app-field-label">Correo</label>
+        <label for="correo" class="app-field-label">{{ 'COMMON.EMAIL' | translate }}</label>
         <input
           id="correo"
           class="app-input"
           type="email"
           formControlName="correo"
-          placeholder="correo@ejemplo.com"
+          [placeholder]="'USER.EDIT.EMAIL_PLACEHOLDER' | translate"
           [class.input-error]="correo?.invalid && correo?.touched"
         />
         @if (correo?.invalid && correo?.touched) {
           <span class="field-error">
             @if (correo?.errors?.['required']) {
-              El correo es obligatorio.
+              {{ 'USER.EDIT.EMAIL_REQUIRED' | translate }}
             } @else if (correo?.errors?.['email']) {
-              Ingresa un correo valido.
+              {{ 'USER.EDIT.EMAIL_INVALID' | translate }}
             }
           </span>
         }
       </div>
 
       <div class="form-group app-field">
-        <label for="empresa" class="app-field-label">Empresa</label>
-        <input id="empresa" class="app-input" type="text" formControlName="empresa" placeholder="Empresa" />
+        <label for="empresa" class="app-field-label">{{ 'AUTH.SIGNUP.COMPANY' | translate }}</label>
+        <input id="empresa" class="app-input" type="text" formControlName="empresa" [placeholder]="'USER.EDIT.COMPANY_PLACEHOLDER' | translate" />
       </div>
 
       <div class="form-group app-field">
-        <label for="estado" class="app-field-label">Estado</label>
+        <label for="estado" class="app-field-label">{{ 'COMMON.STATUS' | translate }}</label>
         <select id="estado" class="app-select" formControlName="estado">
-          <option [ngValue]="true">Activo</option>
-          <option [ngValue]="false">Inactivo</option>
+          <option [ngValue]="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+          <option [ngValue]="false">{{ 'COMMON.INACTIVE' | translate }}</option>
         </select>
       </div>
 
       <div class="form-group app-field">
-        <label for="rol" class="app-field-label">Rol</label>
+        <label for="rol" class="app-field-label">{{ 'COMMON.ROLE' | translate }}</label>
         <select id="rol" class="app-select" formControlName="rol">
           @for (rol of roles; track rol) {
             <option [value]="rol">{{ rol }}</option>
@@ -88,19 +88,19 @@
       <div class="actions">
         <button type="submit" class="btn-primary app-btn app-btn-primary" [disabled]="form.invalid || isSaving || isDeleting || isLoading">
           @if (isSaving) {
-            Guardando...
+            {{ 'COMMON.SAVING' | translate }}
           } @else {
-            Guardar cambios
+            {{ 'USER.EDIT.SAVE_CHANGES' | translate }}
           }
         </button>
 
         <button type="button" class="btn-danger app-btn app-btn-danger" (click)="onDelete()" [disabled]="isDeleting || isSaving || isLoading">
           @if (isDeleting) {
-            Eliminando...
+            {{ 'USER.EDIT.DELETING' | translate }}
           } @else if (isOwnAccount) {
-            Eliminar cuenta
+            {{ 'USER.EDIT.DELETE_ACCOUNT' | translate }}
           } @else {
-            Eliminar usuario
+            {{ 'USER.EDIT.DELETE_USER' | translate }}
           }
         </button>
       </div>

@@ -38,7 +38,8 @@
     "PREVIOUS": "Anterior",
     "NEXT": "Siguiente",
     "ERROR": "Error",
-    "SUCCESS": "Exito"
+    "SUCCESS": "Exito",
+    "CLOSE_NOTIFICATION": "Cerrar notificacion"
   },
   "LANGUAGE": {
     "LABEL": "Idioma",
@@ -286,6 +287,40 @@
       "ERROR_LOAD_PRODUCTS": "No se pudieron cargar los productos. Intenta más tarde.",
       "ERROR_INVALID_STOCK": "La salida no es válida. Verifica el stock disponible."
     }
+  },
+  "USER": {
+    "EDIT": {
+      "TITLE": "Editar Usuario",
+      "SUBTITLE_OWN": "Actualiza la información principal de tu cuenta.",
+      "SUBTITLE_ADMIN": "Gestiona los datos principales del usuario seleccionado.",
+      "NAME_PLACEHOLDER": "Nombre",
+      "NAME_REQUIRED": "El nombre es obligatorio.",
+      "NAME_MIN": "El nombre debe tener al menos 2 caracteres.",
+      "EMAIL_PLACEHOLDER": "correo@ejemplo.com",
+      "EMAIL_REQUIRED": "El correo es obligatorio.",
+      "EMAIL_INVALID": "Ingresa un correo valido.",
+      "COMPANY_PLACEHOLDER": "Empresa",
+      "SAVE_CHANGES": "Guardar cambios",
+      "DELETING": "Eliminando...",
+      "DELETE_ACCOUNT": "Eliminar cuenta",
+      "DELETE_USER": "Eliminar usuario",
+      "DELETE_TARGET_ACCOUNT": "tu cuenta",
+      "DELETE_TARGET_USER": "este usuario",
+      "CONFIRM_DELETE": "¿Seguro que deseas eliminar {{target}}? Esta acción no se puede deshacer.",
+      "SUCCESS_UPDATE": "Datos actualizados correctamente.",
+      "ERROR_LOAD": "No se pudo cargar la información del usuario.",
+      "ERROR_UPDATE": "No fue posible actualizar el usuario. Intenta de nuevo.",
+      "ERROR_DELETE": "No se pudo eliminar el usuario. Intenta nuevamente."
+    }
+  },
+  "STOCK_ALERT": {
+    "VALID_TITLE": "Cantidad válida",
+    "INVALID_TITLE": "Stock insuficiente",
+    "CURRENT_STOCK": "Stock actual",
+    "REQUESTED_AMOUNT": "Cantidad solicitada",
+    "DIFFERENCE": "Diferencia",
+    "UNITS": "unidades",
+    "MISSING_UNITS": "{{value}} unidades faltantes"
   },
   "HOME": {
     "BRAND_ARIA": "Inicio de Stoq",

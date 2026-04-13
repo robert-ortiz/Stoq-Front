@@ -38,7 +38,8 @@
     "PREVIOUS": "Previous",
     "NEXT": "Next",
     "ERROR": "Error",
-    "SUCCESS": "Success"
+    "SUCCESS": "Success",
+    "CLOSE_NOTIFICATION": "Close notification"
   },
   "LANGUAGE": {
     "LABEL": "Language",
@@ -286,6 +287,40 @@
       "ERROR_LOAD_PRODUCTS": "Could not load products. Try again later.",
       "ERROR_INVALID_STOCK": "Exit is not valid. Check available stock."
     }
+  },
+  "USER": {
+    "EDIT": {
+      "TITLE": "Edit User",
+      "SUBTITLE_OWN": "Update your account main information.",
+      "SUBTITLE_ADMIN": "Manage the selected user's main data.",
+      "NAME_PLACEHOLDER": "Name",
+      "NAME_REQUIRED": "Name is required.",
+      "NAME_MIN": "Name must have at least 2 characters.",
+      "EMAIL_PLACEHOLDER": "email@example.com",
+      "EMAIL_REQUIRED": "Email is required.",
+      "EMAIL_INVALID": "Enter a valid email.",
+      "COMPANY_PLACEHOLDER": "Company",
+      "SAVE_CHANGES": "Save changes",
+      "DELETING": "Deleting...",
+      "DELETE_ACCOUNT": "Delete account",
+      "DELETE_USER": "Delete user",
+      "DELETE_TARGET_ACCOUNT": "your account",
+      "DELETE_TARGET_USER": "this user",
+      "CONFIRM_DELETE": "Are you sure you want to delete {{target}}? This action cannot be undone.",
+      "SUCCESS_UPDATE": "Data updated successfully.",
+      "ERROR_LOAD": "Could not load user information.",
+      "ERROR_UPDATE": "Could not update user. Try again.",
+      "ERROR_DELETE": "Could not delete user. Please try again."
+    }
+  },
+  "STOCK_ALERT": {
+    "VALID_TITLE": "Valid quantity",
+    "INVALID_TITLE": "Insufficient stock",
+    "CURRENT_STOCK": "Current stock",
+    "REQUESTED_AMOUNT": "Requested amount",
+    "DIFFERENCE": "Difference",
+    "UNITS": "units",
+    "MISSING_UNITS": "{{value}} missing units"
   },
   "HOME": {
     "BRAND_ARIA": "Stoq home",
