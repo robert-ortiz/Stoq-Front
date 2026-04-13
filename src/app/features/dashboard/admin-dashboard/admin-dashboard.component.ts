@@ -1,17 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuditLogApi, AuditLogService } from '../../../core/services/audit-log.service';
 import { ProductoApi, ProductoService } from '../../../core/services/producto.service';
 import { RoleService, RolApi } from '../../../core/services/role.service';
 import { EditableUser, UserService } from '../../../core/services/user.service';
+import { LanguageService } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,6 +26,8 @@ export class AdminDashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private translateService = inject(TranslateService);
+  private languageService = inject(LanguageService);
 
   users: EditableUser[] = [];
   roles: RolApi[] = [];
@@ -80,7 +84,7 @@ export class AdminDashboardComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.error = 'No se pudo cargar el panel de administrador.';
+        this.error = this.translateService.instant('DASHBOARD.ADMIN.ERROR_LOAD');
         this.loading = false;
         this.cdr.markForCheck();
       }
@@ -92,7 +96,7 @@ export class AdminDashboardComponent implements OnInit {
       return '-';
     }
 
-    return new Date(value).toLocaleString('es-ES', {
+    return new Date(value).toLocaleString(this.languageService.getCurrentLocale(), {
       dateStyle: 'short',
       timeStyle: 'short'
     });

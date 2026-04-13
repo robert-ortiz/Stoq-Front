@@ -1,18 +1,18 @@
 <section class="lista-productos-page app-page app-shell">
   <header class="lista-header app-toolbar">
     <div class="app-title-block">
-      <h1>Lista de Productos</h1>
+      <h1>{{ 'PRODUCTS.LIST.TITLE' | translate }}</h1>
     </div>
 
     <div class="header-actions app-actions">
-      <a routerLink="/" class="btn-secondary app-btn app-btn-secondary">Inicio</a>
-      <a routerLink="/entradas/registro" class="btn-secondary app-btn app-btn-secondary">Registrar Entrada</a>
-      <a routerLink="/salidas/registro" class="btn-secondary app-btn app-btn-secondary">Registrar Salida</a>
+      <a routerLink="/" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.HOME' | translate }}</a>
+      <a routerLink="/entradas/registro" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.REGISTER_ENTRY' | translate }}</a>
+      <a routerLink="/salidas/registro" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.REGISTER_EXIT' | translate }}</a>
       <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="toggleCrear()">
-        {{ mostrarCrear ? 'Cancelar' : 'Nuevo producto' }}
+        {{ mostrarCrear ? ('COMMON.CANCEL' | translate) : ('PRODUCTS.LIST.NEW_PRODUCT' | translate) }}
       </button>
-      <a routerLink="/usuarios/editar" class="btn-secondary app-btn app-btn-secondary">Mi perfil</a>
-      <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="logout()">Cerrar sesión</button>
+      <a routerLink="/usuarios/editar" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.MY_PROFILE' | translate }}</a>
+      <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="logout()">{{ 'COMMON.LOGOUT' | translate }}</button>
     </div>
   </header>
 
@@ -22,8 +22,8 @@
 
   @if (mostrarCrear) {
     <section class="create-card app-card">
-      <h2>Crear producto</h2>
-      <p class="helper-note">Categorías y unidades se gestionan con valores preestablecidos sincronizados con backend.</p>
+      <h2>{{ 'PRODUCTS.LIST.CREATE_TITLE' | translate }}</h2>
+      <p class="helper-note">{{ 'PRODUCTS.LIST.CREATE_HELPER' | translate }}</p>
 
       @if (createError) {
         <p class="state-message error app-message app-message-error">{{ createError }}</p>
@@ -31,81 +31,81 @@
 
       <form [formGroup]="createForm" (ngSubmit)="crearProducto()" class="create-form" novalidate>
         <div class="field app-field">
-          <label for="codigo" class="app-field-label">Codigo</label>
-          <input id="codigo" class="app-input" type="text" formControlName="codigo" placeholder="Ej: PROD010" />
+          <label for="codigo" class="app-field-label">{{ 'COMMON.CODE' | translate }}</label>
+          <input id="codigo" class="app-input" type="text" formControlName="codigo" [placeholder]="'PRODUCTS.LIST.CODE_PLACEHOLDER' | translate" />
           @if (codigo?.invalid && codigo?.touched) {
-            <span class="field-error">El codigo es obligatorio.</span>
+            <span class="field-error">{{ 'PRODUCTS.LIST.CODE_REQUIRED' | translate }}</span>
           }
         </div>
 
         <div class="field app-field">
-          <label for="nombre" class="app-field-label">Nombre</label>
-          <input id="nombre" class="app-input" type="text" formControlName="nombre" placeholder="Nombre del producto" />
+          <label for="nombre" class="app-field-label">{{ 'COMMON.NAME' | translate }}</label>
+          <input id="nombre" class="app-input" type="text" formControlName="nombre" [placeholder]="'PRODUCTS.LIST.NAME_PLACEHOLDER' | translate" />
           @if (nombre?.invalid && nombre?.touched) {
             <span class="field-error">
               @if (nombre?.errors?.['required']) {
-                El nombre es obligatorio.
+                {{ 'PRODUCTS.LIST.NAME_REQUIRED' | translate }}
               } @else if (nombre?.errors?.['minlength']) {
-                El nombre debe tener al menos 2 caracteres.
+                {{ 'PRODUCTS.LIST.NAME_MIN' | translate }}
               }
             </span>
           }
         </div>
 
         <div class="field app-field">
-          <label for="ubicacion" class="app-field-label">Ubicacion</label>
-          <input id="ubicacion" class="app-input" type="text" formControlName="ubicacion" placeholder="Ej: Pasillo A / Estante 3" />
+          <label for="ubicacion" class="app-field-label">{{ 'COMMON.LOCATION' | translate }}</label>
+          <input id="ubicacion" class="app-input" type="text" formControlName="ubicacion" [placeholder]="'PRODUCTS.LIST.LOCATION_PLACEHOLDER' | translate" />
         </div>
 
         <div class="field app-field">
-          <label for="categoriaId" class="app-field-label">Categoria</label>
+          <label for="categoriaId" class="app-field-label">{{ 'COMMON.CATEGORY' | translate }}</label>
           <select id="categoriaId" class="app-select" formControlName="categoriaId">
-            <option value="">Selecciona una categoria</option>
+            <option value="">{{ 'PRODUCTS.LIST.SELECT_CATEGORY' | translate }}</option>
             @for (categoria of categorias; track categoria.id) {
               <option [value]="categoria.id">{{ categoria.nombre }}</option>
             }
           </select>
           @if (categoriaId?.invalid && categoriaId?.touched) {
-            <span class="field-error">La categoria es obligatoria.</span>
+            <span class="field-error">{{ 'PRODUCTS.LIST.CATEGORY_REQUIRED' | translate }}</span>
           }
         </div>
 
         <div class="field app-field">
-          <label for="unidadId" class="app-field-label">Unidad</label>
+          <label for="unidadId" class="app-field-label">{{ 'COMMON.UNIT' | translate }}</label>
           <select id="unidadId" class="app-select" formControlName="unidadId">
-            <option value="">Selecciona una unidad</option>
+            <option value="">{{ 'PRODUCTS.LIST.SELECT_UNIT' | translate }}</option>
             @for (unidad of unidades; track unidad.id) {
               <option [value]="unidad.id">{{ unidad.abreviatura }} - {{ unidad.nombre }}</option>
             }
           </select>
           @if (unidadId?.invalid && unidadId?.touched) {
-            <span class="field-error">La unidad es obligatoria.</span>
+            <span class="field-error">{{ 'PRODUCTS.LIST.UNIT_REQUIRED' | translate }}</span>
           }
         </div>
 
         <div class="field app-field">
-          <label for="stock_inicial" class="app-field-label">Stock inicial</label>
+          <label for="stock_inicial" class="app-field-label">{{ 'PRODUCTS.LIST.INITIAL_STOCK' | translate }}</label>
           <input id="stock_inicial" class="app-input" type="number" formControlName="stock_inicial" min="0" />
           @if (stockInicial?.invalid && stockInicial?.touched) {
             <span class="field-error">
               @if (stockInicial?.errors?.['required']) {
-                El stock inicial es obligatorio.
+                {{ 'PRODUCTS.LIST.INITIAL_STOCK_REQUIRED' | translate }}
               } @else if (stockInicial?.errors?.['min']) {
-                El stock inicial debe ser 0 o mayor.
+                {{ 'PRODUCTS.LIST.INITIAL_STOCK_MIN' | translate }}
               }
             </span>
           }
         </div>
 
         <div class="field app-field">
-          <label for="stock_minimo" class="app-field-label">Stock minimo</label>
+          <label for="stock_minimo" class="app-field-label">{{ 'PRODUCTS.LIST.MIN_STOCK' | translate }}</label>
           <input id="stock_minimo" class="app-input" type="number" formControlName="stock_minimo" min="0" />
           @if (stockMinimo?.invalid && stockMinimo?.touched) {
             <span class="field-error">
               @if (stockMinimo?.errors?.['required']) {
-                El stock minimo es obligatorio.
+                {{ 'PRODUCTS.LIST.MIN_STOCK_REQUIRED' | translate }}
               } @else if (stockMinimo?.errors?.['min']) {
-                El stock minimo debe ser 0 o mayor.
+                {{ 'PRODUCTS.LIST.MIN_STOCK_MIN' | translate }}
               }
             </span>
           }
@@ -113,7 +113,7 @@
 
         <div class="create-actions">
           <button type="submit" class="btn-primary app-btn app-btn-primary" [disabled]="createForm.invalid || creando">
-            {{ creando ? 'Guardando...' : 'Crear producto' }}
+            {{ creando ? ('COMMON.SAVING' | translate) : ('PRODUCTS.LIST.CREATE_CTA' | translate) }}
           </button>
         </div>
       </form>
@@ -121,37 +121,37 @@
   }
 
   <section class="search-card app-card">
-    <label for="buscarProducto" class="app-field-label">Buscar producto</label>
+    <label for="buscarProducto" class="app-field-label">{{ 'PRODUCTS.LIST.SEARCH_LABEL' | translate }}</label>
     <input
       id="buscarProducto"
       type="text"
       class="app-input"
       [formControl]="searchControl"
-      placeholder="Buscar por codigo, nombre, categoria o unidad"
+      [placeholder]="'PRODUCTS.LIST.SEARCH_PLACEHOLDER' | translate"
     />
   </section>
 
   <section class="table-card app-card">
     @if (cargando) {
-      <p class="state-message">Cargando productos...</p>
+      <p class="state-message">{{ 'PRODUCTS.LIST.LOADING' | translate }}</p>
     } @else if (error) {
       <p class="state-message error">{{ error }}</p>
     } @else if (!productosFiltrados.length) {
-      <p class="state-message">No se encontraron productos para el filtro aplicado.</p>
+      <p class="state-message">{{ 'PRODUCTS.LIST.EMPTY_FILTER' | translate }}</p>
     } @else {
       <div class="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th>Codigo</th>
-              <th>Nombre</th>
-              <th>Ubicacion</th>
-              <th>Categoria</th>
-              <th>Unidad</th>
-              <th>Stock actual</th>
-              <th>Stock minimo</th>
-              <th>Estado</th>
-              <th>Accion</th>
+              <th>{{ 'COMMON.CODE' | translate }}</th>
+              <th>{{ 'COMMON.NAME' | translate }}</th>
+              <th>{{ 'COMMON.LOCATION' | translate }}</th>
+              <th>{{ 'COMMON.CATEGORY' | translate }}</th>
+              <th>{{ 'COMMON.UNIT' | translate }}</th>
+              <th>{{ 'PRODUCTS.LIST.CURRENT_STOCK' | translate }}</th>
+              <th>{{ 'PRODUCTS.LIST.MIN_STOCK' | translate }}</th>
+              <th>{{ 'COMMON.STATUS' | translate }}</th>
+              <th>{{ 'COMMON.ACTION' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -159,22 +159,22 @@
               <tr>
                 <td>{{ producto.codigo }}</td>
                 <td>{{ producto.nombre }}</td>
-                <td>{{ producto.ubicacion || 'Sin definir' }}</td>
+                <td>{{ producto.ubicacion || ('PRODUCTS.LIST.NOT_DEFINED' | translate) }}</td>
                 <td>{{ producto.categoria }}</td>
                 <td>{{ producto.unidad }}</td>
                 <td>{{ producto.stockActual }}</td>
                 <td>{{ producto.stockMinimo }}</td>
                 <td>
                   <span class="badge" [class.inactive]="!producto.estado">
-                    {{ producto.estado ? 'Activo' : 'Inactivo' }}
+                    {{ producto.estado ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
                   </span>
                 </td>
                 <td>
                   <button type="button" class="btn-edit app-btn app-btn-secondary" (click)="irAEditar(producto)">
-                    Editar
+                    {{ 'COMMON.EDIT' | translate }}
                   </button>
                   <button type="button" class="btn-delete app-btn app-btn-danger" (click)="solicitarEliminarProducto(producto)">
-                    Eliminar
+                    {{ 'COMMON.DELETE' | translate }}
                   </button>
                 </td>
               </tr>
@@ -185,21 +185,21 @@
 
       <footer class="pagination-footer">
         <p>
-          Mostrando {{ desdeRegistro }}-{{ hastaRegistro }} de {{ productosFiltrados.length }}
+          {{ 'PRODUCTS.LIST.SHOWING' | translate: { from: desdeRegistro, to: hastaRegistro, total: productosFiltrados.length } }}
         </p>
 
         <div class="pagination-buttons">
           <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="paginaAnterior()" [disabled]="paginaActual <= 1">
-            Anterior
+            {{ 'COMMON.PREVIOUS' | translate }}
           </button>
-          <span>Pagina {{ paginaActual }} de {{ totalPaginas }}</span>
+          <span>{{ 'PRODUCTS.LIST.PAGE_OF' | translate: { page: paginaActual, total: totalPaginas } }}</span>
           <button
             type="button"
             class="btn-secondary app-btn app-btn-secondary"
             (click)="paginaSiguiente()"
             [disabled]="paginaActual >= totalPaginas"
           >
-            Siguiente
+            {{ 'COMMON.NEXT' | translate }}
           </button>
         </div>
       </footer>
@@ -209,15 +209,14 @@
   @if (mostrarModalEliminar && productoAEliminar) {
     <div class="modal-backdrop" (click)="cancelarEliminarProducto()">
       <section class="confirm-modal" (click)="$event.stopPropagation()">
-        <h3>Confirmar eliminación</h3>
+        <h3>{{ 'PRODUCTS.LIST.CONFIRM_DELETE_TITLE' | translate }}</h3>
         <p>
-          Se eliminará el producto <strong>{{ productoAEliminar.nombre }}</strong>.
-          Esta acción no se puede deshacer.
+          {{ 'PRODUCTS.LIST.CONFIRM_DELETE_TEXT' | translate: { name: productoAEliminar.nombre } }}
         </p>
 
         <div class="modal-actions">
-          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="cancelarEliminarProducto()">Cancelar</button>
-          <button type="button" class="btn-delete app-btn app-btn-danger" (click)="confirmarEliminarProducto()">Eliminar</button>
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="cancelarEliminarProducto()">{{ 'COMMON.CANCEL' | translate }}</button>
+          <button type="button" class="btn-delete app-btn app-btn-danger" (click)="confirmarEliminarProducto()">{{ 'COMMON.DELETE' | translate }}</button>
         </div>
       </section>
     </div>

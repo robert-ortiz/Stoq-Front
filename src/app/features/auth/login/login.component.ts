@@ -2,12 +2,13 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../app/core/services/auth.service';
 import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslatePipe],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,6 +25,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
+    private translateService: TranslateService,
     private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
@@ -54,7 +56,7 @@ export class LoginComponent {
       },
       error: (err) => {
         console.error('Error al iniciar sesión:', err);
-        this.errorMessage = 'Correo o contraseña incorrectos';
+        this.errorMessage = this.translateService.instant('AUTH.LOGIN.ERROR_INVALID_CREDENTIALS');
         this.isLoading = false;
         this.cdr.markForCheck();
       }

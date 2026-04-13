@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, forkJoin, startWith } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
@@ -28,7 +29,7 @@ interface ProductoRow {
 @Component({
   selector: 'app-lista-productos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './lista-productos.component.html',
   styleUrl: './lista-productos.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -41,6 +42,7 @@ export class ListaProductosComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
+  private translateService = inject(TranslateService);
 
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly createForm = this.fb.group({
@@ -129,16 +131,16 @@ export class ListaProductosComponent implements OnInit {
     this.productoService.createProducto(payload).subscribe({
       next: () => {
         this.creando = false;
-        this.success = 'Producto creado correctamente.';
-        this.toastService.success('Producto creado correctamente.');
+        this.success = this.translateService.instant('PRODUCTS.LIST.SUCCESS_CREATED');
+        this.toastService.success(this.translateService.instant('PRODUCTS.LIST.SUCCESS_CREATED'));
         this.mostrarCrear = false;
         this.cargarProductos();
         this.cdr.markForCheck();
       },
       error: () => {
         this.creando = false;
-        this.createError = 'No se pudo crear el producto. Revisa los datos e intenta de nuevo.';
-        this.toastService.error('No se pudo crear el producto.');
+        this.createError = this.translateService.instant('PRODUCTS.LIST.ERROR_CREATE');
+        this.toastService.error(this.translateService.instant('PRODUCTS.LIST.ERROR_CREATE_SHORT'));
         this.cdr.markForCheck();
       }
     });
@@ -165,15 +167,15 @@ export class ListaProductosComponent implements OnInit {
 
     this.productoService.deleteProducto(producto.id).subscribe({
       next: () => {
-        this.success = 'Producto eliminado correctamente.';
-        this.toastService.success('Producto eliminado correctamente.');
+        this.success = this.translateService.instant('PRODUCTS.LIST.SUCCESS_DELETED');
+        this.toastService.success(this.translateService.instant('PRODUCTS.LIST.SUCCESS_DELETED'));
         this.cancelarEliminarProducto();
         this.cargarProductos();
         this.cdr.markForCheck();
       },
       error: () => {
-        this.error = 'No se pudo eliminar el producto.';
-        this.toastService.error('No se pudo eliminar el producto.');
+        this.error = this.translateService.instant('PRODUCTS.LIST.ERROR_DELETE');
+        this.toastService.error(this.translateService.instant('PRODUCTS.LIST.ERROR_DELETE'));
         this.cdr.markForCheck();
       }
     });
@@ -191,8 +193,8 @@ export class ListaProductosComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.error = 'No se pudieron cargar los productos. Verifica la conexión con el backend.';
-        this.toastService.error('No se pudieron cargar los productos.');
+        this.error = this.translateService.instant('PRODUCTS.LIST.ERROR_LOAD');
+        this.toastService.error(this.translateService.instant('PRODUCTS.LIST.ERROR_LOAD_SHORT'));
         this.cargando = false;
         this.cdr.markForCheck();
       }
@@ -216,8 +218,8 @@ export class ListaProductosComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.error = 'No se pudieron cargar los productos. Verifica la conexión con el backend.';
-        this.toastService.error('No se pudieron cargar o sincronizar productos, categorias y unidades.');
+        this.error = this.translateService.instant('PRODUCTS.LIST.ERROR_LOAD');
+        this.toastService.error(this.translateService.instant('PRODUCTS.LIST.ERROR_SYNC_CATALOGS'));
         this.cargando = false;
         this.cdr.markForCheck();
       }
@@ -269,7 +271,7 @@ export class ListaProductosComponent implements OnInit {
       codigo: item.codigo,
       nombre: item.nombre,
       ubicacion: item.ubicacion ?? '',
-      categoria: item.categoria?.nombre ?? 'Sin categoria',
+      categoria: item.categoria?.nombre ?? this.translateService.instant('PRODUCTS.LIST.NO_CATEGORY'),
       unidad: item.unidad?.abreviatura ?? item.unidad?.nombre ?? 'N/A',
       stockActual: item.stockActual ?? 0,
       stockMinimo: item.stockMinimo ?? 0,

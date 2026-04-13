@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router, RouterModule } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { MovimientoApi, MovimientoService } from '../../../core/services/movimiento.service';
 import { ProductoApi, ProductoService } from '../../../core/services/producto.service';
 
@@ -16,7 +18,7 @@ interface TopSalida {
 @Component({
   selector: 'app-manager-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './manager-dashboard.component.html',
   styleUrl: './manager-dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -28,6 +30,8 @@ export class ManagerDashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private translateService = inject(TranslateService);
+  private languageService = inject(LanguageService);
 
   productos: ProductoApi[] = [];
   movimientos: MovimientoApi[] = [];
@@ -106,7 +110,7 @@ export class ManagerDashboardComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.rangoError = 'No se pudo aplicar el filtro de fechas.';
+        this.rangoError = this.translateService.instant('DASHBOARD.MANAGER.ERROR_RANGE');
         this.loadingRange = false;
         this.cdr.markForCheck();
       }
@@ -126,7 +130,7 @@ export class ManagerDashboardComponent implements OnInit {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = 'reporte-inventario.csv';
+    anchor.download = this.translateService.instant('DASHBOARD.MANAGER.EXPORT_FILENAME');
     anchor.click();
     URL.revokeObjectURL(url);
   }
@@ -147,7 +151,7 @@ export class ManagerDashboardComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.error = 'No se pudo cargar el panel de gerente.';
+        this.error = this.translateService.instant('DASHBOARD.MANAGER.ERROR_LOAD');
         this.loading = false;
         this.cdr.markForCheck();
       }
@@ -168,7 +172,7 @@ export class ManagerDashboardComponent implements OnInit {
       return '-';
     }
 
-    return new Date(value).toLocaleString('es-ES', {
+    return new Date(value).toLocaleString(this.languageService.getCurrentLocale(), {
       dateStyle: 'short',
       timeStyle: 'short'
     });

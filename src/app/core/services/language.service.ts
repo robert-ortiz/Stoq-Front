@@ -40,6 +40,17 @@ export class LanguageService {
     return this.currentLanguage;
   }
 
+  getCurrentLocale(): string {
+    switch (this.currentLanguage) {
+      case 'en':
+        return 'en-US';
+      case 'pt':
+        return 'pt-BR';
+      default:
+        return 'es-ES';
+    }
+  }
+
   setLanguage(language: LanguageCode): void {
     const normalizedLanguage = this.normalizeLanguage(language) ?? 'es';
     this.currentLanguage = normalizedLanguage;

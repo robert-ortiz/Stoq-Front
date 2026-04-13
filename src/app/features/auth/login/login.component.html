@@ -1,29 +1,29 @@
 <section
   appFormShell
   [title]="'Stoq'"
-  [subtitle]="'Iniciar Sesión'"
+  [subtitle]="'AUTH.LOGIN.TITLE' | translate"
   [backRoute]="'/'"
-  [backLabel]="'VOLVER'"
+  [backLabel]="'COMMON.BACK' | translate"
 >
     <form shell-body [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
       <!-- Correo -->
       <div class="form-group">
-        <label for="correo" class="form-label">Correo</label>
+        <label for="correo" class="form-label">{{ 'AUTH.LOGIN.EMAIL_LABEL' | translate }}</label>
         <input
           id="correo"
           type="text"
           formControlName="correo"
           class="form-input"
-          placeholder="Ingrese su correo"
+          [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
           [class.input-error]="correo?.invalid && correo?.touched"
-          aria-label="Correo"
+          [attr.aria-label]="'AUTH.LOGIN.EMAIL_LABEL' | translate"
         />
         @if (correo?.invalid && correo?.touched) {
           <span class="error-text" role="alert">
             @if (correo?.errors?.['required']) {
-              Correo es requerido
+              {{ 'AUTH.LOGIN.EMAIL_REQUIRED' | translate }}
             } @else if (correo?.errors?.['email']) {
-              Debe ser un correo válido
+              {{ 'AUTH.LOGIN.EMAIL_INVALID' | translate }}
             }
           </span>
         }
@@ -31,22 +31,22 @@
 
       <!-- Contrasena -->
       <div class="form-group">
-        <label for="contrasena" class="form-label">Contraseña</label>
+        <label for="contrasena" class="form-label">{{ 'AUTH.LOGIN.PASSWORD_LABEL' | translate }}</label>
         <input
           id="contrasena"
           type="password"
           formControlName="contrasena"
           class="form-input"
-          placeholder="Ingrese su contraseña"
+          [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
           [class.input-error]="contrasena?.invalid && contrasena?.touched"
-          aria-label="Contraseña"
+          [attr.aria-label]="'AUTH.LOGIN.PASSWORD_LABEL' | translate"
         />
         @if (contrasena?.invalid && contrasena?.touched) {
           <span class="error-text" role="alert">
             @if (contrasena?.errors?.['required']) {
-              Contraseña es requerida
+              {{ 'AUTH.LOGIN.PASSWORD_REQUIRED' | translate }}
             } @else if (contrasena?.errors?.['minlength']) {
-              Contraseña debe tener al menos 6 caracteres
+              {{ 'AUTH.LOGIN.PASSWORD_MIN' | translate }}
             }
           </span>
         }
@@ -64,19 +64,19 @@
         type="submit"
         class="btn-submit"
         [disabled]="isLoading"
-        aria-label="Iniciar sesión"
+        [attr.aria-label]="'AUTH.LOGIN.SUBMIT' | translate"
       >
         @if (isLoading) {
           <span class="spinner"></span>
         } @else {
-          INICIAR SESIÓN
+          {{ 'AUTH.LOGIN.SUBMIT' | translate }}
         }
       </button>
     </form>
 
     <div shell-footer class="footer-section">
-      <a href="#" class="forgot-password-link" aria-label="¿Olvidaste tu contraseña?">
-        ¿Olvidaste tu contraseña?
+      <a href="#" class="forgot-password-link" [attr.aria-label]="'AUTH.LOGIN.FORGOT_PASSWORD' | translate">
+        {{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}
       </a>
     </div>
 </section>

@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router, RouterModule } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { MovimientoApi, MovimientoService } from '../../../core/services/movimiento.service';
 import { ProductoApi, ProductoService } from '../../../core/services/producto.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -11,7 +13,7 @@ import { ToastService } from '../../../core/services/toast.service';
 @Component({
   selector: 'app-operador-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './operator-dashboard.component.html',
   styleUrl: './operator-dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,6 +26,8 @@ export class OperatorDashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private translateService = inject(TranslateService);
+  private languageService = inject(LanguageService);
 
   productos: ProductoApi[] = [];
   movimientos: MovimientoApi[] = [];
@@ -87,8 +91,8 @@ export class OperatorDashboardComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.saving = false;
-        this.success = 'Movimiento registrado correctamente.';
-        this.toastService.success('Movimiento registrado correctamente.');
+        this.success = this.translateService.instant('DASHBOARD.OPERATOR.SUCCESS_MOVE');
+        this.toastService.success(this.translateService.instant('DASHBOARD.OPERATOR.SUCCESS_MOVE'));
         this.form.reset({
           productoId: '',
           tipoMovimiento: 'ENTRADA',
@@ -99,8 +103,8 @@ export class OperatorDashboardComponent implements OnInit {
       },
       error: () => {
         this.saving = false;
-        this.error = 'No se pudo registrar el movimiento.';
-        this.toastService.error('No se pudo registrar el movimiento.');
+        this.error = this.translateService.instant('DASHBOARD.OPERATOR.ERROR_MOVE');
+        this.toastService.error(this.translateService.instant('DASHBOARD.OPERATOR.ERROR_MOVE'));
         this.cdr.markForCheck();
       }
     });
@@ -121,7 +125,7 @@ export class OperatorDashboardComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.error = 'No se pudo cargar la vista del operador.';
+        this.error = this.translateService.instant('DASHBOARD.OPERATOR.ERROR_LOAD');
         this.loading = false;
         this.cdr.markForCheck();
       }
@@ -138,7 +142,7 @@ export class OperatorDashboardComponent implements OnInit {
       return '-';
     }
 
-    return new Date(value).toLocaleString('es-ES', {
+    return new Date(value).toLocaleString(this.languageService.getCurrentLocale(), {
       dateStyle: 'short',
       timeStyle: 'short'
     });
