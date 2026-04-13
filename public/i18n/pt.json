@@ -1,0 +1,43 @@
+{
+  "LANGUAGE": {
+    "LABEL": "Idioma",
+    "ES": "Espanhol",
+    "EN": "Inglês",
+    "PT": "Português"
+  },
+  "HOME": {
+    "BRAND_ARIA": "Início do Stoq",
+    "BRAND_ALT": "Logo do Stoq",
+    "GUEST": {
+      "LOGIN": "INICIAR SESSÃO",
+      "SIGNUP": "CADASTRAR",
+      "TITLE": "Sistema de Controle de Inventário",
+      "SUBTITLE": "Gerencie seu inventário de forma simples e eficiente. Controle produtos, movimentações, alertas e gere relatórios em tempo real.",
+      "LOGIN_CTA": "INICIAR SESSÃO →",
+      "SIGNUP_CTA": "CRIAR CONTA →"
+    },
+    "AUTH": {
+      "PRODUCTS": "PRODUTOS",
+      "ADMIN": "ADMIN",
+      "OPERATOR": "OPERADOR",
+      "MANAGER": "GERENTE",
+      "REGISTER_ENTRY": "REGISTRAR ENTRADA",
+      "ADD_PRODUCT": "ADICIONAR PRODUTO",
+      "LOGOUT": "SAIR",
+      "SESSION_SUMMARY": "Resumo da sessão",
+      "WELCOME_USER": "Bem-vindo, {{name}}",
+      "SUBTITLE": "Você já iniciou sessão. A partir daqui, pode ir direto ao painel correspondente ao seu perfil.",
+      "COMPANY": "Empresa",
+      "ROLE": "Função",
+      "VIEW_PRODUCTS_CTA": "VER PRODUTOS →",
+      "REGISTER_ENTRY_CTA": "REGISTRAR ENTRADA →",
+      "ADD_PRODUCT_CTA": "ADICIONAR PRODUTO →",
+      "MY_PROFILE_CTA": "MEU PERFIL →",
+      "AVAILABLE_PANELS": "Painéis disponíveis",
+      "ADMIN_PANEL": "Painel Admin",
+      "OPERATOR_PANEL": "Painel Operador",
+      "MANAGER_PANEL": "Painel Gerente",
+      "GO_PRODUCTS": "Ir para Produtos"
+    }
+  }
+}

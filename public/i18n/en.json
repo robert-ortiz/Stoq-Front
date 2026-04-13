@@ -1,0 +1,43 @@
+{
+  "LANGUAGE": {
+    "LABEL": "Language",
+    "ES": "Spanish",
+    "EN": "English",
+    "PT": "Portuguese"
+  },
+  "HOME": {
+    "BRAND_ARIA": "Stoq home",
+    "BRAND_ALT": "Stoq logo",
+    "GUEST": {
+      "LOGIN": "LOG IN",
+      "SIGNUP": "SIGN UP",
+      "TITLE": "Inventory Control System",
+      "SUBTITLE": "Manage your inventory in a simple and efficient way. Control products, movements, alerts, and generate real-time reports.",
+      "LOGIN_CTA": "LOG IN →",
+      "SIGNUP_CTA": "CREATE ACCOUNT →"
+    },
+    "AUTH": {
+      "PRODUCTS": "PRODUCTS",
+      "ADMIN": "ADMIN",
+      "OPERATOR": "OPERATOR",
+      "MANAGER": "MANAGER",
+      "REGISTER_ENTRY": "REGISTER ENTRY",
+      "ADD_PRODUCT": "ADD PRODUCT",
+      "LOGOUT": "LOG OUT",
+      "SESSION_SUMMARY": "Session summary",
+      "WELCOME_USER": "Welcome, {{name}}",
+      "SUBTITLE": "You are already signed in. From here, you can go directly to the panel that matches your role.",
+      "COMPANY": "Company",
+      "ROLE": "Role",
+      "VIEW_PRODUCTS_CTA": "VIEW PRODUCTS →",
+      "REGISTER_ENTRY_CTA": "REGISTER ENTRY →",
+      "ADD_PRODUCT_CTA": "ADD PRODUCT →",
+      "MY_PROFILE_CTA": "MY PROFILE →",
+      "AVAILABLE_PANELS": "Available panels",
+      "ADMIN_PANEL": "Admin panel",
+      "OPERATOR_PANEL": "Operator panel",
+      "MANAGER_PANEL": "Manager panel",
+      "GO_PRODUCTS": "Go to Products"
+    }
+  }
+}

@@ -1,4 +1,16 @@
 <main class="app-root-shell" [class]="themeClass">
+	<section class="language-switcher" aria-label="Language switcher">
+		<label for="app-language-select">{{ 'LANGUAGE.LABEL' | translate }}</label>
+		<select
+			id="app-language-select"
+			[class]="'language-select ' + themeClass"
+			[value]="currentLanguage"
+			(change)="onLanguageChange(($any($event.target).value))">
+			@for (lang of availableLanguages; track lang.code) {
+				<option [value]="lang.code">{{ lang.labelKey | translate }}</option>
+			}
+		</select>
+	</section>
 	<router-outlet></router-outlet>
 	<app-toast-container></app-toast-container>
 </main>
