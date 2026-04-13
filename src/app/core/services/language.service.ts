@@ -6,6 +6,7 @@ export type LanguageCode = 'es' | 'en' | 'pt';
 interface SupportedLanguage {
   code: LanguageCode;
   labelKey: string;
+  flag: string;
 }
 
 @Injectable({
@@ -17,9 +18,9 @@ export class LanguageService {
   private readonly translateService = inject(TranslateService);
 
   readonly supportedLanguages: SupportedLanguage[] = [
-    { code: 'es', labelKey: 'LANGUAGE.ES' },
-    { code: 'en', labelKey: 'LANGUAGE.EN' },
-    { code: 'pt', labelKey: 'LANGUAGE.PT' }
+    { code: 'es', labelKey: 'LANGUAGE.ES', flag: '🇪🇸' },
+    { code: 'en', labelKey: 'LANGUAGE.EN', flag: '🇬🇧' },
+    { code: 'pt', labelKey: 'LANGUAGE.PT', flag: '🇧🇷' }
   ];
 
   private currentLanguage: LanguageCode = 'es';
