@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { ProductoApi, ProductoService } from '../../../core/services/producto.service';
 import { MovimientoService, ValidacionSalida } from '../../../core/services/movimiento.service';
@@ -10,7 +11,7 @@ import { StockAlertComponent } from '../../../shared/components/stock-alert/stoc
 @Component({
   selector: 'app-registro-salida',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, StockAlertComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, StockAlertComponent, TranslatePipe],
   templateUrl: './registro-salida.component.html',
   styleUrl: './registro-salida.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,6 +22,7 @@ export class RegistroSalidaComponent implements OnInit {
   private movimientoService = inject(MovimientoService);
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject(ToastService);
+  private translateService = inject(TranslateService);
 
   productos: ProductoApi[] = [];
   cargandoProductos = false;
@@ -53,7 +55,7 @@ export class RegistroSalidaComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error cargando productos:', err);
-        this.error = 'No se pudieron cargar los productos. Intenta más tarde.';
+        this.error = this.translateService.instant('EXIT.REGISTER.ERROR_LOAD_PRODUCTS');
         this.cargandoProductos = false;
         this.cdr.markForCheck();
       }
@@ -93,7 +95,7 @@ export class RegistroSalidaComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.validacionActual || !this.validacionActual.permitido) {
-      this.error = 'La salida no es válida. Verifica el stock disponible.';
+      this.error = this.translateService.instant('EXIT.REGISTER.ERROR_INVALID_STOCK');
       return;
     }
 
@@ -116,11 +118,11 @@ export class RegistroSalidaComponent implements OnInit {
     this.movimientoService.createSalida(payload).subscribe({
       next: () => {
         this.guardando = false;
-        this.toastService.success('Salida registrada correctamente.');
+        this.toastService.success(this.translateService.instant('EXIT.REGISTER.SUCCESS_SAVE'));
         this.form.reset();
         this.productoSeleccionado = null;
         this.validacionActual = null;
-        this.success = 'Salida registrada correctamente.';
+        this.success = this.translateService.instant('EXIT.REGISTER.SUCCESS_SAVE');
         this.cdr.markForCheck();
 
         // Limpiar mensajes después de 3 segundos
@@ -132,7 +134,7 @@ export class RegistroSalidaComponent implements OnInit {
       error: (err) => {
         console.error('Error registrando salida:', err);
         this.guardando = false;
-        const errorMsg = err?.error?.message || 'Error al registrar la salida.';
+        const errorMsg = err?.error?.message || this.translateService.instant('EXIT.REGISTER.ERROR_SAVE');
         this.error = errorMsg;
         this.toastService.error(errorMsg);
         this.cdr.markForCheck();

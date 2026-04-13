@@ -36,7 +36,9 @@
     "ACTION": "Ação",
     "DELETE": "Excluir",
     "PREVIOUS": "Anterior",
-    "NEXT": "Próxima"
+    "NEXT": "Próxima",
+    "ERROR": "Erro",
+    "SUCCESS": "Sucesso"
   },
   "LANGUAGE": {
     "LABEL": "Idioma",
@@ -58,6 +60,36 @@
       "SUBMIT": "INICIAR SESSÃO",
       "FORGOT_PASSWORD": "Esqueceu sua senha?",
       "ERROR_INVALID_CREDENTIALS": "Email ou senha incorretos"
+    },
+    "SIGNUP": {
+      "TITLE": "Criar Nova Conta",
+      "FIRST_NAME": "Nome",
+      "FIRST_NAME_PLACEHOLDER": "João",
+      "FIRST_NAME_REQUIRED": "Nome é obrigatório",
+      "MIN_1_CHAR": "Deve ter pelo menos 1 caractere",
+      "LAST_NAME_1": "Primeiro Sobrenome",
+      "LAST_NAME_1_PLACEHOLDER": "Silva",
+      "LAST_NAME_1_REQUIRED": "Primeiro sobrenome é obrigatório",
+      "LAST_NAME_2": "Segundo Sobrenome (Opcional)",
+      "LAST_NAME_2_PLACEHOLDER": "Souza",
+      "EMAIL": "Email",
+      "EMAIL_PLACEHOLDER": "email@exemplo.com",
+      "EMAIL_REQUIRED": "Email é obrigatório",
+      "EMAIL_INVALID": "Deve ser um email válido",
+      "COMPANY": "Empresa",
+      "COMPANY_PLACEHOLDER": "Nome da sua empresa",
+      "ROLE_REQUIRED": "A função é obrigatória",
+      "PASSWORD": "Senha",
+      "PASSWORD_PLACEHOLDER": "Mínimo 6 caracteres",
+      "PASSWORD_REQUIRED": "Senha é obrigatória",
+      "PASSWORD_MIN": "Deve ter pelo menos 6 caracteres",
+      "CONFIRM_PASSWORD": "Confirmar Senha",
+      "CONFIRM_PASSWORD_PLACEHOLDER": "Confirme sua senha",
+      "PASSWORD_MISMATCH": "As senhas não coincidem",
+      "SUBMIT": "CRIAR CONTA",
+      "ALREADY_HAVE_ACCOUNT": "Já tem uma conta?",
+      "LOGIN_CTA": "INICIAR SESSÃO",
+      "ERROR_CREATE": "Erro ao criar a conta. Tente novamente."
     }
   },
   "DASHBOARD": {
@@ -181,6 +213,79 @@
       "ERROR_LOAD_SHORT": "Não foi possível carregar os produtos.",
       "ERROR_SYNC_CATALOGS": "Não foi possível carregar ou sincronizar produtos, categorias e unidades.",
       "NO_CATEGORY": "Sem categoria"
+    },
+    "EDIT": {
+      "TITLE": "Editar produto",
+      "LOADING": "Carregando dados do produto...",
+      "SELECTED": "Produto selecionado: {{id}}",
+      "CODE_PLACEHOLDER": "Código do produto",
+      "CODE_REQUIRED": "O código é obrigatório.",
+      "NAME_PLACEHOLDER": "Nome do produto",
+      "NAME_REQUIRED": "O nome é obrigatório.",
+      "NAME_MIN": "O nome deve ter pelo menos 2 caracteres.",
+      "LOCATION_PLACEHOLDER": "Ex: Corredor A / Prateleira 3",
+      "SELECT_CATEGORY": "Selecione uma categoria",
+      "CATEGORY_REQUIRED": "Selecione uma categoria.",
+      "SELECT_UNIT": "Selecione uma unidade",
+      "UNIT_REQUIRED": "Selecione uma unidade.",
+      "MIN_STOCK": "Estoque mínimo",
+      "MIN_STOCK_REQUIRED": "O estoque mínimo é obrigatório.",
+      "MIN_STOCK_NEGATIVE": "O estoque mínimo não pode ser negativo.",
+      "BACK_TO_LIST": "Voltar à lista",
+      "SAVE_CHANGES": "Salvar alterações",
+      "ERROR_NO_ID": "Identificador do produto não encontrado.",
+      "SUCCESS_UPDATE": "Produto atualizado com sucesso.",
+      "ERROR_UPDATE": "Não foi possível atualizar o produto. Verifique os dados e tente novamente.",
+      "ERROR_UPDATE_SHORT": "Não foi possível atualizar o produto.",
+      "ERROR_LOAD": "Não foi possível carregar os dados do produto."
+    }
+  },
+  "ENTRY": {
+    "REGISTER": {
+      "TITLE": "Registro de Entrada de Produtos",
+      "SUBTITLE": "Adicionar estoque ao inventário",
+      "STEP_PRODUCT": "1. Selecionar Produto",
+      "LOADING_PRODUCTS": "Carregando produtos...",
+      "SELECT_PRODUCT": "Selecione um produto...",
+      "PRODUCT_REQUIRED": "Este campo é obrigatório",
+      "CURRENT_STOCK": "Estoque Atual",
+      "UNITS": "unidades",
+      "STEP_QUANTITY": "2. Quantidade de Entrada",
+      "QUANTITY_PLACEHOLDER": "Digite a quantidade a registrar",
+      "QUANTITY_INVALID": "A quantidade deve ser maior que 0",
+      "STEP_REASON": "3. Motivo da Entrada",
+      "REASON_PLACEHOLDER": "Descreva o motivo da entrada (ex: compra de fornecedor, ajuste de inventário)",
+      "REASON_INVALID": "O motivo deve ter pelo menos 5 caracteres",
+      "SAVE": "Registrar Entrada",
+      "SAVING": "Registrando...",
+      "SUCCESS_SAVE": "Entrada registrada com sucesso.",
+      "ERROR_SAVE": "Erro ao registrar a entrada.",
+      "ERROR_LOAD_PRODUCTS": "Não foi possível carregar os produtos. Tente mais tarde."
+    }
+  },
+  "EXIT": {
+    "REGISTER": {
+      "TITLE": "Registro de Saída de Produtos",
+      "SUBTITLE": "Retirar produtos do inventário",
+      "STEP_PRODUCT": "1. Selecionar Produto",
+      "LOADING_PRODUCTS": "Carregando produtos...",
+      "SELECT_PRODUCT": "Selecione um produto...",
+      "PRODUCT_REQUIRED": "Este campo é obrigatório",
+      "CURRENT_STOCK": "Estoque Atual",
+      "UNITS": "unidades",
+      "STEP_QUANTITY": "2. Quantidade de Saída",
+      "QUANTITY_PLACEHOLDER": "Digite a quantidade a retirar",
+      "QUANTITY_INVALID": "A quantidade deve ser maior que 0",
+      "STEP_REASON": "3. Motivo da Saída",
+      "REASON_PLACEHOLDER": "Descreva o motivo da saída (ex: venda ao cliente, devolução, uso interno)",
+      "REASON_INVALID": "O motivo deve ter pelo menos 5 caracteres",
+      "SAVE": "Registrar Saída",
+      "SAVING": "Registrando...",
+      "SUCCESS_SAVE": "Saída registrada com sucesso.",
+      "ERROR_SAVE": "Erro ao registrar a saída.",
+      "ERROR_LOAD_PRODUCTS": "Não foi possível carregar os produtos. Tente mais tarde.",
+      "ERROR_INVALID_STOCK": "A saída não é válida. Verifique o estoque disponível."
+    }
     }
   },
   "HOME": {

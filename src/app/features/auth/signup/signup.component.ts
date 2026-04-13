@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { RoleService } from '../../../core/services/role.service';
 import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
@@ -15,7 +16,7 @@ function validadorCoincidenciaContrasena(group: FormGroup) {
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslatePipe],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +31,7 @@ export class SignupComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private roleService = inject(RoleService);
+  private translateService = inject(TranslateService);
   roles: string[] = ['ADMIN', 'OPERADOR', 'GERENTE'];
 
   constructor(private fb: FormBuilder) {
@@ -81,7 +83,7 @@ export class SignupComponent {
         },
         error: (error) => {
           this.isLoading = false;
-          this.errorMessage = error.error?.message || 'Error al crear la cuenta. Intenta de nuevo.';
+          this.errorMessage = error.error?.message || this.translateService.instant('AUTH.SIGNUP.ERROR_CREATE');
           console.error('Signup error:', error);
         }
       });

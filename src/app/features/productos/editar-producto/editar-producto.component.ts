@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject }
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { CategoriaApi, ProductoService, UnidadApi, UpdateProductoRequest } from '../../../core/services/producto.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -9,7 +10,7 @@ import { ToastService } from '../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-producto',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './editar-producto.component.html',
   styleUrl: './editar-producto.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -20,6 +21,7 @@ export class EditarProductoComponent implements OnInit {
   private productoService = inject(ProductoService);
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject(ToastService);
+  private translateService = inject(TranslateService);
 
   readonly productoId = this.route.snapshot.paramMap.get('id');
 
@@ -42,7 +44,7 @@ export class EditarProductoComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.productoId) {
-      this.error = 'No se encontro el identificador del producto.';
+      this.error = this.translateService.instant('PRODUCTS.EDIT.ERROR_NO_ID');
       return;
     }
 
@@ -51,7 +53,7 @@ export class EditarProductoComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.productoId) {
-      this.error = 'No se encontro el identificador del producto.';
+      this.error = this.translateService.instant('PRODUCTS.EDIT.ERROR_NO_ID');
       return;
     }
 
@@ -77,14 +79,14 @@ export class EditarProductoComponent implements OnInit {
     this.productoService.updateProducto(this.productoId, payload).subscribe({
       next: () => {
         this.guardando = false;
-        this.success = 'Producto actualizado correctamente.';
-        this.toastService.success('Producto actualizado correctamente.');
+        this.success = this.translateService.instant('PRODUCTS.EDIT.SUCCESS_UPDATE');
+        this.toastService.success(this.translateService.instant('PRODUCTS.EDIT.SUCCESS_UPDATE'));
         this.cdr.markForCheck();
       },
       error: () => {
         this.guardando = false;
-        this.error = 'No se pudo actualizar el producto. Revisa los datos e intenta de nuevo.';
-        this.toastService.error('No se pudo actualizar el producto.');
+        this.error = this.translateService.instant('PRODUCTS.EDIT.ERROR_UPDATE');
+        this.toastService.error(this.translateService.instant('PRODUCTS.EDIT.ERROR_UPDATE_SHORT'));
         this.cdr.markForCheck();
       }
     });
@@ -117,8 +119,8 @@ export class EditarProductoComponent implements OnInit {
       },
       error: () => {
         this.cargando = false;
-        this.error = 'No se pudieron cargar los datos del producto.';
-        this.toastService.error('No se pudieron cargar los datos del producto.');
+        this.error = this.translateService.instant('PRODUCTS.EDIT.ERROR_LOAD');
+        this.toastService.error(this.translateService.instant('PRODUCTS.EDIT.ERROR_LOAD'));
         this.cdr.markForCheck();
       }
     });

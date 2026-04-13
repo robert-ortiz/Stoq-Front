@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { ProductoApi, ProductoService } from '../../../core/services/producto.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
@@ -9,7 +10,7 @@ import { ToastService } from '../../../core/services/toast.service';
 @Component({
   selector: 'app-registro-entrada',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './registro-entrada.component.html',
   styleUrl: './registro-entrada.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -20,6 +21,7 @@ export class RegistroEntradaComponent implements OnInit {
   private movimientoService = inject(MovimientoService);
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject(ToastService);
+  private translateService = inject(TranslateService);
 
   productos: ProductoApi[] = [];
   productoSeleccionado: ProductoApi | null = null;
@@ -51,7 +53,7 @@ export class RegistroEntradaComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error cargando productos:', err);
-        this.error = 'No se pudieron cargar los productos. Intenta más tarde.';
+        this.error = this.translateService.instant('ENTRY.REGISTER.ERROR_LOAD_PRODUCTS');
         this.cargandoProductos = false;
         this.cdr.markForCheck();
       }
@@ -85,8 +87,8 @@ export class RegistroEntradaComponent implements OnInit {
     this.movimientoService.createEntrada(payload).subscribe({
       next: () => {
         this.guardando = false;
-        this.toastService.success('Entrada registrada correctamente.');
-        this.success = 'Entrada registrada correctamente.';
+        this.toastService.success(this.translateService.instant('ENTRY.REGISTER.SUCCESS_SAVE'));
+        this.success = this.translateService.instant('ENTRY.REGISTER.SUCCESS_SAVE');
         this.form.reset();
         this.productoSeleccionado = null;
         this.cdr.markForCheck();
@@ -94,7 +96,7 @@ export class RegistroEntradaComponent implements OnInit {
       error: (err) => {
         console.error('Error registrando entrada:', err);
         this.guardando = false;
-        const errorMsg = err?.error?.message || 'Error al registrar la entrada.';
+        const errorMsg = err?.error?.message || this.translateService.instant('ENTRY.REGISTER.ERROR_SAVE');
         this.error = errorMsg;
         this.toastService.error(errorMsg);
         this.cdr.markForCheck();

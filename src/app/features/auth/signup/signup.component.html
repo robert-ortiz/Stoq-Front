@@ -1,108 +1,108 @@
 <section
   appFormShell
   [title]="'Stoq'"
-  [subtitle]="'Crear Nueva Cuenta'"
+  [subtitle]="'AUTH.SIGNUP.TITLE' | translate"
   [backRoute]="'../login'"
-  [backLabel]="'VOLVER'"
+  [backLabel]="'COMMON.BACK' | translate"
 >
     <form shell-body [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
-        <label for="nombre" class="form-label">Nombre</label>
+        <label for="nombre" class="form-label">{{ 'AUTH.SIGNUP.FIRST_NAME' | translate }}</label>
         <input
           id="nombre"
           type="text"
           formControlName="nombre"
           class="form-input"
-          placeholder="Juan"
+          [placeholder]="'AUTH.SIGNUP.FIRST_NAME_PLACEHOLDER' | translate"
           [class.input-error]="nombre?.invalid && nombre?.touched"
-          aria-label="Nombre"
+          [attr.aria-label]="'AUTH.SIGNUP.FIRST_NAME' | translate"
         />
         @if (nombre?.invalid && nombre?.touched) {
           <span class="error-text" role="alert">
             @if (nombre?.errors?.['required']) {
-              Nombre es requerido
+              {{ 'AUTH.SIGNUP.FIRST_NAME_REQUIRED' | translate }}
             } @else if (nombre?.errors?.['minlength']) {
-              Debe tener al menos 1 caracter
+              {{ 'AUTH.SIGNUP.MIN_1_CHAR' | translate }}
             }
           </span>
         }
       </div>
 
       <div class="form-group">
-        <label for="apellido1" class="form-label">Primer Apellido</label>
+        <label for="apellido1" class="form-label">{{ 'AUTH.SIGNUP.LAST_NAME_1' | translate }}</label>
         <input
           id="apellido1"
           type="text"
           formControlName="apellido1"
           class="form-input"
-          placeholder="Pérez"
+          [placeholder]="'AUTH.SIGNUP.LAST_NAME_1_PLACEHOLDER' | translate"
           [class.input-error]="apellido1?.invalid && apellido1?.touched"
-          aria-label="Primer apellido"
+          [attr.aria-label]="'AUTH.SIGNUP.LAST_NAME_1' | translate"
         />
         @if (apellido1?.invalid && apellido1?.touched) {
           <span class="error-text" role="alert">
             @if (apellido1?.errors?.['required']) {
-              Primer apellido es requerido
+              {{ 'AUTH.SIGNUP.LAST_NAME_1_REQUIRED' | translate }}
             } @else if (apellido1?.errors?.['minlength']) {
-              Debe tener al menos 1 caracter
+              {{ 'AUTH.SIGNUP.MIN_1_CHAR' | translate }}
             }
           </span>
         }
       </div>
 
       <div class="form-group">
-        <label for="lastName2" class="form-label">Segundo Apellido (Opcional)</label>
+        <label for="lastName2" class="form-label">{{ 'AUTH.SIGNUP.LAST_NAME_2' | translate }}</label>
         <input
           id="apellido2"
           type="text"
           formControlName="apellido2"
           class="form-input"
-          placeholder="Gómez"
-          aria-label="Segundo apellido"
+          [placeholder]="'AUTH.SIGNUP.LAST_NAME_2_PLACEHOLDER' | translate"
+          [attr.aria-label]="'AUTH.SIGNUP.LAST_NAME_2' | translate"
         />
       </div> 
 
       <div class="form-group">
-        <label for="correo" class="form-label">Correo Electrónico</label>
+        <label for="correo" class="form-label">{{ 'AUTH.SIGNUP.EMAIL' | translate }}</label>
         <input
           id="correo"
           type="email"
           formControlName="correo"
           class="form-input"
-          placeholder="correo@ejemplo.com"
+          [placeholder]="'AUTH.SIGNUP.EMAIL_PLACEHOLDER' | translate"
           [class.input-error]="correo?.invalid && correo?.touched"
-          aria-label="Correo electrónico"
+          [attr.aria-label]="'AUTH.SIGNUP.EMAIL' | translate"
         />
         @if (correo?.invalid && correo?.touched) {
           <span class="error-text" role="alert">
             @if (correo?.errors?.['required']) {
-              Correo es requerido
+              {{ 'AUTH.SIGNUP.EMAIL_REQUIRED' | translate }}
             } @else if (correo?.errors?.['email']) {
-              Debe ser un email válido
+              {{ 'AUTH.SIGNUP.EMAIL_INVALID' | translate }}
             }
           </span>
         }
       </div>
 
       <div class="form-group">
-        <label for="empresa" class="form-label">Empresa</label>
+        <label for="empresa" class="form-label">{{ 'AUTH.SIGNUP.COMPANY' | translate }}</label>
         <input
           id="empresa"
           type="text"
           formControlName="empresa"
           class="form-input"
-          placeholder="Nombre de tu empresa"
-          aria-label="Empresa"
+          [placeholder]="'AUTH.SIGNUP.COMPANY_PLACEHOLDER' | translate"
+          [attr.aria-label]="'AUTH.SIGNUP.COMPANY' | translate"
         />
       </div>
 
       <div class="form-group">
-        <label for="rol" class="form-label">Rol</label>
+        <label for="rol" class="form-label">{{ 'COMMON.ROLE' | translate }}</label>
         <select
           id="rol"
           formControlName="rol"
           class="form-input"
-          aria-label="Rol"
+          [attr.aria-label]="'COMMON.ROLE' | translate"
         >
           @for (rol of roles; track rol) {
             <option [value]="rol">{{ rol }}</option>
@@ -110,47 +110,47 @@
         </select>
         @if (rol?.invalid && rol?.touched) {
           <span class="error-text" role="alert">
-            El rol es requerido
+            {{ 'AUTH.SIGNUP.ROLE_REQUIRED' | translate }}
           </span>
         }
       </div>
 
       <div class="form-group">
-        <label for="contrasena" class="form-label">Contraseña</label>
+        <label for="contrasena" class="form-label">{{ 'AUTH.SIGNUP.PASSWORD' | translate }}</label>
         <input
           id="contrasena"
           type="password"
           formControlName="contrasena"
           class="form-input"
-          placeholder="Mínimo 6 caracteres"
+          [placeholder]="'AUTH.SIGNUP.PASSWORD_PLACEHOLDER' | translate"
           [class.input-error]="contrasena?.invalid && contrasena?.touched"
-          aria-label="Contraseña"
+          [attr.aria-label]="'AUTH.SIGNUP.PASSWORD' | translate"
         />
         @if (contrasena?.invalid && contrasena?.touched) {
           <span class="error-text" role="alert">
             @if (contrasena?.errors?.['required']) {
-              Contraseña es requerida
+              {{ 'AUTH.SIGNUP.PASSWORD_REQUIRED' | translate }}
             } @else if (contrasena?.errors?.['minlength']) {
-              Debe tener al menos 6 caracteres
+              {{ 'AUTH.SIGNUP.PASSWORD_MIN' | translate }}
             }
           </span>
         }
       </div>
 
       <div class="form-group">
-        <label for="confirmarContrasena" class="form-label">Confirmar Contraseña</label>
+        <label for="confirmarContrasena" class="form-label">{{ 'AUTH.SIGNUP.CONFIRM_PASSWORD' | translate }}</label>
         <input
           id="confirmarContrasena"
           type="password"
           formControlName="confirmarContrasena"
           class="form-input"
-          placeholder="Confirma tu contraseña"
+          [placeholder]="'AUTH.SIGNUP.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
           [class.input-error]="(confirmarContrasena?.invalid && confirmarContrasena?.touched) || form.errors?.['mismatch']"
-          aria-label="Confirmar contraseña"
+          [attr.aria-label]="'AUTH.SIGNUP.CONFIRM_PASSWORD' | translate"
         />
         @if (form.errors?.['mismatch'] && confirmarContrasena?.touched) {
           <span class="error-text" role="alert">
-            Las contraseñas no coinciden
+            {{ 'AUTH.SIGNUP.PASSWORD_MISMATCH' | translate }}
           </span>
         }
       </div>
@@ -165,20 +165,20 @@
         type="submit"
         class="btn-submit"
         [disabled]="form.invalid || isLoading"
-        aria-label="Crear cuenta"
+        [attr.aria-label]="'AUTH.SIGNUP.SUBMIT' | translate"
       >
         @if (isLoading) {
           <span class="spinner"></span>
         } @else {
-          CREAR CUENTA
+          {{ 'AUTH.SIGNUP.SUBMIT' | translate }}
         }
       </button>
     </form>
 
     <div shell-footer class="footer-section">
-      <p>¿Ya tienes una cuenta?</p>
-      <a routerLink="../login" class="forgot-password-link" aria-label="Iniciar sesión">
-        INICIAR SESIÓN
+      <p>{{ 'AUTH.SIGNUP.ALREADY_HAVE_ACCOUNT' | translate }}</p>
+      <a routerLink="../login" class="forgot-password-link" [attr.aria-label]="'AUTH.SIGNUP.LOGIN_CTA' | translate">
+        {{ 'AUTH.SIGNUP.LOGIN_CTA' | translate }}
       </a>
     </div>
 </section>
