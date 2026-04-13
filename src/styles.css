@@ -1,1 +1,53 @@
 @import './styles/global.css';
+
+:root {
+	/* Surface colors */
+	--color-bg-app: #f2f7f7;
+	--color-surface-base: #ffffff;
+	--color-surface-muted: #e9f1f1;
+
+	/* Text colors */
+	--color-text-primary: #17333a;
+	--color-text-secondary: #48626a;
+
+	/* Brand colors */
+	--color-brand-primary: #0b7285;
+	--color-brand-primary-strong: #095c6b;
+	--color-brand-primary-soft: #d6eef2;
+	--color-brand-accent: #e89c2e;
+
+	/* State colors */
+	--color-state-danger: #c0392b;
+	--color-state-danger-soft: #ffe8e4;
+	--color-state-success: #1f7a4f;
+	--color-state-success-soft: #e5f6ed;
+
+	/* Border and focus */
+	--color-border-default: #c8dbdf;
+	--color-focus-ring: #0b7285;
+
+	/* Elevation */
+	--shadow-1: 0 14px 40px rgba(11, 114, 133, 0.14);
+	--shadow-2: 0 8px 24px rgba(23, 51, 58, 0.08);
+
+	/* Radius */
+	--radius-m: 12px;
+	--radius-l: 18px;
+
+	/* Legacy aliases (temporary compatibility) */
+	--bg: var(--color-bg-app);
+	--surface: var(--color-surface-base);
+	--surface-2: var(--color-surface-muted);
+	--text: var(--color-text-primary);
+	--text-soft: var(--color-text-secondary);
+	--primary: var(--color-brand-primary);
+	--primary-strong: var(--color-brand-primary-strong);
+	--primary-soft: var(--color-brand-primary-soft);
+	--accent: var(--color-brand-accent);
+	--danger: var(--color-state-danger);
+	--danger-soft: var(--color-state-danger-soft);
+	--success: var(--color-state-success);
+	--success-soft: var(--color-state-success-soft);
+	--border: var(--color-border-default);
+	--focus: var(--color-focus-ring);
+}

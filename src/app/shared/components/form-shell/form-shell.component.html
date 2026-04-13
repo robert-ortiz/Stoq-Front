@@ -1,7 +1,7 @@
 <section class="form-shell-wrapper">
   <div class="form-shell-card">
     @if (backRoute) {
-      <a [routerLink]="backRoute" class="form-shell-back-link" aria-label="Volver">
+      <a [routerLink]="backRoute" class="form-shell-back-link" [attr.aria-label]="backLabel">
         ← {{ backLabel }}
       </a>
     }

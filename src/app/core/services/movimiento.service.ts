@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../config/api.config';
 
@@ -23,11 +24,40 @@ export interface MovimientoRangoRequest {
   fin: string;
 }
 
+export type MovimientoApi = MovimientoInventario;
+
+export interface CreateMovimientoRequest {
+  productoId: string;
+  tipoMovimiento: 'ENTRADA' | 'SALIDA';
+  cantidad: number;
+  motivo: string;
+}
+
+export interface CreateSalidaRequest {
+  productoId: string;
+  cantidad: number;
+  motivo: string;
+}
+
+export interface CreateEntradaRequest {
+  productoId: string;
+  cantidad: number;
+  motivo: string;
+}
+
+export interface ValidacionSalida {
+  permitido: boolean;
+  stockActual: number;
+  cantidadSolicitada: number;
+  mensaje: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class MovimientoService {
   private http = inject(HttpClient);
+  private translateService = inject(TranslateService);
   private apiUrl = `${API_BASE_URL}/api/movimientos`;
 
   getMovimientos(): Observable<MovimientoInventario[]> {
@@ -36,14 +66,61 @@ export class MovimientoService {
     );
   }
 
-  getMovimientosPorRango(request: MovimientoRangoRequest): Observable<MovimientoInventario[]> {
-    const params = new HttpParams()
-      .set('inicio', request.inicio)
-      .set('fin', request.fin);
+  getMovimientosPorRango(
+    requestOrInicio: MovimientoRangoRequest | string,
+    maybeFin?: string
+  ): Observable<MovimientoInventario[]> {
+    const inicio = typeof requestOrInicio === 'string' ? requestOrInicio : requestOrInicio.inicio;
+    const fin = typeof requestOrInicio === 'string' ? maybeFin ?? '' : requestOrInicio.fin;
 
-    return this.http.get<MovimientoInventario[]>(`${this.apiUrl}/rango`, { params }).pipe(
+    return this.http.get<MovimientoInventario[]>(`${this.apiUrl}/rango`, {
+      params: { inicio, fin }
+    }).pipe(
       map((items) => this.sortByFechaDesc(items))
     );
+  }
+
+  createMovimiento(payload: CreateMovimientoRequest): Observable<MovimientoInventario> {
+    return this.http.post<MovimientoInventario>(this.apiUrl, payload);
+  }
+
+  createSalida(payload: CreateSalidaRequest): Observable<MovimientoInventario> {
+    const request: CreateMovimientoRequest = {
+      ...payload,
+      tipoMovimiento: 'SALIDA'
+    };
+    return this.createMovimiento(request);
+  }
+
+  createEntrada(payload: CreateEntradaRequest): Observable<MovimientoInventario> {
+    const request: CreateMovimientoRequest = {
+      ...payload,
+      tipoMovimiento: 'ENTRADA'
+    };
+    return this.createMovimiento(request);
+  }
+
+  validarSalida(cantidad: number, stockActual: number): ValidacionSalida {
+    const permitido = cantidad > 0 && cantidad <= stockActual;
+    const mensaje = this.obtenerMensajeValidacion(cantidad, stockActual);
+    return {
+      permitido,
+      stockActual,
+      cantidadSolicitada: cantidad,
+      mensaje
+    };
+  }
+
+  private obtenerMensajeValidacion(cantidad: number, stockActual: number): string {
+    if (cantidad <= 0) {
+      return this.translateService.instant('STOCK_ALERT.INVALID_QUANTITY');
+    }
+    if (cantidad > stockActual) {
+      return this.translateService.instant('STOCK_ALERT.INSUFFICIENT_STOCK_DETAIL', {
+        stockActual
+      });
+    }
+    return this.translateService.instant('STOCK_ALERT.OK_MESSAGE');
   }
 
   private sortByFechaDesc(items: MovimientoInventario[]): MovimientoInventario[] {

@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
+    "rootDir": "./src",
     "moduleResolution": "bundler",
     "typeRoots": [
       "./node_modules/@types"

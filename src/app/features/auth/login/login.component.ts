@@ -3,12 +3,13 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../app/core/services/auth.service';
 import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslatePipe],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +26,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
+    private translateService: TranslateService,
     private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
@@ -46,12 +48,12 @@ export class LoginComponent {
     // Llamada real al backend
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        localStorage.setItem('token', response.token);
+        this.authService.saveSession(response);
 
         this.isLoading = false;
         this.cdr.markForCheck();
 
-        this.router.navigate(['/productos']);
+        this.router.navigateByUrl(this.authService.getLandingRoute());
       },
       error: (err) => {
         console.error('Error al iniciar sesión:', err);

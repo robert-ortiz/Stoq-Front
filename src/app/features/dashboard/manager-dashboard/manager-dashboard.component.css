@@ -1,0 +1,141 @@
+:host {
+  display: block;
+}
+
+.dashboard-layout {
+  background:
+    radial-gradient(circle at top left, rgba(232, 156, 46, 0.16), transparent 32%),
+    radial-gradient(circle at top right, rgba(11, 114, 133, 0.12), transparent 28%),
+    var(--bg);
+}
+
+.manager-theme .dashboard-eyebrow {
+  color: #b36b00;
+}
+
+.dashboard-hero h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.action {
+  border-radius: 999px;
+  padding: 12px 18px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.primary {
+  background: linear-gradient(145deg, #e89c2e, #b77413);
+  color: #ffffff;
+  border: none;
+}
+
+.secondary {
+  border: 1px solid var(--border);
+  color: var(--text);
+  background: #ffffff;
+}
+
+.critical-item,
+.ranking-item {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-l);
+}
+
+.dashboard-kpi-card p,
+.critical-item p {
+  color: var(--text-soft);
+}
+
+.dashboard-kpi-card.warning strong {
+  color: var(--accent);
+}
+
+.filter-panel {
+  margin-bottom: 24px;
+}
+
+.range-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.range-form label {
+  display: grid;
+  gap: 8px;
+}
+
+.range-form span {
+  color: var(--text);
+}
+
+.range-form input {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  background: #ffffff;
+  color: var(--text);
+  padding: 12px 14px;
+}
+
+.critical-list,
+.ranking-list {
+  display: grid;
+  gap: 12px;
+}
+
+.critical-item,
+.ranking-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+}
+
+.critical-item strong,
+.ranking-item strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.critical-item span,
+.ranking-item span {
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+}
+
+th,
+td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid #e8f0f1;
+}
+
+th {
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.alert.error {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: 1px solid #f5b5ad;
+}
+
+.dashboard-state.small {
+  margin-top: 14px;
+}

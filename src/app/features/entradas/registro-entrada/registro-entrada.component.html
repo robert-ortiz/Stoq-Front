@@ -1,0 +1,108 @@
+<div class="container">
+  <div class="page-header">
+    <h1>{{ 'ENTRY.REGISTER.TITLE' | translate }}</h1>
+    <p class="subtitle">{{ 'ENTRY.REGISTER.SUBTITLE' | translate }}</p>
+  </div>
+
+  <div class="form-wrapper">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="entrada-form">
+      <div *ngIf="error" class="alert alert-error">
+        <strong>{{ 'COMMON.ERROR' | translate }}:</strong> {{ error }}
+      </div>
+
+      <div *ngIf="success" class="alert alert-success">
+        <strong>{{ 'COMMON.SUCCESS' | translate }}:</strong> {{ success }}
+      </div>
+
+      <div class="form-section">
+        <h2>{{ 'ENTRY.REGISTER.STEP_PRODUCT' | translate }}</h2>
+
+        <div *ngIf="cargandoProductos" class="loading">
+          {{ 'ENTRY.REGISTER.LOADING_PRODUCTS' | translate }}
+        </div>
+
+        <div *ngIf="!cargandoProductos" class="form-group">
+          <label for="productoId">{{ 'COMMON.PRODUCT' | translate }} <span class="required">*</span></label>
+          <select
+            id="productoId"
+            formControlName="productoId"
+            (change)="onProductoChange()"
+            class="form-control"
+            [class.is-invalid]="form.get('productoId')?.invalid && form.get('productoId')?.touched"
+          >
+            <option value="">{{ 'ENTRY.REGISTER.SELECT_PRODUCT' | translate }}</option>
+            <option *ngFor="let p of productos" [value]="p.id">
+              {{ p.codigo }} - {{ p.nombre }}
+            </option>
+          </select>
+          <small *ngIf="form.get('productoId')?.invalid && form.get('productoId')?.touched">
+            {{ 'ENTRY.REGISTER.PRODUCT_REQUIRED' | translate }}
+          </small>
+        </div>
+
+        <div *ngIf="productoSeleccionado" class="product-details">
+          <div class="detail-row">
+            <span class="label">{{ 'COMMON.CODE' | translate }}:</span>
+            <span class="value">{{ productoSeleccionado.codigo }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">{{ 'ENTRY.REGISTER.CURRENT_STOCK' | translate }}:</span>
+            <span class="value stock">
+              {{ productoSeleccionado.stockActual || 0 }}
+              {{ productoSeleccionado.unidad?.abreviatura || ('ENTRY.REGISTER.UNITS' | translate) }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="productoSeleccionado" class="form-section">
+        <h2>{{ 'ENTRY.REGISTER.STEP_QUANTITY' | translate }}</h2>
+
+        <div class="form-group">
+          <label for="cantidad">{{ 'COMMON.QUANTITY' | translate }} <span class="required">*</span></label>
+          <input
+            id="cantidad"
+            type="number"
+            formControlName="cantidad"
+            min="1"
+            class="form-control"
+            [class.is-invalid]="form.get('cantidad')?.invalid && form.get('cantidad')?.touched"
+            [placeholder]="'ENTRY.REGISTER.QUANTITY_PLACEHOLDER' | translate"
+          />
+          <small *ngIf="form.get('cantidad')?.invalid && form.get('cantidad')?.touched">
+            {{ 'ENTRY.REGISTER.QUANTITY_INVALID' | translate }}
+          </small>
+        </div>
+      </div>
+
+      <div *ngIf="productoSeleccionado" class="form-section">
+        <h2>{{ 'ENTRY.REGISTER.STEP_REASON' | translate }}</h2>
+
+        <div class="form-group">
+          <label for="motivo">{{ 'COMMON.REASON' | translate }} <span class="required">*</span></label>
+          <textarea
+            id="motivo"
+            formControlName="motivo"
+            class="form-control"
+            [class.is-invalid]="form.get('motivo')?.invalid && form.get('motivo')?.touched"
+            [placeholder]="'ENTRY.REGISTER.REASON_PLACEHOLDER' | translate"
+            rows="3"
+          ></textarea>
+          <small *ngIf="form.get('motivo')?.invalid && form.get('motivo')?.touched">
+            {{ 'ENTRY.REGISTER.REASON_INVALID' | translate }}
+          </small>
+        </div>
+      </div>
+
+      <div *ngIf="productoSeleccionado" class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid || guardando">
+          <span *ngIf="!guardando">{{ 'ENTRY.REGISTER.SAVE' | translate }}</span>
+          <span *ngIf="guardando">{{ 'ENTRY.REGISTER.SAVING' | translate }}</span>
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="guardando">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

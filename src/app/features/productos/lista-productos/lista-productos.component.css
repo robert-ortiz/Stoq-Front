@@ -41,13 +41,13 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-l);
+  box-shadow: var(--shadow-2);
+}
 
 .helper-note {
   margin: 0;
-  color: var(--app-text-subtle);
+  color: var(--text-soft);
   font-size: 0.92rem;
-}
-  box-shadow: var(--shadow-2);
 }
 
 .create-card {

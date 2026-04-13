@@ -1,0 +1,146 @@
+<section class="dashboard-layout operator-theme">
+  <header class="dashboard-hero dashboard-card operator">
+    <div>
+      <p class="dashboard-eyebrow">{{ 'DASHBOARD.OPERATOR.EYEBROW' | translate }}</p>
+      <h1>{{ 'DASHBOARD.OPERATOR.TITLE' | translate }}</h1>
+      <p class="dashboard-lead">
+        {{ 'DASHBOARD.OPERATOR.LEAD' | translate }}
+      </p>
+    </div>
+    <div class="dashboard-actions">
+      <a routerLink="/" class="action secondary">{{ 'COMMON.HOME' | translate }}</a>
+      <a routerLink="/productos" class="action secondary">{{ 'COMMON.PRODUCTS' | translate }}</a>
+      <a routerLink="/productos" [queryParams]="{ create: 1 }" class="action secondary">{{ 'COMMON.ADD_PRODUCT' | translate }}</a>
+      <a routerLink="/perfil" class="action primary">{{ 'COMMON.MY_PROFILE' | translate }}</a>
+      <button type="button" class="action secondary" (click)="logout()">{{ 'COMMON.LOGOUT' | translate }}</button>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="dashboard-state loading">{{ 'DASHBOARD.OPERATOR.LOADING' | translate }}</div>
+  }
+
+  @if (error) {
+    <div class="dashboard-state error">{{ error }}</div>
+  }
+
+  <section class="dashboard-kpi-grid">
+    <article class="dashboard-kpi-card dashboard-card">
+      <span>{{ 'DASHBOARD.OPERATOR.KPI_CURRENT_STOCK' | translate }}</span>
+      <strong>{{ totalStockActual }}</strong>
+      <p>{{ 'DASHBOARD.OPERATOR.KPI_CURRENT_STOCK_DESC' | translate }}</p>
+    </article>
+    <article class="dashboard-kpi-card dashboard-card warning">
+      <span>{{ 'DASHBOARD.OPERATOR.KPI_CRITICAL' | translate }}</span>
+      <strong>{{ productosCriticos.length }}</strong>
+      <p>{{ 'DASHBOARD.OPERATOR.KPI_CRITICAL_DESC' | translate }}</p>
+    </article>
+    <article class="dashboard-kpi-card dashboard-card">
+      <span>{{ 'DASHBOARD.OPERATOR.KPI_MOVES' | translate }}</span>
+      <strong>{{ totalMovimientos }}</strong>
+      <p>{{ 'DASHBOARD.OPERATOR.KPI_MOVES_DESC' | translate }}</p>
+    </article>
+  </section>
+
+  <section class="dashboard-content-grid operator-grid">
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
+        <h2>{{ 'DASHBOARD.OPERATOR.REGISTER_MOVE_TITLE' | translate }}</h2>
+        <span>{{ 'DASHBOARD.OPERATOR.REGISTER_MOVE_SUBTITLE' | translate }}</span>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="registrarMovimiento()" class="movement-form">
+        <label>
+          <span>{{ 'COMMON.PRODUCT' | translate }}</span>
+          <select formControlName="productoId">
+            <option value="">{{ 'DASHBOARD.OPERATOR.SELECT_PRODUCT' | translate }}</option>
+            @for (producto of productos; track producto.id) {
+              <option [value]="producto.id">{{ productoLabel(producto) }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>{{ 'COMMON.TYPE' | translate }}</span>
+          <select formControlName="tipoMovimiento">
+            <option value="ENTRADA">{{ 'COMMON.ENTRY' | translate }}</option>
+            <option value="SALIDA">{{ 'COMMON.EXIT' | translate }}</option>
+          </select>
+        </label>
+
+        <label>
+          <span>{{ 'COMMON.QUANTITY' | translate }}</span>
+          <input type="number" formControlName="cantidad" min="1" />
+        </label>
+
+        <label>
+          <span>{{ 'COMMON.REASON' | translate }}</span>
+          <textarea formControlName="motivo" rows="3" [placeholder]="'DASHBOARD.OPERATOR.REASON_PLACEHOLDER' | translate"></textarea>
+        </label>
+
+        <button class="action primary full-width" type="submit" [disabled]="saving">
+          {{ saving ? ('DASHBOARD.OPERATOR.SAVING' | translate) : ('DASHBOARD.OPERATOR.SAVE' | translate) }}
+        </button>
+      </form>
+
+      @if (success) {
+        <div class="alert success">{{ success }}</div>
+      }
+    </article>
+
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
+        <h2>{{ 'DASHBOARD.OPERATOR.STOCK_LOCATION_TITLE' | translate }}</h2>
+        <span>{{ 'DASHBOARD.OPERATOR.STOCK_LOCATION_SUBTITLE' | translate }}</span>
+      </div>
+      <div class="stock-list">
+        @for (producto of productos; track producto.id) {
+          <div class="stock-item" [class.critical]="(producto.stockActual ?? 0) <= (producto.stockMinimo ?? 0)">
+            <div>
+              <strong>{{ producto.codigo }}</strong>
+              <p>{{ producto.nombre }}</p>
+              <small>{{ producto.ubicacion || ('COMMON.LOCATION_NOT_SET' | translate) }}</small>
+            </div>
+            <div class="stock-values">
+              <span>{{ producto.stockActual ?? 0 }}</span>
+              <small>{{ 'COMMON.MIN' | translate }} {{ producto.stockMinimo ?? 0 }}</small>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="dashboard-panel dashboard-card dashboard-panel-full">
+      <div class="dashboard-panel-header">
+        <h2>{{ 'DASHBOARD.OPERATOR.RECENT_MOVES_TITLE' | translate }}</h2>
+        <span>{{ 'DASHBOARD.OPERATOR.RECENT_MOVES_SUBTITLE' | translate }}</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>{{ 'COMMON.DATE' | translate }}</th>
+              <th>{{ 'COMMON.PRODUCT' | translate }}</th>
+              <th>{{ 'COMMON.TYPE' | translate }}</th>
+              <th>{{ 'COMMON.QUANTITY' | translate }}</th>
+              <th>{{ 'COMMON.RESULT' | translate }}</th>
+              <th>{{ 'COMMON.REASON' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (movimiento of recientes; track movimiento.id) {
+              <tr>
+                <td>{{ formatDate(movimiento.fechaMovimiento) }}</td>
+                <td>{{ movimiento.productoCodigo }} - {{ movimiento.productoNombre }}</td>
+                <td>{{ movimiento.tipoMovimiento }}</td>
+                <td>{{ movimiento.cantidad }}</td>
+                <td>{{ movimiento.stockResultante }}</td>
+                <td>{{ movimiento.motivo }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+</section>

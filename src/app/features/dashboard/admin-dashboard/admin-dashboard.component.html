@@ -1,0 +1,132 @@
+<section class="dashboard-layout admin-theme">
+  <header class="dashboard-hero dashboard-card">
+    <div>
+      <p class="dashboard-eyebrow">{{ 'DASHBOARD.ADMIN.EYEBROW' | translate }}</p>
+      <h1>{{ 'DASHBOARD.ADMIN.TITLE' | translate }}</h1>
+      <p class="dashboard-lead">
+        {{ 'DASHBOARD.ADMIN.LEAD' | translate }}
+      </p>
+    </div>
+    <div class="dashboard-actions">
+      <a routerLink="/" class="action secondary">{{ 'COMMON.HOME' | translate }}</a>
+      <a routerLink="/auth/signup" class="action primary">{{ 'DASHBOARD.ADMIN.CREATE_USER' | translate }}</a>
+      <a routerLink="/productos" class="action secondary">{{ 'DASHBOARD.ADMIN.CATALOG' | translate }}</a>
+      <a routerLink="/productos" [queryParams]="{ create: 1 }" class="action secondary">{{ 'COMMON.ADD_PRODUCT' | translate }}</a>
+      <a routerLink="/perfil" class="action secondary">{{ 'COMMON.MY_PROFILE' | translate }}</a>
+      <button type="button" class="action secondary" (click)="logout()">{{ 'COMMON.LOGOUT' | translate }}</button>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="dashboard-state loading">{{ 'DASHBOARD.ADMIN.LOADING' | translate }}</div>
+  }
+
+  @if (error) {
+    <div class="dashboard-state error">{{ error }}</div>
+  }
+
+  <section class="dashboard-kpi-grid">
+    <article class="dashboard-kpi-card dashboard-card">
+      <span>{{ 'DASHBOARD.ADMIN.KPI_USERS' | translate }}</span>
+      <strong>{{ totalUsuarios }}</strong>
+      <p>{{ 'DASHBOARD.ADMIN.KPI_USERS_DESC' | translate }}</p>
+    </article>
+    <article class="dashboard-kpi-card dashboard-card">
+      <span>{{ 'DASHBOARD.ADMIN.KPI_ROLES' | translate }}</span>
+      <strong>{{ totalRoles }}</strong>
+      <p>{{ 'DASHBOARD.ADMIN.KPI_ROLES_DESC' | translate }}</p>
+    </article>
+    <article class="dashboard-kpi-card dashboard-card">
+      <span>{{ 'DASHBOARD.ADMIN.KPI_ACTIVE_PRODUCTS' | translate }}</span>
+      <strong>{{ productosActivos }}</strong>
+      <p>{{ 'DASHBOARD.ADMIN.KPI_ACTIVE_PRODUCTS_DESC' | translate }}</p>
+    </article>
+    <article class="dashboard-kpi-card dashboard-card warning">
+      <span>{{ 'DASHBOARD.ADMIN.KPI_CRITICAL_STOCK' | translate }}</span>
+      <strong>{{ productosCriticos.length }}</strong>
+      <p>{{ 'DASHBOARD.ADMIN.KPI_CRITICAL_STOCK_DESC' | translate }}</p>
+    </article>
+  </section>
+
+  <section class="dashboard-content-grid">
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
+        <h2>{{ 'DASHBOARD.ADMIN.USERS_TITLE' | translate }}</h2>
+        <span>{{ 'DASHBOARD.ADMIN.USERS_SUBTITLE' | translate }}</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>{{ 'COMMON.NAME' | translate }}</th>
+              <th>{{ 'COMMON.EMAIL' | translate }}</th>
+              <th>{{ 'COMMON.ROLE' | translate }}</th>
+              <th>{{ 'COMMON.STATUS' | translate }}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of users; track user.id) {
+              <tr>
+                <td>{{ user.nombre }}</td>
+                <td>{{ user.correo }}</td>
+                <td>{{ user.rol }}</td>
+                <td>{{ user.estado ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}</td>
+                <td><a [routerLink]="['/usuarios', user.id, 'editar']">{{ 'COMMON.EDIT' | translate }}</a></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
+        <h2>{{ 'DASHBOARD.ADMIN.ROLES_TITLE' | translate }}</h2>
+        <span>{{ 'DASHBOARD.ADMIN.ROLES_SUBTITLE' | translate }}</span>
+      </div>
+      <div class="roles-grid">
+        @for (rol of roles; track rol.id) {
+          <article class="role-card">
+            <h3>{{ rol.nombre }}</h3>
+            <p>{{ rol.descripcion }}</p>
+            <ul>
+              @for (permiso of rol.permisos; track permiso) {
+                <li>{{ permiso }}</li>
+              }
+            </ul>
+          </article>
+        }
+      </div>
+    </article>
+
+    <article class="dashboard-panel dashboard-card">
+      <div class="dashboard-panel-header">
+        <h2>{{ 'DASHBOARD.ADMIN.AUDIT_TITLE' | translate }}</h2>
+        <span>{{ 'DASHBOARD.ADMIN.AUDIT_SUBTITLE' | translate }}</span>
+      </div>
+      <div class="table-wrap compact">
+        <table>
+          <thead>
+            <tr>
+              <th>{{ 'DASHBOARD.ADMIN.TABLE_ENTITY' | translate }}</th>
+              <th>{{ 'DASHBOARD.ADMIN.TABLE_OPERATION' | translate }}</th>
+              <th>{{ 'DASHBOARD.ADMIN.TABLE_USER' | translate }}</th>
+              <th>{{ 'COMMON.DATE' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (log of auditRecentes; track log.id) {
+              <tr>
+                <td>{{ log.entidad }}</td>
+                <td>{{ log.operacion }}</td>
+                <td>{{ log.createdBy }}</td>
+                <td>{{ formatDate(log.createdDate) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+</section>

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { HomePageComponent } from './features/home/home-page/home-page.component';
 import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -10,7 +11,6 @@ export const routes: Routes = [
   },
   {
     path: 'productos',
-    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/productos/lista-productos/lista-productos.component').then(
         (m) => m.ListaProductosComponent
@@ -18,7 +18,6 @@ export const routes: Routes = [
   },
   {
     path: 'productos/:id/editar',
-    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/productos/editar-producto/editar-producto.component').then(
         (m) => m.EditarProductoComponent
@@ -26,10 +25,37 @@ export const routes: Routes = [
   },
   {
     path: 'movimientos',
-    canActivate: [authGuard],
+    canActivate: [roleGuard],
+    data: { roles: ['ADMIN'] },
     loadComponent: () =>
       import('./features/movimientos/lista-movimientos/lista-movimientos.component').then(
         (m) => m.ListaMovimientosComponent
+      )
+  },
+  {
+    path: 'salidas/registro',
+    canActivate: [roleGuard],
+    data: { roles: ['OPERADOR', 'ADMIN'] },
+    loadComponent: () =>
+      import('./features/salidas/registro-salida/registro-salida.component').then(
+        (m) => m.RegistroSalidaComponent
+      )
+  },
+  {
+    path: 'entradas/registro',
+    canActivate: [roleGuard],
+    data: { roles: ['OPERADOR', 'ADMIN'] },
+    loadComponent: () =>
+      import('./features/entradas/registro-entrada/registro-entrada.component').then(
+        (m) => m.RegistroEntradaComponent
+      )
+  },
+  {
+    path: 'perfil',
+    canActivate: [roleGuard],
+    loadComponent: () =>
+      import('./features/users/user-edit/user-edit.component').then(
+        (m) => m.UserEditComponent
       )
   },
   {
@@ -42,10 +68,38 @@ export const routes: Routes = [
   },
   {
     path: 'usuarios/:id/editar',
-    canActivate: [authGuard],
+    canActivate: [roleGuard],
+    data: { roles: ['ADMIN'] },
     loadComponent: () =>
       import('./features/users/user-edit/user-edit.component').then(
         (m) => m.UserEditComponent
+      )
+  },
+  {
+    path: 'admin',
+    canActivate: [roleGuard],
+    data: { roles: ['ADMIN'] },
+    loadComponent: () =>
+      import('./features/dashboard/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent
+      )
+  },
+  {
+    path: 'operador',
+    canActivate: [roleGuard],
+    data: { roles: ['OPERADOR', 'ADMIN'] },
+    loadComponent: () =>
+      import('./features/dashboard/operator-dashboard/operator-dashboard.component').then(
+        (m) => m.OperatorDashboardComponent
+      )
+  },
+  {
+    path: 'gerente',
+    canActivate: [roleGuard],
+    data: { roles: ['GERENTE', 'ADMIN'] },
+    loadComponent: () =>
+      import('./features/dashboard/manager-dashboard/manager-dashboard.component').then(
+        (m) => m.ManagerDashboardComponent
       )
   },
   {

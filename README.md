@@ -16,6 +16,17 @@ Este README consolida lo que antes estaba distribuido en varios archivos de docu
 - Vistas responsivas base para los modulos ya implementados.
 - Preparado para conectar backend REST en entorno local.
 
+## Resumen Reciente (roles y diseno)
+
+- Roles unificados en frontend: ADMIN, OPERADOR y GERENTE.
+- Redireccion por rol despues de iniciar sesion hacia su dashboard correspondiente.
+- Proteccion de rutas por autenticacion y rol para evitar accesos no autorizados.
+- Dashboards por rol con utilidad real:
+	- Admin: gestion de usuarios/roles y visibilidad de auditoria.
+	- Operador: registro de entradas/salidas y consulta de stock/ubicacion.
+	- Gerente: stock critico, top salidas, rotacion y reportes por fecha.
+- Alineacion visual aplicada: los dashboards se ajustaron al lenguaje visual global del sitio (tema claro, tarjetas y estilos consistentes).
+
 ## Funcionalidades Implementadas
 
 ### 1. Autenticacion

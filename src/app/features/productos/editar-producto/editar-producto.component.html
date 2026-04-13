@@ -1,11 +1,11 @@
 <section class="editar-page app-page">
   <div class="card app-card">
-    <h1>Editar producto</h1>
+    <h1>{{ 'PRODUCTS.EDIT.TITLE' | translate }}</h1>
 
     @if (cargando) {
-      <p class="helper">Cargando datos del producto...</p>
+      <p class="helper">{{ 'PRODUCTS.EDIT.LOADING' | translate }}</p>
     } @else {
-      <p class="helper">Producto seleccionado: {{ productoId }}</p>
+      <p class="helper">{{ 'PRODUCTS.EDIT.SELECTED' | translate: { id: productoId } }}</p>
 
       @if (error) {
         <p class="message error app-message app-message-error">{{ error }}</p>
@@ -17,76 +17,81 @@
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="edit-form" novalidate>
         <div class="field app-field">
-          <label for="codigo" class="app-field-label">Codigo</label>
-          <input id="codigo" class="app-input" type="text" formControlName="codigo" placeholder="Codigo del producto" />
+          <label for="codigo" class="app-field-label">{{ 'COMMON.CODE' | translate }}</label>
+          <input id="codigo" class="app-input" type="text" formControlName="codigo" [placeholder]="'PRODUCTS.EDIT.CODE_PLACEHOLDER' | translate" />
           @if (codigo?.invalid && codigo?.touched) {
-            <span class="field-error">El codigo es obligatorio.</span>
+            <span class="field-error">{{ 'PRODUCTS.EDIT.CODE_REQUIRED' | translate }}</span>
           }
         </div>
 
         <div class="field app-field">
-          <label for="nombre" class="app-field-label">Nombre</label>
-          <input id="nombre" class="app-input" type="text" formControlName="nombre" placeholder="Nombre del producto" />
+          <label for="nombre" class="app-field-label">{{ 'COMMON.NAME' | translate }}</label>
+          <input id="nombre" class="app-input" type="text" formControlName="nombre" [placeholder]="'PRODUCTS.EDIT.NAME_PLACEHOLDER' | translate" />
           @if (nombre?.invalid && nombre?.touched) {
             <span class="field-error">
               @if (nombre?.errors?.['required']) {
-                El nombre es obligatorio.
+                {{ 'PRODUCTS.EDIT.NAME_REQUIRED' | translate }}
               } @else if (nombre?.errors?.['minlength']) {
-                El nombre debe tener al menos 2 caracteres.
+                {{ 'PRODUCTS.EDIT.NAME_MIN' | translate }}
               }
             </span>
           }
         </div>
 
+        <div class="field app-field">
+          <label for="ubicacion" class="app-field-label">{{ 'COMMON.LOCATION' | translate }}</label>
+          <input id="ubicacion" class="app-input" type="text" formControlName="ubicacion" [placeholder]="'PRODUCTS.EDIT.LOCATION_PLACEHOLDER' | translate" />
+        </div>
+
         <div class="grid-2">
           <div class="field app-field">
-            <label for="categoriaId" class="app-field-label">Categoria</label>
+            <label for="categoriaId" class="app-field-label">{{ 'COMMON.CATEGORY' | translate }}</label>
             <select id="categoriaId" class="app-select" formControlName="categoriaId">
-              <option value="">Selecciona una categoria</option>
+              <option value="">{{ 'PRODUCTS.EDIT.SELECT_CATEGORY' | translate }}</option>
               @for (categoria of categorias; track categoria.id) {
                 <option [value]="categoria.id">{{ categoria.nombre }}</option>
               }
             </select>
             @if (categoriaId?.invalid && categoriaId?.touched) {
-              <span class="field-error">Selecciona una categoria.</span>
+              <span class="field-error">{{ 'PRODUCTS.EDIT.CATEGORY_REQUIRED' | translate }}</span>
             }
           </div>
 
           <div class="field app-field">
-            <label for="unidadId" class="app-field-label">Unidad</label>
+            <label for="unidadId" class="app-field-label">{{ 'COMMON.UNIT' | translate }}</label>
             <select id="unidadId" class="app-select" formControlName="unidadId">
-              <option value="">Selecciona una unidad</option>
+              <option value="">{{ 'PRODUCTS.EDIT.SELECT_UNIT' | translate }}</option>
               @for (unidad of unidades; track unidad.id) {
                 <option [value]="unidad.id">{{ unidad.abreviatura }} - {{ unidad.nombre }}</option>
               }
             </select>
             @if (unidadId?.invalid && unidadId?.touched) {
-              <span class="field-error">Selecciona una unidad.</span>
+              <span class="field-error">{{ 'PRODUCTS.EDIT.UNIT_REQUIRED' | translate }}</span>
             }
           </div>
         </div>
 
         <div class="field app-field">
-          <label for="stock_minimo" class="app-field-label">Stock minimo</label>
+          <label for="stock_minimo" class="app-field-label">{{ 'PRODUCTS.EDIT.MIN_STOCK' | translate }}</label>
           <input id="stock_minimo" class="app-input" type="number" min="0" formControlName="stock_minimo" />
           @if (stockMinimo?.invalid && stockMinimo?.touched) {
             <span class="field-error">
               @if (stockMinimo?.errors?.['required']) {
-                El stock minimo es obligatorio.
+                {{ 'PRODUCTS.EDIT.MIN_STOCK_REQUIRED' | translate }}
               } @else if (stockMinimo?.errors?.['min']) {
-                El stock minimo no puede ser negativo.
+                {{ 'PRODUCTS.EDIT.MIN_STOCK_NEGATIVE' | translate }}
               }
             </span>
           }
         </div>
 
         <div class="actions">
-          <a routerLink="/productos" class="btn-back app-btn app-btn-secondary">Volver al listado</a>
+          <a routerLink="/productos" class="btn-back app-btn app-btn-secondary">{{ 'PRODUCTS.EDIT.BACK_TO_LIST' | translate }}</a>
           <button type="submit" class="btn-save app-btn app-btn-primary" [disabled]="form.invalid || guardando">
             @if (guardando) {
-              Guardando...
+              {{ 'COMMON.SAVING' | translate }}
             } @else {
-              Guardar cambios
+              {{ 'PRODUCTS.EDIT.SAVE_CHANGES' | translate }}
             }
           </button>
         </div>

@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, forkJoin, startWith } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
 import {
   CategoriaApi,
   CreateProductoRequest,
@@ -11,13 +13,13 @@ import {
   UnidadApi
 } from '../../../core/services/producto.service';
 import { ToastService } from '../../../core/services/toast.service';
-import { AuthService } from '../../../core/services/auth.service';
 import { UserService } from '../../../core/services/user.service';
 
 interface ProductoRow {
   id: string;
   codigo: string;
   nombre: string;
+  ubicacion: string;
   categoria: string;
   unidad: string;
   stockActual: number;
@@ -28,7 +30,7 @@ interface ProductoRow {
 @Component({
   selector: 'app-lista-productos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './lista-productos.component.html',
   styleUrl: './lista-productos.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -36,16 +38,19 @@ interface ProductoRow {
 export class ListaProductosComponent implements OnInit {
   private productoService = inject(ProductoService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
+  private authService = inject(AuthService);
   private toastService = inject(ToastService);
   private userService = inject(UserService);
-  private authService = inject(AuthService);
+  private translateService = inject(TranslateService);
 
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly createForm = this.fb.group({
     codigo: ['', [Validators.required]],
     nombre: ['', [Validators.required, Validators.minLength(2)]],
+    ubicacion: ['', []],
     categoriaId: ['', [Validators.required]],
     unidadId: ['', [Validators.required]],
     stock_inicial: [0, [Validators.required, Validators.min(0)]],
@@ -78,6 +83,10 @@ export class ListaProductosComponent implements OnInit {
     this.cargarDatosIniciales();
     this.cargarAccesoMovimientos();
 
+    if (this.route.snapshot.queryParamMap.get('create') === '1') {
+      this.toggleCrear();
+    }
+
     this.searchControl.valueChanges
       .pipe(startWith(''), debounceTime(200), distinctUntilChanged())
       .subscribe(() => {
@@ -95,6 +104,7 @@ export class ListaProductosComponent implements OnInit {
       this.createForm.reset({
         codigo: '',
         nombre: '',
+        ubicacion: '',
         categoriaId: '',
         unidadId: '',
         stock_inicial: 0,
@@ -128,6 +138,7 @@ export class ListaProductosComponent implements OnInit {
     const payload: CreateProductoRequest = {
       codigo: (raw.codigo ?? '').trim(),
       nombre: (raw.nombre ?? '').trim(),
+      ubicacion: (raw.ubicacion ?? '').trim(),
       categoriaId,
       unidadId,
       stock_inicial: raw.stock_inicial ?? 0,
@@ -139,16 +150,16 @@ export class ListaProductosComponent implements OnInit {
     this.productoService.createProducto(payload).subscribe({
       next: () => {
         this.creando = false;
-        this.success = 'Producto creado correctamente.';
-        this.toastService.success('Producto creado correctamente.');
+        this.success = this.translateService.instant('PRODUCTS.LIST.SUCCESS_CREATED');
+        this.toastService.success(this.translateService.instant('PRODUCTS.LIST.SUCCESS_CREATED'));
         this.mostrarCrear = false;
         this.cargarProductos();
         this.cdr.markForCheck();
       },
       error: () => {
         this.creando = false;
-        this.createError = 'No se pudo crear el producto. Revisa los datos e intenta de nuevo.';
-        this.toastService.error('No se pudo crear el producto.');
+        this.createError = this.translateService.instant('PRODUCTS.LIST.ERROR_CREATE');
+        this.toastService.error(this.translateService.instant('PRODUCTS.LIST.ERROR_CREATE_SHORT'));
         this.cdr.markForCheck();
       }
     });
@@ -175,15 +186,15 @@ export class ListaProductosComponent implements OnInit {
 
     this.productoService.deleteProducto(producto.id).subscribe({
       next: () => {
-        this.success = 'Producto eliminado correctamente.';
-        this.toastService.success('Producto eliminado correctamente.');
+        this.success = this.translateService.instant('PRODUCTS.LIST.SUCCESS_DELETED');
+        this.toastService.success(this.translateService.instant('PRODUCTS.LIST.SUCCESS_DELETED'));
         this.cancelarEliminarProducto();
         this.cargarProductos();
         this.cdr.markForCheck();
       },
       error: () => {
-        this.error = 'No se pudo eliminar el producto.';
-        this.toastService.error('No se pudo eliminar el producto.');
+        this.error = this.translateService.instant('PRODUCTS.LIST.ERROR_DELETE');
+        this.toastService.error(this.translateService.instant('PRODUCTS.LIST.ERROR_DELETE'));
         this.cdr.markForCheck();
       }
     });
@@ -201,8 +212,8 @@ export class ListaProductosComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.error = 'No se pudieron cargar los productos. Verifica la conexión con el backend.';
-        this.toastService.error('No se pudieron cargar los productos.');
+        this.error = this.translateService.instant('PRODUCTS.LIST.ERROR_LOAD');
+        this.toastService.error(this.translateService.instant('PRODUCTS.LIST.ERROR_LOAD_SHORT'));
         this.cargando = false;
         this.cdr.markForCheck();
       }
@@ -242,8 +253,8 @@ export class ListaProductosComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.error = 'No se pudieron cargar los productos. Verifica la conexión con el backend.';
-        this.toastService.error('No se pudieron cargar o sincronizar productos, categorias y unidades.');
+        this.error = this.translateService.instant('PRODUCTS.LIST.ERROR_LOAD');
+        this.toastService.error(this.translateService.instant('PRODUCTS.LIST.ERROR_SYNC_CATALOGS'));
         this.cargando = false;
         this.cdr.markForCheck();
       }
@@ -252,6 +263,11 @@ export class ListaProductosComponent implements OnInit {
 
   irAEditar(producto: ProductoRow): void {
     this.router.navigate(['/productos', producto.id, 'editar']);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigateByUrl('/auth/login');
   }
 
   paginaAnterior(): void {
@@ -289,7 +305,8 @@ export class ListaProductosComponent implements OnInit {
       id: item.id,
       codigo: item.codigo,
       nombre: item.nombre,
-      categoria: item.categoria?.nombre ?? 'Sin categoria',
+      ubicacion: item.ubicacion ?? '',
+      categoria: item.categoria?.nombre ?? this.translateService.instant('PRODUCTS.LIST.NO_CATEGORY'),
       unidad: item.unidad?.abreviatura ?? item.unidad?.nombre ?? 'N/A',
       stockActual: item.stockActual ?? 0,
       stockMinimo: item.stockMinimo ?? 0,
@@ -308,6 +325,7 @@ export class ListaProductosComponent implements OnInit {
       return (
         producto.codigo.toLowerCase().includes(termino) ||
         producto.nombre.toLowerCase().includes(termino) ||
+        producto.ubicacion.toLowerCase().includes(termino) ||
         producto.categoria.toLowerCase().includes(termino) ||
         producto.unidad.toLowerCase().includes(termino)
       );

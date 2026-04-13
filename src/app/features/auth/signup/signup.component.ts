@@ -3,7 +3,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
+import { RoleService } from '../../../core/services/role.service';
 import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
 
 function validadorCoincidenciaContrasena(group: FormGroup) {
@@ -15,7 +17,7 @@ function validadorCoincidenciaContrasena(group: FormGroup) {
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslatePipe],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +31,9 @@ export class SignupComponent {
   errorMessage = '';
   private authService = inject(AuthService);
   private router = inject(Router);
+  private roleService = inject(RoleService);
+  private translateService = inject(TranslateService);
+  roles: string[] = ['ADMIN', 'OPERADOR', 'GERENTE'];
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group(
@@ -38,12 +43,21 @@ export class SignupComponent {
         apellido2: ['', []],
         correo: ['', [Validators.required, Validators.email]],
         empresa: ['', []],
-        rol: ['USER', [Validators.required]],
+        rol: ['OPERADOR', [Validators.required]],
         contrasena: ['', [Validators.required, Validators.minLength(6)]],
         confirmarContrasena: ['', [Validators.required]]
       },
       { validators: validadorCoincidenciaContrasena }
     );
+
+    this.roleService.getRoles().subscribe({
+      next: (roles) => {
+        const allowedRoles = roles.map((role) => role.nombre);
+        if (allowedRoles.length > 0) {
+          this.roles = allowedRoles;
+        }
+      }
+    });
   }
 
   onSubmit(): void {
@@ -64,9 +78,9 @@ export class SignupComponent {
 
       this.authService.signup(signupData).subscribe({
         next: (response) => {
-          localStorage.setItem('token', response.token);
+          this.authService.saveSession(response);
           this.isLoading = false;
-          this.router.navigate(['/productos']);
+          this.router.navigate([this.authService.getLandingRoute()]);
         },
         error: (error) => {
           this.isLoading = false;

@@ -28,6 +28,10 @@ export class UserService {
   private http = inject(HttpClient);
   private apiUrl = `${API_BASE_URL}/api/usuarios`;
 
+  getUsers(): Observable<EditableUser[]> {
+    return this.http.get<EditableUser[]>(this.apiUrl);
+  }
+
   getCurrentUser(): Observable<EditableUser> {
     return this.http.get<EditableUser>(`${this.apiUrl}/me`);
   }

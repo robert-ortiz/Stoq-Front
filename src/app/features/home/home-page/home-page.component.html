@@ -1,29 +1,93 @@
 <div class="home-wrapper">
   <header class="topbar">
-    <a routerLink="/" class="logo-link" aria-label="Stoq Home">
+    <a routerLink="/" class="logo-link" [attr.aria-label]="'HOME.BRAND_ARIA' | translate">
       <div class="logo-icon">
-        <img src="/Logo.png" alt="Stoq" width="40" height="40" />
+        <img src="/Logo.png" [attr.alt]="'HOME.BRAND_ALT' | translate" width="40" height="40" />
       </div>
       <span class="brand">Stoq</span>
     </a>
-    <nav class="nav-actions">
-      <a routerLink="/auth/login" class="btn-link app-btn app-btn-secondary">INICIAR SESIÓN</a>
-      <a routerLink="/auth/signup" class="btn-primary app-btn app-btn-primary">REGISTRARSE</a>
-    </nav>
+    @if (!isAuthenticated) {
+      <nav class="nav-actions">
+        <a routerLink="/auth/login" class="btn-link app-btn app-btn-secondary">{{ 'HOME.GUEST.LOGIN' | translate }}</a>
+        <a routerLink="/auth/signup" class="btn-primary app-btn app-btn-primary">{{ 'HOME.GUEST.SIGNUP' | translate }}</a>
+      </nav>
+    } @else {
+      <nav class="nav-actions">
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToProductos()">{{ 'HOME.AUTH.PRODUCTS' | translate }}</button>
+        @if (isAdmin) {
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToAdmin()">{{ 'HOME.AUTH.ADMIN' | translate }}</button>
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">{{ 'HOME.AUTH.OPERATOR' | translate }}</button>
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">{{ 'HOME.AUTH.MANAGER' | translate }}</button>
+        } @else if (isOperator) {
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">{{ 'HOME.AUTH.OPERATOR' | translate }}</button>
+        } @else if (isManager) {
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">{{ 'HOME.AUTH.MANAGER' | translate }}</button>
+        }
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToRegistrarEntrada()">{{ 'HOME.AUTH.REGISTER_ENTRY' | translate }}</button>
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToCrearProducto()">{{ 'HOME.AUTH.ADD_PRODUCT' | translate }}</button>
+        <button type="button" class="btn-primary app-btn app-btn-primary" (click)="logout()">{{ 'HOME.AUTH.LOGOUT' | translate }}</button>
+      </nav>
+    }
   </header>
   <main class="home-card">
-    <div class="logo-section">
-      <div class="logo-icon-large">
-        <img src="/Logo.png" alt="Stoq" width="80" height="80" />
+    @if (!isAuthenticated) {
+      <div class="logo-section">
+        <div class="logo-icon-large">
+          <img src="/Logo.png" [attr.alt]="'HOME.BRAND_ALT' | translate" width="80" height="80" />
+        </div>
+        <h1 class="home-title">{{ 'HOME.GUEST.TITLE' | translate }}</h1>
+        <p class="home-subtitle">
+          {{ 'HOME.GUEST.SUBTITLE' | translate }}
+        </p>
       </div>
-      <h1 class="home-title">Sistema de Control de Inventario</h1>
-      <p class="home-subtitle">
-        Gestiona tu inventario de manera simple y eficiente. Controla productos, movimientos, alertas y genera reportes en tiempo real.
-      </p>
-    </div>
-    <div class="action-buttons">
-      <a routerLink="/auth/login" class="btn-secondary app-btn app-btn-secondary">INICIAR SESIÓN →</a>
-      <a routerLink="/auth/signup" class="btn-primary app-btn app-btn-primary">CREAR CUENTA →</a>
-    </div>
+
+      <div class="action-buttons">
+        <a routerLink="/auth/login" class="btn-secondary app-btn app-btn-secondary">{{ 'HOME.GUEST.LOGIN_CTA' | translate }}</a>
+        <a routerLink="/auth/signup" class="btn-primary app-btn app-btn-primary">{{ 'HOME.GUEST.SIGNUP_CTA' | translate }}</a>
+      </div>
+    } @else {
+      <section class="logo-section user-home" [attr.aria-label]="'HOME.AUTH.SESSION_SUMMARY' | translate">
+        <div class="logo-icon-large">
+          <img src="/Logo.png" [attr.alt]="'HOME.BRAND_ALT' | translate" width="80" height="80" />
+        </div>
+        <h1 class="home-title">{{ 'HOME.AUTH.WELCOME_USER' | translate: { name: displayName } }}</h1>
+        <p class="home-subtitle">{{ 'HOME.AUTH.SUBTITLE' | translate }}</p>
+
+        <div class="session-grid">
+          <article class="session-item">
+            <h2>{{ 'HOME.AUTH.COMPANY' | translate }}</h2>
+            <p>{{ company }}</p>
+          </article>
+          <article class="session-item">
+            <h2>{{ 'HOME.AUTH.ROLE' | translate }}</h2>
+            <p>{{ roleLabel }}</p>
+          </article>
+        </div>
+
+        <div class="action-buttons">
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToProductos()">{{ 'HOME.AUTH.VIEW_PRODUCTS_CTA' | translate }}</button>
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToRegistrarEntrada()">{{ 'HOME.AUTH.REGISTER_ENTRY_CTA' | translate }}</button>
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToCrearProducto()">{{ 'HOME.AUTH.ADD_PRODUCT_CTA' | translate }}</button>
+          <a routerLink="/perfil" class="btn-primary app-btn app-btn-primary">{{ 'HOME.AUTH.MY_PROFILE_CTA' | translate }}</a>
+        </div>
+
+        <div class="panel-links" [attr.aria-label]="'HOME.AUTH.AVAILABLE_PANELS' | translate">
+          <h2>{{ 'HOME.AUTH.AVAILABLE_PANELS' | translate }}</h2>
+          <div class="panel-links-grid">
+            @if (isAdmin) {
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToAdmin()">{{ 'HOME.AUTH.ADMIN_PANEL' | translate }}</button>
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">{{ 'HOME.AUTH.OPERATOR_PANEL' | translate }}</button>
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">{{ 'HOME.AUTH.MANAGER_PANEL' | translate }}</button>
+            } @else if (isOperator) {
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">{{ 'HOME.AUTH.OPERATOR_PANEL' | translate }}</button>
+            } @else if (isManager) {
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">{{ 'HOME.AUTH.MANAGER_PANEL' | translate }}</button>
+            } @else {
+              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToProductos()">{{ 'HOME.AUTH.GO_PRODUCTS' | translate }}</button>
+            }
+          </div>
+        </div>
+      </section>
+    }
   </main>
 </div>

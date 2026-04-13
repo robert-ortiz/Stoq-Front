@@ -7,6 +7,7 @@ export interface ProductoApi {
   id: string;
   codigo: string;
   nombre: string;
+  ubicacion?: string | null;
   categoria?: {
     id?: string;
     nombre?: string;
@@ -45,6 +46,7 @@ interface CreateUnidadRequest {
 export interface UpdateProductoRequest {
   codigo?: string;
   nombre?: string;
+  ubicacion?: string;
   categoriaId?: string;
   unidadId?: string;
   stock_minimo?: number;
@@ -53,6 +55,7 @@ export interface UpdateProductoRequest {
 export interface CreateProductoRequest {
   codigo: string;
   nombre: string;
+  ubicacion: string;
   categoriaId: string;
   unidadId: string;
   stock_inicial: number;
