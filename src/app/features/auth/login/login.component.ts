@@ -64,15 +64,65 @@ export class LoginComponent {
   }
 
   private resolveErrorMessage(error: HttpErrorResponse): string {
-    if (!error.error) {
-      return 'No se pudo iniciar sesión. Intenta de nuevo.';
+    if (error.status === 401) {
+      return 'Correo o contrasena incorrecta.';
     }
 
-    if (typeof error.error === 'string') {
-      return error.error;
+    const backendMessage = this.extractBackendMessage(error.error);
+
+    if (backendMessage) {
+      const normalized = backendMessage.toLowerCase();
+
+      if (normalized.includes('unauthorized') || normalized.includes('incorrect') || normalized.includes('incorrecta')) {
+        return 'Correo o contrasena incorrecta.';
+      }
     }
 
-    return error.error.message || 'No se pudo iniciar sesión. Intenta de nuevo.';
+    return 'No se pudo iniciar sesion. Intenta de nuevo.';
+  }
+
+  private extractBackendMessage(payload: unknown): string | null {
+    if (!payload) {
+      return null;
+    }
+
+    if (typeof payload === 'string') {
+      const trimmed = payload.trim();
+
+      if (!trimmed) {
+        return null;
+      }
+
+      try {
+        const parsed = JSON.parse(trimmed) as { message?: unknown; error?: unknown };
+
+        if (typeof parsed.message === 'string' && parsed.message.trim()) {
+          return parsed.message.trim();
+        }
+
+        if (typeof parsed.error === 'string' && parsed.error.trim()) {
+          return parsed.error.trim();
+        }
+
+        return trimmed;
+      } catch {
+        return trimmed;
+      }
+    }
+
+    if (typeof payload === 'object') {
+      const record = payload as Record<string, unknown>;
+
+      if (typeof record['message'] === 'string' && record['message'].trim()) {
+        return record['message'].trim();
+      }
+
+      if (typeof record['error'] === 'string' && record['error'].trim()) {
+        return record['error'].trim();
+      }
+    }
+
+    return null;
   }
 
   get correo() { return this.form.get('correo'); }
