@@ -8,11 +8,13 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 }
 
 .password-field {
   position: relative;
   width: 100%;
+  display: block;
 }
 
 .form-label {
@@ -36,6 +38,9 @@
 }
 
 .password-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
   padding-right: 48px;
 }
 
