@@ -12,6 +12,7 @@
 
 .password-field {
   position: relative;
+  width: 100%;
 }
 
 .form-label {
@@ -22,6 +23,8 @@
 }
 
 .form-input {
+  width: 100%;
+  box-sizing: border-box;
   padding: 11px 12px;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -33,7 +36,7 @@
 }
 
 .password-input {
-  padding-right: 46px;
+  padding-right: 48px;
 }
 
 .password-toggle {
@@ -52,6 +55,7 @@
   align-items: center;
   justify-content: center;
   transition: color 0.2s ease, background-color 0.2s ease;
+  z-index: 1;
 }
 
 .password-toggle:hover {
