@@ -11,10 +11,11 @@ import {
   calcularTotalesEntradaSalida,
   obtenerProductosConMasMovimiento
 } from '../movimientos.selectors';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-lista-movimientos',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './lista-movimientos.component.html',
   styleUrl: './lista-movimientos.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -25,6 +26,7 @@ export class ListaMovimientosComponent implements OnInit {
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
   private router = inject(Router);
+  private translateService = inject(TranslateService);
 
   readonly buscarControl = new FormControl('', { nonNullable: true });
   readonly tipoControl = new FormControl('TODOS', { nonNullable: true });

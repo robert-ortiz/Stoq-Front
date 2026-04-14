@@ -1,14 +1,14 @@
 <section class="movimientos-page app-page app-shell">
   <header class="app-toolbar">
     <div class="app-title-block">
-      <h1>Movimientos de Inventario</h1>
-      <p>Consulta operativa de entradas y salidas. Vista de solo lectura para administración.</p>
+      <h1>{{ 'MOVEMENTS.TITLE' | translate }}</h1>
+      <p>{{ 'MOVEMENTS.SUBTITLE' | translate }}</p>
     </div>
 
     <div class="app-actions">
-      <a routerLink="/productos" class="app-btn app-btn-secondary">Volver a productos</a>
-      <a routerLink="/perfil" class="app-btn app-btn-secondary">Mi perfil</a>
-      <button type="button" class="app-btn app-btn-secondary" (click)="logout()">Cerrar sesión</button>
+      <a routerLink="/productos" class="app-btn app-btn-secondary">{{ 'MOVEMENTS.BACK_TO_PRODUCTS' | translate }}</a>
+      <a routerLink="/perfil" class="app-btn app-btn-secondary">{{ 'MOVEMENTS.MY_PROFILE' | translate }}</a>
+      <button type="button" class="app-btn app-btn-secondary" (click)="logout()">{{ 'MOVEMENTS.LOGOUT' | translate }}</button>
     </div>
   </header>
 
@@ -27,64 +27,64 @@
     <section class="app-card filters-card" aria-label="Filtros de movimientos">
       <div class="filters-grid">
         <div class="app-field">
-          <label for="buscar" class="app-field-label">Buscar</label>
+          <label for="buscar" class="app-field-label">{{ 'MOVEMENTS.SEARCH_LABEL' | translate }}</label>
           <input
             id="buscar"
             type="text"
             class="app-input"
             [formControl]="buscarControl"
-            placeholder="Producto, código, usuario o motivo"
+            [placeholder]="'MOVEMENTS.SEARCH_PLACEHOLDER' | translate"
           />
         </div>
 
         <div class="app-field">
-          <label for="tipo" class="app-field-label">Tipo de movimiento</label>
+          <label for="tipo" class="app-field-label">{{ 'MOVEMENTS.MOVEMENT_TYPE_LABEL' | translate }}</label>
           <select id="tipo" class="app-select" [formControl]="tipoControl">
             @for (tipo of tiposDisponibles(); track tipo) {
-              <option [value]="tipo">{{ tipo === 'TODOS' ? 'Todos' : tipo }}</option>
+              <option [value]="tipo">{{ tipo === 'TODOS' ? ('MOVEMENTS.ALL_TYPES' | translate) : tipo }}</option>
             }
           </select>
         </div>
 
         <div class="app-field">
-          <label for="fechaInicio" class="app-field-label">Fecha inicio</label>
+          <label for="fechaInicio" class="app-field-label">{{ 'MOVEMENTS.START_DATE_LABEL' | translate }}</label>
           <input id="fechaInicio" type="datetime-local" class="app-input" [formControl]="fechaInicioControl" />
         </div>
 
         <div class="app-field">
-          <label for="fechaFin" class="app-field-label">Fecha fin</label>
+          <label for="fechaFin" class="app-field-label">{{ 'MOVEMENTS.END_DATE_LABEL' | translate }}</label>
           <input id="fechaFin" type="datetime-local" class="app-input" [formControl]="fechaFinControl" />
         </div>
       </div>
 
       <div class="filter-actions">
-        <button type="button" class="app-btn app-btn-primary" (click)="aplicarFiltros()">Aplicar filtros</button>
+        <button type="button" class="app-btn app-btn-primary" (click)="aplicarFiltros()">{{ 'MOVEMENTS.APPLY_FILTERS' | translate }}</button>
         <button type="button" class="app-btn app-btn-secondary" (click)="limpiarFiltros()" [disabled]="!hayFiltrosActivos()">
-          Limpiar filtros
+          {{ 'MOVEMENTS.CLEAR_FILTERS' | translate }}
         </button>
       </div>
 
       @if (hayFiltrosActivos()) {
-        <p class="filters-feedback" role="status">Filtros activos sobre {{ movimientosFiltrados().length }} movimientos.</p>
+        <p class="filters-feedback" role="status">{{ 'MOVEMENTS.ACTIVE_FILTERS' | translate }} {{ movimientosFiltrados().length }} {{ 'MOVEMENTS.MOVEMENTS_PLURAL' | translate }}</p>
       }
     </section>
 
     <section class="app-card kpi-preview" aria-label="Resumen operativo rápido">
       <div class="kpi-item">
-        <span class="kpi-label">Total entradas</span>
+        <span class="kpi-label">{{ 'MOVEMENTS.TOTAL_ENTRIES' | translate }}</span>
         <strong>{{ resumenOperativo().totales.entradas }}</strong>
       </div>
 
       <div class="kpi-item">
-        <span class="kpi-label">Total salidas</span>
+        <span class="kpi-label">{{ 'MOVEMENTS.TOTAL_EXITS' | translate }}</span>
         <strong>{{ resumenOperativo().totales.salidas }}</strong>
       </div>
 
       <div class="kpi-item top-products">
-        <span class="kpi-label">Top productos con movimiento</span>
+        <span class="kpi-label">{{ 'MOVEMENTS.TOP_PRODUCTS' | translate }}</span>
         <p>
           @if (!resumenOperativo().productosTop.length) {
-            Sin datos para ranking.
+            {{ 'MOVEMENTS.NO_RANKING_DATA' | translate }}
           } @else {
             @for (producto of resumenOperativo().productosTop; track producto.productoId; let i = $index) {
               <span>{{ i + 1 }}. {{ producto.productoCodigo }} ({{ producto.totalMovimientos }})</span>
@@ -103,33 +103,33 @@
         </div>
       } @else if (error()) {
         <div class="state-card inner" role="alert">
-          <h2>Error al consultar movimientos</h2>
+          <h2>{{ 'MOVEMENTS.ERROR_LOADING' | translate }}</h2>
           <p class="state-description">{{ error() }}</p>
-          <button type="button" class="app-btn app-btn-secondary" (click)="reintentar()">Reintentar</button>
+          <button type="button" class="app-btn app-btn-secondary" (click)="reintentar()">{{ 'MOVEMENTS.RETRY' | translate }}</button>
         </div>
       } @else if (!movimientosFiltrados().length) {
         <div class="state-card inner" role="status">
-          <h2>Sin resultados</h2>
-          <p class="state-description">No hay movimientos con los filtros actuales. Ajusta los criterios para continuar.</p>
+          <h2>{{ 'MOVEMENTS.NO_RESULTS' | translate }}</h2>
+          <p class="state-description">{{ 'MOVEMENTS.NO_RESULTS_DESCRIPTION' | translate }}</p>
           <button type="button" class="app-btn app-btn-secondary" (click)="limpiarFiltros()" [disabled]="!hayFiltrosActivos()">
-            Limpiar filtros
+            {{ 'MOVEMENTS.CLEAR_FILTERS' | translate }}
           </button>
         </div>
       } @else {
         <div class="table-wrapper">
           <table>
-            <caption class="sr-only">Listado de movimientos de inventario</caption>
+            <caption class="sr-only">{{ 'MOVEMENTS.TABLE_CAPTION' | translate }}</caption>
             <thead>
               <tr>
-                <th scope="col">Fecha</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">Producto</th>
-                <th scope="col">Código</th>
-                <th scope="col">Cantidad</th>
-                <th scope="col">Stock ant.</th>
-                <th scope="col">Stock res.</th>
-                <th scope="col">Usuario</th>
-                <th scope="col">Motivo</th>
+                <th scope="col">{{ 'MOVEMENTS.TABLE_DATE' | translate }}</th>
+                <th scope="col">{{ 'MOVEMENTS.TABLE_TYPE' | translate }}</th>
+                <th scope="col">{{ 'MOVEMENTS.TABLE_PRODUCT' | translate }}</th>
+                <th scope="col">{{ 'MOVEMENTS.TABLE_CODE' | translate }}</th>
+                <th scope="col">{{ 'MOVEMENTS.TABLE_QUANTITY' | translate }}</th>
+                <th scope="col">{{ 'MOVEMENTS.TABLE_STOCK_BEFORE' | translate }}</th>
+                <th scope="col">{{ 'MOVEMENTS.TABLE_STOCK_AFTER' | translate }}</th>
+                <th scope="col">{{ 'MOVEMENTS.TABLE_USER' | translate }}</th>
+                <th scope="col">{{ 'MOVEMENTS.TABLE_REASON' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -151,6 +151,7 @@
                     <span class="user-mail">{{ movimiento.usuarioCorreo }}</span>
                   </td>
                   <td>{{ movimiento.motivo || 'Sin motivo' }}</td>
+                                  <td>{{ movimiento.motivo || ('MOVEMENTS.NO_DATA' | translate) }}</td>
                 </tr>
               }
             </tbody>
@@ -158,7 +159,7 @@
         </div>
 
         <footer class="pagination-footer" aria-label="Paginación de movimientos">
-          <p>Mostrando {{ desdeRegistro() }}-{{ hastaRegistro() }} de {{ movimientosFiltrados().length }}</p>
+          <p>{{ 'MOVEMENTS.PAGINATION_SHOWING' | translate }}: {{ desdeRegistro() }}-{{ hastaRegistro() }} {{ 'MOVEMENTS.PAGINATION_OF_COUNT' | translate }} {{ movimientosFiltrados().length }}</p>
 
           <div class="pagination-actions">
             <button
@@ -167,16 +168,16 @@
               (click)="paginaAnterior()"
               [disabled]="obtenerPaginaActual() <= 1"
             >
-              Anterior
+              {{ 'MOVEMENTS.PAGINATION_PREVIOUS' | translate }}
             </button>
-            <span>Pagina {{ obtenerPaginaActual() }} de {{ totalPaginas() }}</span>
+            <span>{{ 'MOVEMENTS.PAGINATION_OF' | translate: { page: obtenerPaginaActual(), total: totalPaginas() } }}</span>
             <button
               type="button"
               class="app-btn app-btn-secondary"
               (click)="paginaSiguiente()"
               [disabled]="obtenerPaginaActual() >= totalPaginas()"
             >
-              Siguiente
+              {{ 'MOVEMENTS.PAGINATION_NEXT' | translate }}
             </button>
           </div>
         </footer>
