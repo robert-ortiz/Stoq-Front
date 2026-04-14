@@ -2,16 +2,17 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject }
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ProductoApi, ProductoService } from '../../../core/services/producto.service';
 import { MovimientoService, ValidacionSalida } from '../../../core/services/movimiento.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { StockAlertComponent } from '../../../shared/components/stock-alert/stock-alert.component';
+import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
 
 @Component({
   selector: 'app-registro-salida',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, StockAlertComponent, TranslatePipe],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, StockAlertComponent, TranslatePipe, FormShellComponent],
   templateUrl: './registro-salida.component.html',
   styleUrl: './registro-salida.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,6 +24,7 @@ export class RegistroSalidaComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject(ToastService);
   private translateService = inject(TranslateService);
+  private router = inject(Router);
 
   productos: ProductoApi[] = [];
   cargandoProductos = false;
@@ -143,11 +145,6 @@ export class RegistroSalidaComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.form.reset();
-    this.productoSeleccionado = null;
-    this.validacionActual = null;
-    this.error = '';
-    this.success = '';
-    this.cdr.markForCheck();
+    this.router.navigate(['/movimientos']);
   }
 }

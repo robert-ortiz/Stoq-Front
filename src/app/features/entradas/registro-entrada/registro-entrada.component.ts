@@ -2,15 +2,16 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject }
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ProductoApi, ProductoService } from '../../../core/services/producto.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
 
 @Component({
   selector: 'app-registro-entrada',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslatePipe],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslatePipe, FormShellComponent],
   templateUrl: './registro-entrada.component.html',
   styleUrl: './registro-entrada.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -22,6 +23,7 @@ export class RegistroEntradaComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject(ToastService);
   private translateService = inject(TranslateService);
+  private router = inject(Router);
 
   productos: ProductoApi[] = [];
   productoSeleccionado: ProductoApi | null = null;
@@ -105,10 +107,6 @@ export class RegistroEntradaComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.form.reset();
-    this.productoSeleccionado = null;
-    this.error = '';
-    this.success = '';
-    this.cdr.markForCheck();
+    this.router.navigate(['/movimientos']);
   }
 }

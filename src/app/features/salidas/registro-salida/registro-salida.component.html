@@ -1,10 +1,12 @@
-<div class="container">
-  <div class="page-header">
-    <h1>{{ 'EXIT.REGISTER.TITLE' | translate }}</h1>
-    <p class="subtitle">{{ 'EXIT.REGISTER.SUBTITLE' | translate }}</p>
-  </div>
-
-  <div class="form-wrapper">
+<section
+  appFormShell
+  [title]="'EXIT.REGISTER.TITLE' | translate"
+  [subtitle]="'EXIT.REGISTER.SUBTITLE' | translate"
+  [backRoute]="'/movimientos'"
+  [backLabel]="'COMMON.BACK' | translate"
+  [showLogo]="false"
+>
+  <div shell-body>
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="salida-form">
       <!-- Mensajes de estado -->
       <div *ngIf="error" class="alert alert-error">
@@ -135,4 +137,4 @@
       </div>
     </form>
   </div>
-</div>
+</section>
