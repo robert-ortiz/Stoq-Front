@@ -21,6 +21,7 @@ export class LoginComponent {
   form: FormGroup;
   isLoading = false;
   errorMessage = '';
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -61,6 +62,10 @@ export class LoginComponent {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   private resolveErrorMessage(error: HttpErrorResponse): string {

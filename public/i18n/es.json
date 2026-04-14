@@ -58,6 +58,8 @@
       "PASSWORD_PLACEHOLDER": "Ingrese su contraseña",
       "PASSWORD_REQUIRED": "Contraseña es requerida",
       "PASSWORD_MIN": "Contraseña debe tener al menos 6 caracteres",
+      "SHOW_PASSWORD": "Mostrar contraseña",
+      "HIDE_PASSWORD": "Ocultar contraseña",
       "SUBMIT": "INICIAR SESIÓN",
       "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
       "ERROR_INVALID_CREDENTIALS": "Correo o contraseña incorrectos"

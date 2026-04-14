@@ -58,6 +58,8 @@
       "PASSWORD_PLACEHOLDER": "Digite sua senha",
       "PASSWORD_REQUIRED": "Senha é obrigatória",
       "PASSWORD_MIN": "A senha deve ter pelo menos 6 caracteres",
+      "SHOW_PASSWORD": "Mostrar senha",
+      "HIDE_PASSWORD": "Ocultar senha",
       "SUBMIT": "INICIAR SESSÃO",
       "FORGOT_PASSWORD": "Esqueceu sua senha?",
       "ERROR_INVALID_CREDENTIALS": "Email ou senha incorretos"

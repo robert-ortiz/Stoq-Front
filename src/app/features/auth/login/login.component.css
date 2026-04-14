@@ -10,6 +10,10 @@
   gap: 8px;
 }
 
+.password-field {
+  position: relative;
+}
+
 .form-label {
   font-size: 13px;
   font-weight: 600;
@@ -26,6 +30,44 @@
   transition: all 0.2s ease;
   background: #ffffff;
   color: var(--text);
+}
+
+.password-input {
+  padding-right: 46px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: var(--primary-strong);
+  background: rgba(11, 114, 133, 0.08);
+}
+
+.password-toggle:focus {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.password-toggle svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
 }
 
 .form-input:focus {
