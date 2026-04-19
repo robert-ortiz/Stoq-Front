@@ -52,6 +52,118 @@ Se maneja de forma explicita en el registro y contratos de autenticacion:
 - /auth/login -> Inicio de sesion
 - /auth/signup -> Registro de usuario
 
+## Implementacion de Idiomas (i18n) y Uso
+
+El proyecto ya tiene base compatible con internacionalizacion en Angular (por ejemplo, `enableI18nLegacyMessageIdFormat: false` en `tsconfig.json`), pero en esta rama la traduccion dinamica aun no esta activada en el codigo fuente.
+
+Esta es la implementacion recomendada para habilitar idiomas de forma escalable usando `ngx-translate`.
+
+### 1) Instalar dependencias
+
+```bash
+npm install @ngx-translate/core @ngx-translate/http-loader
+```
+
+### 2) Configurar proveedores globales
+
+En `src/app/app.config.ts` registrar el servicio de traduccion y el loader HTTP:
+
+```ts
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export const appConfig: ApplicationConfig = {
+	providers: [
+		provideBrowserGlobalErrorListeners(),
+		provideRouter(routes),
+		provideHttpClient(withFetch()),
+		provideTranslateService({
+			loader: provideTranslateHttpLoader({
+				prefix: './i18n/',
+				suffix: '.json'
+			}),
+			fallbackLang: 'es'
+		})
+	]
+};
+```
+
+### 3) Crear archivos de traduccion
+
+Crear carpeta y archivos JSON por idioma:
+
+```text
+public/
+	i18n/
+		es.json
+		en.json
+		pt.json
+```
+
+Ejemplo minimo (`es.json`):
+
+```json
+{
+	"AUTH": {
+		"LOGIN": {
+			"TITLE": "Inicia sesion",
+			"EMAIL": "Correo electronico",
+			"PASSWORD": "Contrasena",
+			"SUBMIT": "Entrar"
+		}
+	},
+	"LANGUAGE": {
+		"ES": "Espanol",
+		"EN": "Ingles",
+		"PT": "Portugues"
+	}
+}
+```
+
+### 4) Usar traducciones en templates
+
+```html
+<h1>{{ 'AUTH.LOGIN.TITLE' | translate }}</h1>
+<label>{{ 'AUTH.LOGIN.EMAIL' | translate }}</label>
+<button type="submit">{{ 'AUTH.LOGIN.SUBMIT' | translate }}</button>
+```
+
+### 5) Cambiar idioma en tiempo de ejecucion
+
+En un componente (por ejemplo, layout principal):
+
+```ts
+import { TranslateService } from '@ngx-translate/core';
+
+constructor(private readonly translate: TranslateService) {
+	this.translate.addLangs(['es', 'en', 'pt']);
+	this.translate.setFallbackLang('es');
+	this.translate.use('es');
+}
+
+changeLanguage(lang: 'es' | 'en' | 'pt'): void {
+	this.translate.use(lang);
+	localStorage.setItem('stoq_lang', lang);
+}
+```
+
+### 6) Restaurar idioma preferido del usuario
+
+```ts
+const savedLang = localStorage.getItem('stoq_lang');
+const browserLang = this.translate.getBrowserLang();
+const lang = savedLang ?? (['es', 'en', 'pt'].includes(browserLang ?? '') ? browserLang! : 'es');
+this.translate.use(lang);
+```
+
+### Recomendaciones de uso
+
+- Mantener todas las claves en formato jerarquico (`MODULO.SECCION.CLAVE`).
+- Evitar textos literales en templates y mensajes de error del frontend.
+- Reutilizar las mismas claves para botones comunes (guardar, cancelar, eliminar).
+- Definir `es` como `fallbackLang` para asegurar respuesta cuando falte una traduccion.
+- Validar visualmente login/signup al cambiar entre `es`, `en` y `pt`.
+
 ## Estructura del Proyecto (Resumen)
 
 ```text
