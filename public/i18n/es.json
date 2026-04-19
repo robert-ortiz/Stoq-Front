@@ -70,6 +70,7 @@
       "FIRST_NAME_PLACEHOLDER": "Juan",
       "FIRST_NAME_REQUIRED": "Nombre es requerido",
       "MIN_1_CHAR": "Debe tener al menos 1 caracter",
+      "MAX_CHARS": "Máximo {{count}} caracteres",
       "LAST_NAME_1": "Primer Apellido",
       "LAST_NAME_1_PLACEHOLDER": "Perez",
       "LAST_NAME_1_REQUIRED": "Primer apellido es requerido",

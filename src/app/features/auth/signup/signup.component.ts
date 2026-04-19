@@ -29,6 +29,15 @@ export class SignupComponent {
   form: FormGroup;
   isLoading = false;
   errorMessage = '';
+  readonly maxLength = {
+    nombre: 25,
+    apellido1: 25,
+    apellido2: 25,
+    correo: 60,
+    empresa: 20,
+    contrasena: 30,
+    confirmarContrasena: 30
+  };
   private authService = inject(AuthService);
   private router = inject(Router);
   private roleService = inject(RoleService);
@@ -37,14 +46,14 @@ export class SignupComponent {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group(
       {
-        nombre: ['', [Validators.required, Validators.minLength(1)]],
-        apellido1: ['', [Validators.required, Validators.minLength(1)]],
-        apellido2: ['', []],
-        correo: ['', [Validators.required, Validators.email]],
-        empresa: ['', []],
+        nombre: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(this.maxLength.nombre)]],
+        apellido1: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(this.maxLength.apellido1)]],
+        apellido2: ['', [Validators.maxLength(this.maxLength.apellido2)]],
+        correo: ['', [Validators.required, Validators.email, Validators.maxLength(this.maxLength.correo)]],
+        empresa: ['', [Validators.maxLength(this.maxLength.empresa)]],
         rol: ['OPERADOR', [Validators.required]],
-        contrasena: ['', [Validators.required, Validators.minLength(6)]],
-        confirmarContrasena: ['', [Validators.required]]
+        contrasena: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(this.maxLength.contrasena)]],
+        confirmarContrasena: ['', [Validators.required, Validators.maxLength(this.maxLength.confirmarContrasena)]]
       },
       { validators: validadorCoincidenciaContrasena }
     );
@@ -65,12 +74,12 @@ export class SignupComponent {
       this.errorMessage = '';
       
       const { nombre, apellido1, apellido2, correo, empresa, rol, contrasena } = this.form.value;
-      const nombreCompleto = `${nombre} ${apellido1}${apellido2 ? ' ' + apellido2 : ''}`;
+      const nombreCompleto = [nombre?.trim(), apellido1?.trim(), apellido2?.trim()].filter(Boolean).join(' ');
       
       const signupData = {
         nombre: nombreCompleto,
-        correo,
-        empresa: empresa || '',
+        correo: correo?.trim(),
+        empresa: empresa?.trim() || '',
         contrasena,
         rol
       };

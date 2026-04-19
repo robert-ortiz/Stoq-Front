@@ -70,6 +70,7 @@
       "FIRST_NAME_PLACEHOLDER": "João",
       "FIRST_NAME_REQUIRED": "Nome é obrigatório",
       "MIN_1_CHAR": "Deve ter pelo menos 1 caractere",
+      "MAX_CHARS": "Máximo de {{count}} caracteres",
       "LAST_NAME_1": "Primeiro Sobrenome",
       "LAST_NAME_1_PLACEHOLDER": "Silva",
       "LAST_NAME_1_REQUIRED": "Primeiro sobrenome é obrigatório",

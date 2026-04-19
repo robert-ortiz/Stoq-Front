@@ -70,6 +70,7 @@
       "FIRST_NAME_PLACEHOLDER": "John",
       "FIRST_NAME_REQUIRED": "First name is required",
       "MIN_1_CHAR": "Must have at least 1 character",
+      "MAX_CHARS": "Maximum {{count}} characters",
       "LAST_NAME_1": "Last Name",
       "LAST_NAME_1_PLACEHOLDER": "Doe",
       "LAST_NAME_1_REQUIRED": "Last name is required",
