@@ -125,6 +125,7 @@ export class UserEditComponent implements OnInit {
   }
 
   onDelete(): void {
+    console.log('onDelete called, isSaving:', this.isSaving, 'isLoading:', this.isLoading);
     this.showDeleteConfirm = true;
     this.cdr.markForCheck();
   }

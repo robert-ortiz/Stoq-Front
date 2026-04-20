@@ -94,7 +94,7 @@
           }
         </button>
 
-        <button type="button" class="btn-danger app-btn app-btn-danger" (click)="onDelete()" [disabled]="isSaving || isLoading">
+        <button type="button" class="btn-danger app-btn app-btn-danger" (click)="onDelete()" [disabled]="false">
           @if (isOwnAccount) {
             {{ 'USER.EDIT.DELETE_ACCOUNT' | translate }}
           } @else {
