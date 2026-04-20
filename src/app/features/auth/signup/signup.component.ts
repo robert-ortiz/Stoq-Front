@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -12,6 +12,17 @@ function validadorCoincidenciaContrasena(group: FormGroup) {
   const contrasena = group.get('contrasena')?.value;
   const confirmarContrasena = group.get('confirmarContrasena')?.value;
   return contrasena === confirmarContrasena ? null : { mismatch: true };
+}
+
+function validadorNombreCompletoMax(maxLength: number) {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const nombre = (control.get('nombre')?.value ?? '').trim();
+    const apellido1 = (control.get('apellido1')?.value ?? '').trim();
+    const apellido2 = (control.get('apellido2')?.value ?? '').trim();
+    const nombreCompleto = [nombre, apellido1, apellido2].filter(Boolean).join(' ');
+
+    return nombreCompleto.length > maxLength ? { fullNameMaxLength: true } : null;
+  };
 }
 
 @Component({
@@ -36,7 +47,8 @@ export class SignupComponent {
     correo: 60,
     empresa: 20,
     contrasena: 30,
-    confirmarContrasena: 30
+    confirmarContrasena: 30,
+    nombreCompleto: 120
   };
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -55,7 +67,7 @@ export class SignupComponent {
         contrasena: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(this.maxLength.contrasena)]],
         confirmarContrasena: ['', [Validators.required, Validators.maxLength(this.maxLength.confirmarContrasena)]]
       },
-      { validators: validadorCoincidenciaContrasena }
+      { validators: [validadorCoincidenciaContrasena, validadorNombreCompletoMax(this.maxLength.nombreCompleto)] }
     );
 
     this.roleService.getRoles().subscribe({
@@ -69,19 +81,33 @@ export class SignupComponent {
   }
 
   onSubmit(): void {
+    this.errorMessage = '';
+
     if (this.form.valid) {
       this.isLoading = true;
       this.errorMessage = '';
       
       const { nombre, apellido1, apellido2, correo, empresa, rol, contrasena } = this.form.value;
-      const nombreCompleto = [nombre?.trim(), apellido1?.trim(), apellido2?.trim()].filter(Boolean).join(' ');
+      const nombreLimpio = this.clipValue(nombre, this.maxLength.nombre);
+      const apellido1Limpio = this.clipValue(apellido1, this.maxLength.apellido1);
+      const apellido2Limpio = this.clipValue(apellido2, this.maxLength.apellido2);
+      const correoLimpio = this.clipValue(correo, this.maxLength.correo).toLowerCase();
+      const empresaLimpia = this.clipValue(empresa, this.maxLength.empresa);
+      const contrasenaLimpia = this.clipValue(contrasena, this.maxLength.contrasena);
+      const nombreCompleto = [nombreLimpio, apellido1Limpio, apellido2Limpio].filter(Boolean).join(' ');
+
+      if (nombreCompleto.length > this.maxLength.nombreCompleto) {
+        this.isLoading = false;
+        this.errorMessage = `El nombre completo no puede superar ${this.maxLength.nombreCompleto} caracteres.`;
+        return;
+      }
       
       const signupData = {
         nombre: nombreCompleto,
-        correo: correo?.trim(),
-        empresa: empresa?.trim() || '',
-        contrasena,
-        rol
+        correo: correoLimpio,
+        empresa: empresaLimpia,
+        contrasena: contrasenaLimpia,
+        rol: rol?.trim()?.toUpperCase()
       };
 
       this.authService.signup(signupData).subscribe({
@@ -96,19 +122,110 @@ export class SignupComponent {
           console.error('Signup error:', error);
         }
       });
+    } else {
+      this.form.markAllAsTouched();
     }
   }
 
+  onInputLimit(controlName: keyof SignupComponent['maxLength'], event: Event): void {
+    if (controlName === 'nombreCompleto') {
+      return;
+    }
+
+    const target = event.target as HTMLInputElement | null;
+    const max = this.maxLength[controlName] as number;
+    const raw = target?.value ?? '';
+    const clipped = raw.slice(0, max);
+
+    if (target && clipped !== raw) {
+      target.value = clipped;
+    }
+
+    const control = this.form.get(controlName as string);
+    if (control && control.value !== clipped) {
+      control.setValue(clipped, { emitEvent: false });
+      control.updateValueAndValidity({ emitEvent: false });
+      this.form.updateValueAndValidity({ emitEvent: false });
+    }
+  }
+
+  private clipValue(value: unknown, max: number): string {
+    return String(value ?? '').trim().slice(0, max);
+  }
+
   private resolveErrorMessage(error: HttpErrorResponse): string {
-    if (!error.error) {
-      return 'Error al crear la cuenta. Intenta de nuevo.';
+    const fallback = 'Error al crear la cuenta. Intenta de nuevo.';
+
+    if (error.status === 0) {
+      return 'No se pudo conectar con el servidor. Verifica la conexión e intenta nuevamente.';
     }
 
-    if (typeof error.error === 'string') {
-      return error.error;
+    const parsed = this.parseErrorPayload(error.error);
+
+    if (error.status === 409) {
+      return parsed.message || 'El correo ya está registrado. Usa otro correo o inicia sesión.';
     }
 
-    return error.error.message || 'Error al crear la cuenta. Intenta de nuevo.';
+    if (parsed.details.length > 0) {
+      return parsed.details.join(' ');
+    }
+
+    if (parsed.message) {
+      return parsed.message;
+    }
+
+    return fallback;
+  }
+
+  private parseErrorPayload(payload: unknown): { message: string; details: string[] } {
+    const parsedObject = this.toObject(payload);
+    if (!parsedObject) {
+      if (typeof payload === 'string' && payload.trim()) {
+        return { message: payload.trim(), details: [] };
+      }
+
+      return { message: '', details: [] };
+    }
+
+    const message = typeof parsedObject['message'] === 'string' ? parsedObject['message'].trim() : '';
+    const rawDetails = parsedObject['details'];
+    const details: string[] = [];
+
+    if (rawDetails && typeof rawDetails === 'object') {
+      for (const value of Object.values(rawDetails as Record<string, unknown>)) {
+        if (typeof value === 'string' && value.trim()) {
+          details.push(value.trim());
+        }
+      }
+    }
+
+    return { message, details };
+  }
+
+  private toObject(value: unknown): Record<string, unknown> | null {
+    if (!value) {
+      return null;
+    }
+
+    if (typeof value === 'object') {
+      return value as Record<string, unknown>;
+    }
+
+    if (typeof value === 'string') {
+      const text = value.trim();
+      if (!text.startsWith('{')) {
+        return null;
+      }
+
+      try {
+        const parsed = JSON.parse(text) as unknown;
+        return typeof parsed === 'object' && parsed !== null ? (parsed as Record<string, unknown>) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    return null;
   }
 
   get nombre() {
