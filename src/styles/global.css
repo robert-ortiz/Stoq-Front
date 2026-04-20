@@ -247,7 +247,7 @@ button:disabled {
 }
 
 .app-btn-danger:hover:not(:disabled) {
-  background: #ffe8e4;
+  transform: translateY(-1px);
 }
 
 .app-btn:disabled {
