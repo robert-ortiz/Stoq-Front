@@ -87,10 +87,13 @@
   background: linear-gradient(145deg, #d14d3f, #b1362a);
 }
 
-.btn-primary:hover:not(:disabled),
-.btn-danger:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
   filter: brightness(1.04);
+}
+
+.btn-danger:hover:not(:disabled) {
+  transform: translateY(-1px);
 }
 
 .btn-primary:disabled,

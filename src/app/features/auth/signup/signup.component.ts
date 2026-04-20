@@ -30,10 +30,10 @@ export class SignupComponent {
   isLoading = false;
   errorMessage = '';
   readonly maxLength = {
-    nombre: 25,
-    apellido1: 25,
-    apellido2: 25,
-    correo: 60,
+    nombre: 30,
+    apellido1: 30,
+    apellido2: 30,
+    correo: 30,
     empresa: 20,
     contrasena: 30,
     confirmarContrasena: 30
