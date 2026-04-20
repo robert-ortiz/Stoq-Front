@@ -33,6 +33,7 @@ export class UserEditComponent implements OnInit {
   isLoading = false;
   isSaving = false;
   isDeleting = false;
+  showDeleteConfirm = false;
   errorMessage = '';
   successMessage = '';
   roles: string[] = ['ADMIN', 'OPERADOR', 'GERENTE'];
@@ -124,15 +125,22 @@ export class UserEditComponent implements OnInit {
   }
 
   onDelete(): void {
-    const targetKey = this.isOwnAccount ? 'USER.EDIT.DELETE_TARGET_ACCOUNT' : 'USER.EDIT.DELETE_TARGET_USER';
-    const target = this.translateService.instant(targetKey);
-    const confirmed = window.confirm(
-      this.translateService.instant('USER.EDIT.CONFIRM_DELETE', { target })
-    );
+    this.showDeleteConfirm = true;
+    this.cdr.markForCheck();
+  }
 
-    if (!confirmed) {
+  onCloseDeleteConfirm(): void {
+    if (this.isDeleting) {
       return;
     }
+
+    this.showDeleteConfirm = false;
+    this.cdr.markForCheck();
+  }
+
+  onConfirmDelete(): void {
+    const targetKey = this.isOwnAccount ? 'USER.EDIT.DELETE_TARGET_ACCOUNT' : 'USER.EDIT.DELETE_TARGET_USER';
+    const target = this.translateService.instant(targetKey);
 
     this.isDeleting = true;
     this.errorMessage = '';
@@ -145,6 +153,7 @@ export class UserEditComponent implements OnInit {
     request$.subscribe({
       next: () => {
         this.isDeleting = false;
+        this.showDeleteConfirm = false;
         if (this.isOwnAccount) {
           this.authService.logout();
           this.router.navigate(['/auth/login']);
@@ -155,6 +164,7 @@ export class UserEditComponent implements OnInit {
       },
       error: () => {
         this.isDeleting = false;
+        this.showDeleteConfirm = false;
         this.errorMessage = this.translateService.instant('USER.EDIT.ERROR_DELETE');
         this.cdr.markForCheck();
       }
