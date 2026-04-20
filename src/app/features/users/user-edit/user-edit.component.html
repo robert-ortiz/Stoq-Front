@@ -94,7 +94,7 @@
           }
         </button>
 
-        <button type="button" class="btn-danger app-btn app-btn-danger" (click)="onDelete()" [disabled]="false">
+        <button type="button" class="btn-danger app-btn app-btn-danger" (click)="onDelete()" [disabled]="isSaving || isLoading || isDeleting">
           @if (isOwnAccount) {
             {{ 'USER.EDIT.DELETE_ACCOUNT' | translate }}
           } @else {
@@ -104,27 +104,4 @@
       </div>
     </form>
   </div>
-
-  @if (showDeleteConfirm) {
-    <div class="confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="deleteConfirmTitle">
-      <div class="confirm-card app-card">
-        <h3 id="deleteConfirmTitle">{{ 'COMMON.DELETE' | translate }}</h3>
-        <p>
-          {{ 'USER.EDIT.CONFIRM_DELETE' | translate: { target: (isOwnAccount ? ('USER.EDIT.DELETE_TARGET_ACCOUNT' | translate) : ('USER.EDIT.DELETE_TARGET_USER' | translate)) } }}
-        </p>
-        <div class="confirm-actions">
-          <button type="button" class="app-btn app-btn-secondary" (click)="onCloseDeleteConfirm()" [disabled]="isDeleting">
-            {{ 'COMMON.CANCEL' | translate }}
-          </button>
-          <button type="button" class="app-btn app-btn-danger" (click)="onConfirmDelete()" [disabled]="isDeleting">
-            @if (isDeleting) {
-              {{ 'USER.EDIT.DELETING' | translate }}
-            } @else {
-              {{ 'COMMON.DELETE' | translate }}
-            }
-          </button>
-        </div>
-      </div>
-    </div>
-  }
 </section>
