@@ -13,7 +13,6 @@
           type="text"
           formControlName="nombre"
           class="form-input"
-          (input)="onInputLimit('nombre', $event)"
           [attr.maxlength]="maxLength.nombre"
           [placeholder]="'AUTH.SIGNUP.FIRST_NAME_PLACEHOLDER' | translate"
           [class.input-error]="nombre?.invalid && nombre?.touched"
@@ -39,7 +38,6 @@
           type="text"
           formControlName="apellido1"
           class="form-input"
-          (input)="onInputLimit('apellido1', $event)"
           [attr.maxlength]="maxLength.apellido1"
           [placeholder]="'AUTH.SIGNUP.LAST_NAME_1_PLACEHOLDER' | translate"
           [class.input-error]="apellido1?.invalid && apellido1?.touched"
@@ -65,7 +63,6 @@
           type="text"
           formControlName="apellido2"
           class="form-input"
-          (input)="onInputLimit('apellido2', $event)"
           [attr.maxlength]="maxLength.apellido2"
           [class.input-error]="apellido2?.invalid && apellido2?.touched"
           [placeholder]="'AUTH.SIGNUP.LAST_NAME_2_PLACEHOLDER' | translate"
@@ -85,7 +82,6 @@
           type="email"
           formControlName="correo"
           class="form-input"
-          (input)="onInputLimit('correo', $event)"
           [attr.maxlength]="maxLength.correo"
           [placeholder]="'AUTH.SIGNUP.EMAIL_PLACEHOLDER' | translate"
           [class.input-error]="correo?.invalid && correo?.touched"
@@ -111,7 +107,6 @@
           type="text"
           formControlName="empresa"
           class="form-input"
-          (input)="onInputLimit('empresa', $event)"
           [attr.maxlength]="maxLength.empresa"
           [class.input-error]="empresa?.invalid && empresa?.touched"
           [placeholder]="'AUTH.SIGNUP.COMPANY_PLACEHOLDER' | translate"
@@ -150,7 +145,6 @@
           type="password"
           formControlName="contrasena"
           class="form-input"
-          (input)="onInputLimit('contrasena', $event)"
           [attr.maxlength]="maxLength.contrasena"
           [placeholder]="'AUTH.SIGNUP.PASSWORD_PLACEHOLDER' | translate"
           [class.input-error]="contrasena?.invalid && contrasena?.touched"
@@ -176,7 +170,6 @@
           type="password"
           formControlName="confirmarContrasena"
           class="form-input"
-          (input)="onInputLimit('confirmarContrasena', $event)"
           [attr.maxlength]="maxLength.confirmarContrasena"
           [placeholder]="'AUTH.SIGNUP.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
           [class.input-error]="(confirmarContrasena?.invalid && confirmarContrasena?.touched) || form.errors?.['mismatch']"
@@ -190,11 +183,6 @@
         @if (form.errors?.['mismatch'] && confirmarContrasena?.touched) {
           <span class="error-text" role="alert">
             {{ 'AUTH.SIGNUP.PASSWORD_MISMATCH' | translate }}
-          </span>
-        }
-        @if (form.errors?.['fullNameMaxLength'] && (nombre?.touched || apellido1?.touched || apellido2?.touched)) {
-          <span class="error-text" role="alert">
-            {{ 'AUTH.SIGNUP.MAX_CHARS' | translate: { count: maxLength.nombreCompleto } }}
           </span>
         }
       </div>

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -12,17 +12,6 @@ function validadorCoincidenciaContrasena(group: FormGroup) {
   const contrasena = group.get('contrasena')?.value;
   const confirmarContrasena = group.get('confirmarContrasena')?.value;
   return contrasena === confirmarContrasena ? null : { mismatch: true };
-}
-
-function validadorNombreCompletoMax(maxLength: number) {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const nombre = (control.get('nombre')?.value ?? '').trim();
-    const apellido1 = (control.get('apellido1')?.value ?? '').trim();
-    const apellido2 = (control.get('apellido2')?.value ?? '').trim();
-    const nombreCompleto = [nombre, apellido1, apellido2].filter(Boolean).join(' ');
-
-    return nombreCompleto.length > maxLength ? { fullNameMaxLength: true } : null;
-  };
 }
 
 @Component({
@@ -47,8 +36,7 @@ export class SignupComponent {
     correo: 60,
     empresa: 20,
     contrasena: 30,
-    confirmarContrasena: 30,
-    nombreCompleto: 120
+    confirmarContrasena: 30
   };
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -67,7 +55,7 @@ export class SignupComponent {
         contrasena: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(this.maxLength.contrasena)]],
         confirmarContrasena: ['', [Validators.required, Validators.maxLength(this.maxLength.confirmarContrasena)]]
       },
-      { validators: [validadorCoincidenciaContrasena, validadorNombreCompletoMax(this.maxLength.nombreCompleto)] }
+      { validators: validadorCoincidenciaContrasena }
     );
 
     this.roleService.getRoles().subscribe({
@@ -96,9 +84,9 @@ export class SignupComponent {
       const contrasenaLimpia = this.clipValue(contrasena, this.maxLength.contrasena);
       const nombreCompleto = [nombreLimpio, apellido1Limpio, apellido2Limpio].filter(Boolean).join(' ');
 
-      if (nombreCompleto.length > this.maxLength.nombreCompleto) {
+      if (nombreCompleto.length > 120) {
         this.isLoading = false;
-        this.errorMessage = `El nombre completo no puede superar ${this.maxLength.nombreCompleto} caracteres.`;
+        this.errorMessage = 'El nombre completo no puede superar 120 caracteres.';
         return;
       }
       
@@ -124,28 +112,6 @@ export class SignupComponent {
       });
     } else {
       this.form.markAllAsTouched();
-    }
-  }
-
-  onInputLimit(controlName: keyof SignupComponent['maxLength'], event: Event): void {
-    if (controlName === 'nombreCompleto') {
-      return;
-    }
-
-    const target = event.target as HTMLInputElement | null;
-    const max = this.maxLength[controlName] as number;
-    const raw = target?.value ?? '';
-    const clipped = raw.slice(0, max);
-
-    if (target && clipped !== raw) {
-      target.value = clipped;
-    }
-
-    const control = this.form.get(controlName as string);
-    if (control && control.value !== clipped) {
-      control.setValue(clipped, { emitEvent: false });
-      control.updateValueAndValidity({ emitEvent: false });
-      this.form.updateValueAndValidity({ emitEvent: false });
     }
   }
 
