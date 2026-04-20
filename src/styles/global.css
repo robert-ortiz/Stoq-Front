@@ -241,13 +241,14 @@ button:disabled {
 }
 
 .app-btn-danger {
-  border: 1px solid #e7b8b2;
-  background: #fff4f2;
-  color: #ad3e33;
+  border: none;
+  color: #ffffff;
+  background: linear-gradient(145deg, var(--danger), var(--danger-strong));
 }
 
 .app-btn-danger:hover:not(:disabled) {
   transform: translateY(-1px);
+  filter: brightness(1.04);
 }
 
 .app-btn:disabled {
