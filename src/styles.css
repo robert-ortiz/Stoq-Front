@@ -18,6 +18,7 @@
 
 	/* State colors */
 	--color-state-danger: #c0392b;
+	--color-state-danger-strong: #a93226;
 	--color-state-danger-soft: #ffe8e4;
 	--color-state-success: #1f7a4f;
 	--color-state-success-soft: #e5f6ed;
@@ -45,6 +46,7 @@
 	--primary-soft: var(--color-brand-primary-soft);
 	--accent: var(--color-brand-accent);
 	--danger: var(--color-state-danger);
+	--danger-strong: var(--color-state-danger-strong);
 	--danger-soft: var(--color-state-danger-soft);
 	--success: var(--color-state-success);
 	--success-soft: var(--color-state-success-soft);
