@@ -15,15 +15,10 @@
       <nav class="nav-actions">
         <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToProductos()">{{ 'HOME.AUTH.PRODUCTS' | translate }}</button>
         @if (isAdmin) {
-          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToAdmin()">{{ 'HOME.AUTH.ADMIN' | translate }}</button>
-          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">{{ 'HOME.AUTH.OPERATOR' | translate }}</button>
-          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">{{ 'HOME.AUTH.MANAGER' | translate }}</button>
-        } @else if (isOperator) {
-          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">{{ 'HOME.AUTH.OPERATOR' | translate }}</button>
-        } @else if (isManager) {
-          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">{{ 'HOME.AUTH.MANAGER' | translate }}</button>
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToMovimientos()">Movimientos</button>
         }
         <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToRegistrarEntrada()">{{ 'HOME.AUTH.REGISTER_ENTRY' | translate }}</button>
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToRegistrarSalida()">Registrar salida</button>
         <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToCrearProducto()">{{ 'HOME.AUTH.ADD_PRODUCT' | translate }}</button>
         <button type="button" class="btn-primary app-btn app-btn-primary" (click)="logout()">{{ 'HOME.AUTH.LOGOUT' | translate }}</button>
       </nav>
@@ -67,25 +62,12 @@
         <div class="action-buttons">
           <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToProductos()">{{ 'HOME.AUTH.VIEW_PRODUCTS_CTA' | translate }}</button>
           <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToRegistrarEntrada()">{{ 'HOME.AUTH.REGISTER_ENTRY_CTA' | translate }}</button>
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToRegistrarSalida()">Registrar salida</button>
+          @if (isAdmin) {
+            <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToMovimientos()">Movimientos</button>
+          }
           <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToCrearProducto()">{{ 'HOME.AUTH.ADD_PRODUCT_CTA' | translate }}</button>
           <a routerLink="/perfil" class="btn-primary app-btn app-btn-primary">{{ 'HOME.AUTH.MY_PROFILE_CTA' | translate }}</a>
-        </div>
-
-        <div class="panel-links" [attr.aria-label]="'HOME.AUTH.AVAILABLE_PANELS' | translate">
-          <h2>{{ 'HOME.AUTH.AVAILABLE_PANELS' | translate }}</h2>
-          <div class="panel-links-grid">
-            @if (isAdmin) {
-              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToAdmin()">{{ 'HOME.AUTH.ADMIN_PANEL' | translate }}</button>
-              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">{{ 'HOME.AUTH.OPERATOR_PANEL' | translate }}</button>
-              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">{{ 'HOME.AUTH.MANAGER_PANEL' | translate }}</button>
-            } @else if (isOperator) {
-              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToOperator()">{{ 'HOME.AUTH.OPERATOR_PANEL' | translate }}</button>
-            } @else if (isManager) {
-              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToManager()">{{ 'HOME.AUTH.MANAGER_PANEL' | translate }}</button>
-            } @else {
-              <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToProductos()">{{ 'HOME.AUTH.GO_PRODUCTS' | translate }}</button>
-            }
-          </div>
         </div>
       </section>
     }

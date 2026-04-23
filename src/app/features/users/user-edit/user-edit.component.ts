@@ -157,7 +157,7 @@ export class UserEditComponent implements OnInit {
           return;
         }
 
-        this.router.navigate(['/admin']);
+        this.router.navigate(['/productos']);
       },
       error: () => {
         this.isDeleting = false;
