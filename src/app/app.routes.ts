@@ -76,30 +76,18 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    canActivate: [roleGuard],
-    data: { roles: ['ADMIN'] },
-    loadComponent: () =>
-      import('./features/dashboard/admin-dashboard/admin-dashboard.component').then(
-        (m) => m.AdminDashboardComponent
-      )
+    redirectTo: 'productos',
+    pathMatch: 'full'
   },
   {
     path: 'operador',
-    canActivate: [roleGuard],
-    data: { roles: ['OPERADOR', 'ADMIN'] },
-    loadComponent: () =>
-      import('./features/dashboard/operator-dashboard/operator-dashboard.component').then(
-        (m) => m.OperatorDashboardComponent
-      )
+    redirectTo: 'productos',
+    pathMatch: 'full'
   },
   {
     path: 'gerente',
-    canActivate: [roleGuard],
-    data: { roles: ['GERENTE', 'ADMIN'] },
-    loadComponent: () =>
-      import('./features/dashboard/manager-dashboard/manager-dashboard.component').then(
-        (m) => m.ManagerDashboardComponent
-      )
+    redirectTo: 'productos',
+    pathMatch: 'full'
   },
   {
     path: 'auth',

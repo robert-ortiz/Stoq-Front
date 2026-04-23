@@ -104,16 +104,12 @@ export class HomePageComponent implements OnInit {
     this.router.navigateByUrl('/entradas/registro');
   }
 
-  goToAdmin(): void {
-    this.router.navigateByUrl('/admin');
+  goToMovimientos(): void {
+    this.router.navigateByUrl('/movimientos');
   }
 
-  goToOperator(): void {
-    this.router.navigateByUrl('/operador');
-  }
-
-  goToManager(): void {
-    this.router.navigateByUrl('/gerente');
+  goToRegistrarSalida(): void {
+    this.router.navigateByUrl('/salidas/registro');
   }
 
   logout(): void {
