@@ -41,7 +41,13 @@
     "NEXT": "Próxima",
     "ERROR": "Erro",
     "SUCCESS": "Sucesso",
-    "CLOSE_NOTIFICATION": "Fechar notificação"
+    "CLOSE_NOTIFICATION": "Fechar notificação",
+    "COMPANY": "Empresa",
+    "PASSWORD": "Senha",
+    "USER": "Usuário",
+    "MANAGER": "Gerente",
+    "ADMINISTRATOR": "Administrador",
+    "SAVE_CHANGES": "Salvar alterações"
   },
   "LANGUAGE": {
     "LABEL": "Idioma",
@@ -49,6 +55,38 @@
     "EN": "Inglês",
     "PT": "Português"
   },
+
+  "ADMIN": {
+    "TABS": {
+      "USERS": "Usuários",
+      "COMPANIES": "Empresas"
+    },
+    "USERS": {
+      "TITLE": "Lista de Usuários",
+      "SUBTITLE": "Gerencie os usuários do sistema com seus papéis e permissões",
+      "NEW_USER": "Novo usuário",
+      "SEARCH": "Pesquisar por nome, email ou empresa",
+      "LOADING": "Carregando usuários...",
+      "EMPTY": "Nenhum usuário encontrado.",
+      "SHOWING": "Mostrando {{from}}-{{to}} de {{total}}",
+      "PAGE_OF": "Página {{page}} de {{total}}"
+    },
+    "COMPANIES": {
+      "TITLE": "Empresas",
+      "SUBTITLE": "Visualização referencial de empresas. O gerenciamento será implementado posteriormente.",
+      "USERS": "Usuários"
+    },
+    "MODAL": {
+      "CREATE_USER_TITLE": "Criar Usuário",
+      "CREATE_USER_SUBTITLE": "Preencha os dados para criar um novo usuário no sistema.",
+      "CREATE_USER_BUTTON": "Criar usuário",
+      "EDIT_USER_TITLE": "Editar usuário",
+      "EDIT_USER_SUBTITLE": "Atualize as informações da conta principal.",
+      "DELETE_USER": "Excluir conta"
+    }
+  },
+
+
   "AUTH": {
     "LOGIN": {
       "TITLE": "Iniciar Sessão",

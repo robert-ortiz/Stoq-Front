@@ -41,7 +41,13 @@
     "NEXT": "Next",
     "ERROR": "Error",
     "SUCCESS": "Success",
-    "CLOSE_NOTIFICATION": "Close notification"
+    "CLOSE_NOTIFICATION": "Close notification",
+    "COMPANY": "Company",
+    "PASSWORD": "Password",
+    "USER": "User",
+    "MANAGER": "Manager",
+    "ADMINISTRATOR": "Administrator",
+    "SAVE_CHANGES": "Save changes"
   },
   "LANGUAGE": {
     "LABEL": "Language",
@@ -49,6 +55,38 @@
     "EN": "English",
     "PT": "Portuguese"
   },
+
+  "ADMIN": {
+    "TABS": {
+      "USERS": "Users",
+      "COMPANIES": "Companies"
+    },
+    "USERS": {
+      "TITLE": "User List",
+      "SUBTITLE": "Manage system users with their roles and permissions",
+      "NEW_USER": "New user",
+      "SEARCH": "Search by name, email or company",
+      "LOADING": "Loading users...",
+      "EMPTY": "No users found.",
+      "SHOWING": "Showing {{from}}-{{to}} of {{total}}",
+      "PAGE_OF": "Page {{page}} of {{total}}"
+    },
+    "COMPANIES": {
+      "TITLE": "Companies",
+      "SUBTITLE": "Reference company view. Management will be implemented later.",
+      "USERS": "Users"
+    },
+    "MODAL": {
+      "CREATE_USER_TITLE": "Create User",
+      "CREATE_USER_SUBTITLE": "Fill in the data to create a new system user.",
+      "CREATE_USER_BUTTON": "Create user",
+      "EDIT_USER_TITLE": "Edit User",
+      "EDIT_USER_SUBTITLE": "Update the main information of the account.",
+      "DELETE_USER": "Delete account"
+    }
+  },
+
+
   "AUTH": {
     "LOGIN": {
       "TITLE": "Login",

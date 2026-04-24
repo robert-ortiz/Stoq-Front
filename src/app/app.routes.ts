@@ -76,8 +76,12 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    redirectTo: 'productos',
-    pathMatch: 'full'
+    canActivate: [roleGuard],
+    data: { roles: ['ADMIN'] },
+    loadComponent: () =>
+      import('./features/admin/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent
+      )
   },
   {
   path: 'operador',
@@ -87,7 +91,7 @@ export const routes: Routes = [
     import('./features/productos/lista-productos-operador/lista-productos-operador.component').then(
       (m) => m.ListaProductosOperadorComponent
     )
-  },
+},
   {
     path: 'gerente',
     redirectTo: 'productos',
