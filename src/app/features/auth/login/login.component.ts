@@ -6,6 +6,8 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../../../app/core/services/auth.service';
 import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
+import { UserService } from '../../../core/services/user.service';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -27,6 +29,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
+    private userService: UserService,
     private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
@@ -45,15 +48,32 @@ export class LoginComponent {
     this.errorMessage = '';
     const credentials = this.form.value;
 
-    // Llamada real al backend
     this.authService.login(credentials).subscribe({
       next: (response) => {
         this.authService.saveSession(response);
 
-        this.isLoading = false;
-        this.cdr.markForCheck();
+        this.userService.getCurrentUser().subscribe({
+          next: (user) => {
+            const normalizedRole = this.authService.syncRole(user.rol);
 
-        this.router.navigateByUrl(this.authService.getLandingRoute());
+            this.authService.syncUserProfile({
+              nombre: user.nombre,
+              empresa: user.empresa,
+              rol: normalizedRole
+            });
+
+            this.isLoading = false;
+            this.cdr.markForCheck();
+
+            this.router.navigateByUrl(this.authService.getLandingRoute());
+          },
+          error: () => {
+            this.isLoading = false;
+            this.cdr.markForCheck();
+
+            this.router.navigateByUrl(this.authService.getLandingRoute());
+          }
+        });
       },
       error: (err) => {
         console.error('Error al iniciar sesión:', err);

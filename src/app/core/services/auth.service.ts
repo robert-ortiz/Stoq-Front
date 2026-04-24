@@ -207,11 +207,11 @@ export class AuthService {
       case 'ADMIN':
         return '/productos';
       case 'OPERADOR':
-        return '/productos';
+        return '/operador';
       case 'GERENTE':
         return '/productos';
       default:
-        return '/productos';
+        return '/';
     }
   }
 

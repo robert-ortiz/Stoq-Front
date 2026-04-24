@@ -1,5 +1,7 @@
 {
   "COMMON": {
+    "NOTES": "Notes or observations",
+    "OPTIONAL_NOTES": "Add additional details (optional)",
     "BACK": "BACK",
     "HOME": "Home",
     "PRODUCTS": "Products",
@@ -246,6 +248,12 @@
     }
   },
   "ENTRY": {
+    "MODAL": {
+      "TITLE": "Register Entry",
+      "SUBTITLE": "Register products entering inventory",
+      "SELECT_PRODUCT": "Select a product",
+      "QUANTITY_PLACEHOLDER": "Enter the quantity"
+    },
     "REGISTER": {
       "TITLE": "Product Entry Registration",
       "SUBTITLE": "Add stock to inventory",
@@ -269,6 +277,12 @@
     }
   },
   "EXIT": {
+    "MODAL": {
+      "TITLE": "Register Exit",
+      "SUBTITLE": "Register products leaving inventory",
+      "SELECT_PRODUCT": "Select a product",
+      "QUANTITY_PLACEHOLDER": "Enter the quantity"
+    },
     "REGISTER": {
       "TITLE": "Product Exit Registration",
       "SUBTITLE": "Remove products from inventory",

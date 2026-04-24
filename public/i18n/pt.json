@@ -1,5 +1,7 @@
 {
   "COMMON": {
+    "NOTES": "Notas ou observações",
+    "OPTIONAL_NOTES": "Adicione detalhes adicionais (opcional)",
     "BACK": "VOLTAR",
     "HOME": "Início",
     "PRODUCTS": "Produtos",
@@ -246,6 +248,12 @@
     }
   },
   "ENTRY": {
+    "MODAL": {
+      "TITLE": "Registrar Entrada",
+      "SUBTITLE": "Registre produtos que entram no inventário",
+      "SELECT_PRODUCT": "Selecione um produto",
+      "QUANTITY_PLACEHOLDER": "Digite a quantidade"
+    },
     "REGISTER": {
       "TITLE": "Registro de Entrada de Produtos",
       "SUBTITLE": "Adicionar estoque ao inventário",
@@ -269,6 +277,12 @@
     }
   },
   "EXIT": {
+    "MODAL": {
+      "TITLE": "Registrar Saída",
+      "SUBTITLE": "Registre produtos que saem do inventário",
+      "SELECT_PRODUCT": "Selecione um produto",
+      "QUANTITY_PLACEHOLDER": "Digite a quantidade"
+    },
     "REGISTER": {
       "TITLE": "Registro de Saída de Produtos",
       "SUBTITLE": "Retirar produtos do inventário",

@@ -80,9 +80,13 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'operador',
-    redirectTo: 'productos',
-    pathMatch: 'full'
+  path: 'operador',
+  canActivate: [roleGuard],
+  data: { roles: ['OPERADOR'] },
+  loadComponent: () =>
+    import('./features/productos/lista-productos-operador/lista-productos-operador.component').then(
+      (m) => m.ListaProductosOperadorComponent
+    )
   },
   {
     path: 'gerente',

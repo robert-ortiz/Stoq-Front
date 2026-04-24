@@ -1,5 +1,8 @@
 {
   "COMMON": {
+    "NOTES": "Notas u observaciones",
+    "OPTIONAL_NOTES": "Agrega detalles adicionales (opcional)",
+    "SYSTEM_NAME": "Sistema de Inventario",
     "BACK": "VOLVER",
     "HOME": "Inicio",
     "PRODUCTS": "Productos",
@@ -246,6 +249,12 @@
     }
   },
   "ENTRY": {
+    "MODAL": {
+    "TITLE": "Registrar Entrada",
+    "SUBTITLE": "Registra productos que ingresan al inventario",
+    "SELECT_PRODUCT": "Selecciona un producto",
+    "QUANTITY_PLACEHOLDER": "Ingresa la cantidad"
+  },
     "REGISTER": {
       "TITLE": "Registro de Entrada de Productos",
       "SUBTITLE": "Ingresar stock al inventario",
@@ -269,6 +278,12 @@
     }
   },
   "EXIT": {
+    "MODAL": {
+    "TITLE": "Registrar Salida",
+    "SUBTITLE": "Registra productos que salen del inventario",
+    "SELECT_PRODUCT": "Selecciona un producto",
+    "QUANTITY_PLACEHOLDER": "Ingresa la cantidad"
+    },
     "REGISTER": {
       "TITLE": "Registro de Salida de Productos",
       "SUBTITLE": "Retirar productos del inventario",
