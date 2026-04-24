@@ -5,21 +5,35 @@
   [backRoute]="'/'"
   [backLabel]="'COMMON.BACK' | translate"
 >
-    <form shell-body [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+
+  <div shell-body>
+
+    
+
+    <h1>{{ 'AUTH.LOGIN.TITLE' | translate }}</h1>
+    <p class="subtitle">
+      {{ 'AUTH.LOGIN.SUBTITLE' | translate }}
+    </p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+
       <!-- Correo -->
       <div class="form-group">
-        <label for="correo" class="form-label">{{ 'AUTH.LOGIN.EMAIL_LABEL' | translate }}</label>
-        <input
-          id="correo"
-          type="text"
-          formControlName="correo"
-          class="form-input"
-          [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
-          [class.input-error]="correo?.invalid && correo?.touched"
-          [attr.aria-label]="'AUTH.LOGIN.EMAIL_LABEL' | translate"
-        />
+        <label for="correo">{{ 'AUTH.LOGIN.EMAIL_LABEL' | translate }}</label>
+
+        <div class="input-wrapper">
+          <span class="input-icon">✉</span>
+          <input
+            id="correo"
+            type="text"
+            formControlName="correo"
+            [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
+            [class.input-error]="correo?.invalid && correo?.touched"
+          />
+        </div>
+
         @if (correo?.invalid && correo?.touched) {
-          <span class="error-text" role="alert">
+          <span class="error-text">
             @if (correo?.errors?.['required']) {
               {{ 'AUTH.LOGIN.EMAIL_REQUIRED' | translate }}
             } @else if (correo?.errors?.['email']) {
@@ -29,39 +43,40 @@
         }
       </div>
 
-      <!-- Contrasena -->
+      <!-- Contraseña -->
       <div class="form-group">
-        <label for="contrasena" class="form-label">{{ 'AUTH.LOGIN.PASSWORD_LABEL' | translate }}</label>
-        <div class="password-field">
+        <div class="password-header">
+          <label for="contrasena">
+            {{ 'AUTH.LOGIN.PASSWORD_LABEL' | translate }}
+          </label>
+
+          <a href="#" class="forgot-link">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <div class="input-wrapper">
+          <span class="input-icon">🔒</span>
+
           <input
             id="contrasena"
             [type]="showPassword ? 'text' : 'password'"
             formControlName="contrasena"
-            class="form-input password-input"
             [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
             [class.input-error]="contrasena?.invalid && contrasena?.touched"
-            [attr.aria-label]="'AUTH.LOGIN.PASSWORD_LABEL' | translate"
           />
+
           <button
             type="button"
             class="password-toggle"
             (click)="togglePasswordVisibility()"
-            [attr.aria-label]="showPassword ? ('AUTH.LOGIN.HIDE_PASSWORD' | translate) : ('AUTH.LOGIN.SHOW_PASSWORD' | translate)"
-            [attr.aria-pressed]="showPassword"
           >
-            @if (showPassword) {
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M3.98 8.223A11.08 11.08 0 0 1 12 5c4.4 0 8.27 2.41 10.34 6.014a1 1 0 0 1 0 .97 11.74 11.74 0 0 1-3.27 3.606l-1.42-1.42A9.72 9.72 0 0 0 21.5 11.5C19.74 8.52 16.26 6.5 12 6.5c-2.9 0-5.55 1.02-7.54 2.716L3.98 8.223Zm4.09 4.09a4.5 4.5 0 0 1 6.39 6.39l-1.23-1.23A2.75 2.75 0 0 0 9.31 12.31l-1.24-1.24Zm2.82 2.82a1 1 0 0 1 1.41 1.41 1.5 1.5 0 0 1-1.41-1.41Zm9.17 6.36a1 1 0 0 1-1.41 0l-2.15-2.15A10.94 10.94 0 0 1 12 19c-4.4 0-8.27-2.41-10.34-6.014a1 1 0 0 1 0-.97 11.7 11.7 0 0 1 4.03-4.24L3.27 5.37a1 1 0 0 1 1.41-1.41l15.38 15.38a1 1 0 0 1 0 1.41Zm-4.26-4.26-1.64-1.64a2.75 2.75 0 0 0-3.87-3.87l-1.64-1.64A4.5 4.5 0 0 1 15.8 17.29Z"/>
-              </svg>
-            } @else {
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M12 5c-4.4 0-8.27 2.41-10.34 6.014a1 1 0 0 0 0 .97C3.73 15.59 7.6 18 12 18s8.27-2.41 10.34-6.014a1 1 0 0 0 0-.97C20.27 7.41 16.4 5 12 5Zm0 11c-3.32 0-6.25-1.71-7.9-4 1.65-2.29 4.58-4 7.9-4s6.25 1.71 7.9 4c-1.65 2.29-4.58 4-7.9 4Zm0-6a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/>
-              </svg>
-            }
+            👁
           </button>
         </div>
+
         @if (contrasena?.invalid && contrasena?.touched) {
-          <span class="error-text" role="alert">
+          <span class="error-text">
             @if (contrasena?.errors?.['required']) {
               {{ 'AUTH.LOGIN.PASSWORD_REQUIRED' | translate }}
             } @else if (contrasena?.errors?.['minlength']) {
@@ -71,31 +86,42 @@
         }
       </div>
 
-      <!-- Error Message -->
+      <!-- Recordarme -->
+      <div class="remember-row">
+        <label>
+          <input type="checkbox" />
+          Recordarme
+        </label>
+      </div>
+
+      <!-- Error -->
       @if (errorMessage) {
-        <div class="error-message" role="alert">
+        <div class="error-message">
           {{ errorMessage }}
         </div>
       }
 
-      <!-- Submit Button -->
-      <button
-        type="submit"
-        class="btn-submit"
-        [disabled]="isLoading"
-        [attr.aria-label]="'AUTH.LOGIN.SUBMIT' | translate"
-      >
+      <!-- Botón -->
+      <button type="submit" class="btn-submit" [disabled]="isLoading">
         @if (isLoading) {
           <span class="spinner"></span>
         } @else {
           {{ 'AUTH.LOGIN.SUBMIT' | translate }}
         }
       </button>
-    </form>
 
-    <div shell-footer class="footer-section">
-      <a routerLink="../signup" class="forgot-password-link" [attr.aria-label]="'HOME.GUEST.SIGNUP' | translate">
-        {{ 'HOME.GUEST.SIGNUP' | translate }}
-      </a>
-    </div>
+    </form>
+  </div>
+
+  <div shell-footer class="login-footer">
+    <p>¿Necesitas ayuda? Contacta a tu administrador</p>
+
+    <a
+      routerLink="../signup"
+      class="forgot-password-link"
+    >
+      {{ 'HOME.GUEST.SIGNUP' | translate }}
+    </a>
+  </div>
+
 </section>

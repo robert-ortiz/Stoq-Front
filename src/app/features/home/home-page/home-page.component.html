@@ -2,57 +2,122 @@
   <header class="topbar">
     <a routerLink="/" class="logo-link" [attr.aria-label]="'HOME.BRAND_ARIA' | translate">
       <div class="logo-icon">
-        <img src="/Logo.png" [attr.alt]="'HOME.BRAND_ALT' | translate" width="40" height="40" />
+        <img src="/Logo1.svg" [attr.alt]="'HOME.BRAND_ALT' | translate" width="40" height="40" />
       </div>
       <span class="brand">Stoq</span>
     </a>
+
     @if (!isAuthenticated) {
       <nav class="nav-actions">
-        <a routerLink="/auth/login" class="btn-link app-btn app-btn-secondary">{{ 'HOME.GUEST.LOGIN' | translate }}</a>
-        <a routerLink="/auth/signup" class="btn-primary app-btn app-btn-primary">{{ 'HOME.GUEST.SIGNUP' | translate }}</a>
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="toggleLanguage()">
+          {{ currentLanguage === 'es' ? 'EN' : 'ES' }}
+        </button>
+
+        <a routerLink="/auth/login" class="btn-primary app-btn app-btn-primary">
+          {{ 'HOME.GUEST.LOGIN' | translate }}
+        </a>
       </nav>
     } @else {
       <nav class="nav-actions">
-        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToProductos()">{{ 'HOME.AUTH.PRODUCTS' | translate }}</button>
+
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="toggleLanguage()">
+          {{ currentLanguage === 'es' ? 'EN' : 'ES' }}
+        </button>
+
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToProductos()">
+          {{ 'HOME.AUTH.PRODUCTS' | translate }}
+        </button>
+
         @if (isAdmin) {
-          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToMovimientos()">Movimientos</button>
+          <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToMovimientos()">
+            {{ 'HOME.AUTH.MOVEMENTS' | translate }}
+          </button>
         }
-        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToRegistrarEntrada()">{{ 'HOME.AUTH.REGISTER_ENTRY' | translate }}</button>
-        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToRegistrarSalida()">Registrar salida</button>
-        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToCrearProducto()">{{ 'HOME.AUTH.ADD_PRODUCT' | translate }}</button>
-        <button type="button" class="btn-primary app-btn app-btn-primary" (click)="logout()">{{ 'HOME.AUTH.LOGOUT' | translate }}</button>
+
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToRegistrarEntrada()">
+          {{ 'HOME.AUTH.REGISTER_ENTRY' | translate }}
+        </button>
+
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToRegistrarSalida()">
+          {{ 'HOME.AUTH.REGISTER_EXIT' | translate }}
+        </button>
+
+        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="goToCrearProducto()">
+          {{ 'HOME.AUTH.ADD_PRODUCT' | translate }}
+        </button>
+
+        <button type="button" class="btn-primary app-btn app-btn-primary" (click)="logout()">
+          {{ 'HOME.AUTH.LOGOUT' | translate }}
+        </button>
       </nav>
     }
   </header>
+
   <main class="home-card">
+
     @if (!isAuthenticated) {
-      <div class="logo-section">
+      <section class="guest-hero">
         <div class="logo-icon-large">
-          <img src="/Logo.png" [attr.alt]="'HOME.BRAND_ALT' | translate" width="80" height="80" />
+          <img src="/Logo.svg" [attr.alt]="'HOME.BRAND_ALT' | translate" width="80" height="80" />
         </div>
+
         <h1 class="home-title">{{ 'HOME.GUEST.TITLE' | translate }}</h1>
+
         <p class="home-subtitle">
           {{ 'HOME.GUEST.SUBTITLE' | translate }}
         </p>
-      </div>
 
-      <div class="action-buttons">
-        <a routerLink="/auth/login" class="btn-secondary app-btn app-btn-secondary">{{ 'HOME.GUEST.LOGIN_CTA' | translate }}</a>
-        <a routerLink="/auth/signup" class="btn-primary app-btn app-btn-primary">{{ 'HOME.GUEST.SIGNUP_CTA' | translate }}</a>
-      </div>
-    } @else {
+        <a routerLink="/auth/login" class="hero-button">
+          {{ 'HOME.GUEST.LOGIN_CTA' | translate }}
+          <span>→</span>
+        </a>
+      </section>
+
+      <section class="feature-grid">
+        <article class="feature-card">
+          <div class="feature-icon blue">⌁</div>
+          <h3>{{ 'HOME.GUEST.FEATURES.REPORTS_TITLE' | translate }}</h3>
+          <p>{{ 'HOME.GUEST.FEATURES.REPORTS_TEXT' | translate }}</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon green">↗</div>
+          <h3>{{ 'HOME.GUEST.FEATURES.MANAGEMENT_TITLE' | translate }}</h3>
+          <p>{{ 'HOME.GUEST.FEATURES.MANAGEMENT_TEXT' | translate }}</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon purple">♢</div>
+          <h3>{{ 'HOME.GUEST.FEATURES.SECURITY_TITLE' | translate }}</h3>
+          <p>{{ 'HOME.GUEST.FEATURES.SECURITY_TEXT' | translate }}</p>
+        </article>
+      </section>
+
+      <footer class="home-footer">
+        {{ 'HOME.FOOTER' | translate }}
+      </footer>
+    }
+
+    @else {
       <section class="logo-section user-home" [attr.aria-label]="'HOME.AUTH.SESSION_SUMMARY' | translate">
         <div class="logo-icon-large">
-          <img src="/Logo.png" [attr.alt]="'HOME.BRAND_ALT' | translate" width="80" height="80" />
+          <img src="/Logo.svg" [attr.alt]="'HOME.BRAND_ALT' | translate" width="80" height="80" />
         </div>
-        <h1 class="home-title">{{ 'HOME.AUTH.WELCOME_USER' | translate: { name: displayName } }}</h1>
-        <p class="home-subtitle">{{ 'HOME.AUTH.SUBTITLE' | translate }}</p>
+
+        <h1 class="home-title">
+          {{ 'HOME.AUTH.WELCOME_USER' | translate: { name: displayName } }}
+        </h1>
+
+        <p class="home-subtitle">
+          {{ 'HOME.AUTH.SUBTITLE' | translate }}
+        </p>
 
         <div class="session-grid">
           <article class="session-item">
             <h2>{{ 'HOME.AUTH.COMPANY' | translate }}</h2>
             <p>{{ company }}</p>
           </article>
+
           <article class="session-item">
             <h2>{{ 'HOME.AUTH.ROLE' | translate }}</h2>
             <p>{{ roleLabel }}</p>
@@ -60,16 +125,34 @@
         </div>
 
         <div class="action-buttons">
-          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToProductos()">{{ 'HOME.AUTH.VIEW_PRODUCTS_CTA' | translate }}</button>
-          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToRegistrarEntrada()">{{ 'HOME.AUTH.REGISTER_ENTRY_CTA' | translate }}</button>
-          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToRegistrarSalida()">Registrar salida</button>
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToProductos()">
+            {{ 'HOME.AUTH.VIEW_PRODUCTS_CTA' | translate }}
+          </button>
+
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToRegistrarEntrada()">
+            {{ 'HOME.AUTH.REGISTER_ENTRY_CTA' | translate }}
+          </button>
+
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToRegistrarSalida()">
+            {{ 'HOME.AUTH.REGISTER_EXIT' | translate }}
+          </button>
+
           @if (isAdmin) {
-            <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToMovimientos()">Movimientos</button>
+            <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToMovimientos()">
+              {{ 'HOME.AUTH.MOVEMENTS' | translate }}
+            </button>
           }
-          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToCrearProducto()">{{ 'HOME.AUTH.ADD_PRODUCT_CTA' | translate }}</button>
-          <a routerLink="/perfil" class="btn-primary app-btn app-btn-primary">{{ 'HOME.AUTH.MY_PROFILE_CTA' | translate }}</a>
+
+          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToCrearProducto()">
+            {{ 'HOME.AUTH.ADD_PRODUCT_CTA' | translate }}
+          </button>
+
+          <a routerLink="/perfil" class="btn-primary app-btn app-btn-primary">
+            {{ 'HOME.AUTH.MY_PROFILE_CTA' | translate }}
+          </a>
         </div>
       </section>
     }
+
   </main>
 </div>

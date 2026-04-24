@@ -50,6 +50,7 @@
   "AUTH": {
     "LOGIN": {
       "TITLE": "Iniciar Sessão",
+      "SUBTITLE": "Insira suas credenciais para acessar o sistema.",
       "EMAIL_LABEL": "Email",
       "EMAIL_PLACEHOLDER": "Digite seu email",
       "EMAIL_REQUIRED": "Email é obrigatório",
@@ -337,7 +338,16 @@
       "TITLE": "Sistema de Controle de Inventário",
       "SUBTITLE": "Gerencie seu inventário de forma simples e eficiente. Controle produtos, movimentações, alertas e gere relatórios em tempo real.",
       "LOGIN_CTA": "INICIAR SESSÃO →",
-      "SIGNUP_CTA": "CRIAR CONTA →"
+      "SIGNUP_CTA": "CRIAR CONTA →",
+      "FEATURES": {
+        "REPORTS_TITLE": "Relatórios em Tempo Real",
+        "REPORTS_TEXT": "Visualize estatísticas detalhadas e relatórios atualizados instantaneamente sobre seu inventário.",
+        "MANAGEMENT_TITLE": "Gestão Inteligente",
+        "MANAGEMENT_TEXT": "Controle produtos, movimentações e alertas automáticos quando o estoque estiver baixo.",
+        "SECURITY_TITLE": "Seguro e Confiável",
+        "SECURITY_TEXT": "Seus dados estão protegidos com os mais altos padrões de segurança."
+      }
+
     },
     "AUTH": {
       "PRODUCTS": "PRODUTOS",
@@ -367,7 +377,8 @@
       "OPERATOR_PANEL": "Painel Operador",
       "MANAGER_PANEL": "Painel Gerente",
       "GO_PRODUCTS": "Ir para Produtos"
-    }
+    },
+    "FOOTER": "© 2026 Stoq. Sistema de gestão de inventário."
   },
   "MOVEMENTS": {
     "TITLE": "Movimentos de Inventário",

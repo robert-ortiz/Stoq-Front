@@ -49,7 +49,8 @@
   },
   "AUTH": {
     "LOGIN": {
-      "TITLE": "Log In",
+      "TITLE": "Login",
+      "SUBTITLE": "Enter your credentials to access the system",
       "EMAIL_LABEL": "Email",
       "EMAIL_PLACEHOLDER": "Enter your email",
       "EMAIL_REQUIRED": "Email is required",
@@ -337,7 +338,16 @@
       "TITLE": "Inventory Control System",
       "SUBTITLE": "Manage your inventory in a simple and efficient way. Control products, movements, alerts, and generate real-time reports.",
       "LOGIN_CTA": "LOG IN →",
-      "SIGNUP_CTA": "CREATE ACCOUNT →"
+      "SIGNUP_CTA": "CREATE ACCOUNT →",
+      "FEATURES": {
+        "REPORTS_TITLE": "Real-Time Reports",
+        "REPORTS_TEXT": "View detailed statistics and updated reports instantly about your inventory.",
+        "MANAGEMENT_TITLE": "Smart Management",
+        "MANAGEMENT_TEXT": "Control products, movements, and automatic alerts when stock is low.",
+        "SECURITY_TITLE": "Secure and Reliable",
+        "SECURITY_TEXT": "Your data is protected with the highest security standards."
+      }
+    
     },
     "AUTH": {
       "PRODUCTS": "PRODUCTS",
@@ -367,7 +377,8 @@
       "OPERATOR_PANEL": "Operator panel",
       "MANAGER_PANEL": "Manager panel",
       "GO_PRODUCTS": "Go to Products"
-    }
+    },
+    "FOOTER": "© 2026 Stoq. Inventory Management System."
   },
   "MOVEMENTS": {
     "TITLE": "Inventory Movements",
