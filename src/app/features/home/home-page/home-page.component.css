@@ -308,3 +308,21 @@
     grid-template-columns: 1fr;
   }
 }
+
+.home-language-select {
+  height: 40px;
+  border: 1px solid #d9e0ea;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #ffffff;
+  color: #17243a;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+
+.home-language-select:focus {
+  border-color: #17243a;
+  box-shadow: 0 0 0 3px rgba(23, 36, 58, 0.14);
+}

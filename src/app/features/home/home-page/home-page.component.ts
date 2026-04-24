@@ -156,4 +156,15 @@ export class HomePageComponent implements OnInit {
     this.authService.logout();
     this.router.navigateByUrl('/auth/login');
   }
+  availableLanguages = [
+    { code: 'es', flag: '🇪🇸', labelKey: 'LANGUAGE.ES' },
+    { code: 'en', flag: '🇬🇧', labelKey: 'LANGUAGE.EN' },
+    { code: 'pt', flag: '🇵🇹', labelKey: 'LANGUAGE.PT' }
+  ];
+
+  onLanguageChange(language: string): void {
+    this.currentLanguage = language;
+    this.translateService.use(language);
+    localStorage.setItem('language', language);
+  }
 }

@@ -2,20 +2,27 @@
   <header class="topbar">
     <a routerLink="/" class="logo-link" [attr.aria-label]="'HOME.BRAND_ARIA' | translate">
       <div class="logo-icon">
-        <img src="/Logo1.svg" [attr.alt]="'HOME.BRAND_ALT' | translate" width="40" height="40" />
+        <img src="/Logo.svg" [attr.alt]="'HOME.BRAND_ALT' | translate" width="40" height="40" />
       </div>
       <span class="brand">Stoq</span>
     </a>
 
     @if (!isAuthenticated) {
       <nav class="nav-actions">
-        <button type="button" class="btn-link app-btn app-btn-secondary" (click)="toggleLanguage()">
-          {{ currentLanguage === 'es' ? 'EN' : 'ES' }}
-        </button>
-
-        <a routerLink="/auth/login" class="btn-primary app-btn app-btn-primary">
-          {{ 'HOME.GUEST.LOGIN' | translate }}
-        </a>
+        <select
+          class="home-language-select"
+          [value]="currentLanguage"
+          (change)="onLanguageChange($any($event.target).value)"
+          aria-label="Language switcher">
+          @for (lang of availableLanguages; track lang.code) {
+            <option [value]="lang.code">
+              {{ lang.flag }} {{ lang.labelKey | translate }}
+          </option>
+        }
+      </select>
+      <a routerLink="/auth/login" class="btn-primary app-btn app-btn-primary">
+        {{ 'HOME.GUEST.LOGIN' | translate }}
+      </a>
       </nav>
     } @else {
       <nav class="nav-actions">
