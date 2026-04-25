@@ -38,7 +38,7 @@ export class AdminDashboardComponent implements OnInit {
   error = '';
 
   paginaActual = 1;
-  registrosPorPagina = 4;
+  registrosPorPagina = 8;
 
   mostrarModalCrear = false;
   mostrarModalEditar = false;

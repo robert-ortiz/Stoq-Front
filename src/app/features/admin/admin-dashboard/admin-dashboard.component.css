@@ -245,11 +245,10 @@ tbody td {
 }
 
 .user-modal {
-  width: 100%;
-  max-width: 790px;
+  width: min(92%, 680px);
   background: white;
   border-radius: 22px;
-  padding: 28px 36px 36px;
+  padding: 22px 32px 28px;
   position: relative;
 }
 
@@ -273,61 +272,61 @@ tbody td {
 
 .modal-header {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 42px;
+  font-size: 34px;
   font-weight: 700;
 }
 
 .modal-header p {
-  margin-top: 8px;
+  margin-top: 6px;
+  font-size: 14px;
   color: #6b7280;
 }
 
 .user-form {
   display: grid;
-  gap: 18px;
+  gap: 12px;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .field label {
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .field input,
 .field select {
   border: none;
   background: #f3f4f6;
-  border-radius: 14px;
-  padding: 16px;
-  font-size: 16px;
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-size: 14px;
 }
 
 .form-actions {
   display: flex;
-  gap: 16px;
-  margin-top: 24px;
+  gap: 14px;
+  margin-top: 14px;
 }
 
 .save-btn,
 .delete-btn {
-  flex: 1;
-  max-width: 220px;
-  min-width: 220px;
-  height: 52px;
+  min-width: 180px;
+  max-width: 180px;
+  height: 46px;
   border: none;
-  border-radius: 14px;
-  font-size: 18px;
-  font-weight: 600;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.25s ease;
 }
@@ -362,4 +361,32 @@ tbody td {
 
 .state-message.error {
   color: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .admin-content {
+    padding: 16px;
+  }
+
+  .card-header,
+  .pagination-footer,
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .user-modal {
+    width: 95%;
+    padding: 18px;
+  }
+
+  .modal-header h2 {
+    font-size: 26px;
+  }
+
+  .save-btn,
+  .delete-btn {
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
