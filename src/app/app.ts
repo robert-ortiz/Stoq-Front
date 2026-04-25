@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
 import { filter, Subscription } from 'rxjs';
 import { ToastContainerComponent } from './shared/components/toast-container/toast-container.component';
 import { AuthService } from './core/services/auth.service';
@@ -9,7 +8,7 @@ import { LanguageCode, LanguageService } from './core/services/language.service'
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ToastContainerComponent, TranslatePipe],
+  imports: [RouterOutlet, ToastContainerComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush

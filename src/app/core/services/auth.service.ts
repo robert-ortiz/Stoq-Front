@@ -205,13 +205,13 @@ export class AuthService {
   getLandingRoute(): string {
     switch (this.getRole()) {
       case 'ADMIN':
-        return '/productos';
+        return '/admin';
       case 'OPERADOR':
-        return '/productos';
+        return '/operador';
       case 'GERENTE':
-        return '/productos';
+        return '/gerente';
       default:
-        return '/productos';
+        return '/';
     }
   }
 

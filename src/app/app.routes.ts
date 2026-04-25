@@ -76,18 +76,29 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    redirectTo: 'productos',
-    pathMatch: 'full'
+    canActivate: [roleGuard],
+    data: { roles: ['ADMIN'] },
+    loadComponent: () =>
+      import('./features/admin/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent
+      )
   },
   {
-    path: 'operador',
-    redirectTo: 'productos',
-    pathMatch: 'full'
-  },
+  path: 'operador',
+  canActivate: [roleGuard],
+  data: { roles: ['OPERADOR'] },
+  loadComponent: () =>
+    import('./features/productos/lista-productos-operador/lista-productos-operador.component').then(
+      (m) => m.ListaProductosOperadorComponent
+    )
+},
   {
     path: 'gerente',
-    redirectTo: 'productos',
-    pathMatch: 'full'
+    canActivate: [roleGuard],
+    data: { roles: ['GERENTE'] },
+    loadComponent: () =>
+     import('./features/productos/lista-productos-gerente/lista-productos-gerente.component')
+        .then(m => m.ListaProductosGerenteComponent)
   },
   {
     path: 'auth',

@@ -1,0 +1,308 @@
+<section class="admin-page">
+  <header class="admin-header">
+    <a routerLink="/" class="brand">
+      <img src="/Logo.svg" alt="Stoq" width="44" height="44" />
+      <div>
+        <strong>Stoq</strong>
+        <span>{{ 'COMMON.SYSTEM_NAME' | translate }}</span>
+      </div>
+    </a>
+
+    <div class="header-actions">
+      <select
+        class="language-select"
+        [value]="currentLanguage"
+        (change)="onLanguageChange(($any($event.target).value))"
+      >
+        <option value="es">ES</option>
+        <option value="en">EN</option>
+        <option value="pt">PT</option>
+      </select>
+
+      <button type="button" class="logout-btn" (click)="logout()">
+        ↪ {{ 'COMMON.LOGOUT' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <main class="admin-content">
+    <nav class="admin-tabs">
+      <button
+        type="button"
+        class="tab-btn"
+        [class.active]="activeTab === 'usuarios'"
+        (click)="activeTab = 'usuarios'"
+      >
+        👥 {{ 'ADMIN.TABS.USERS' | translate }}
+      </button>
+
+      <button
+        type="button"
+        class="tab-btn"
+        [class.active]="activeTab === 'empresas'"
+        (click)="activeTab = 'empresas'"
+      >
+        🏢 {{ 'ADMIN.TABS.COMPANIES' | translate }}
+      </button>
+    </nav>
+
+    @if (activeTab === 'usuarios') {
+      <section class="admin-card">
+        <div class="card-header">
+          <div>
+            <h1>{{ 'ADMIN.USERS.TITLE' | translate }}</h1>
+            <p>{{ 'ADMIN.USERS.SUBTITLE' | translate }}</p>
+          </div>
+
+          <button type="button" class="primary-btn" (click)="abrirModalCrearUsuario()">
+            👤 {{ 'ADMIN.USERS.NEW_USER' | translate }}
+          </button>
+        </div>
+
+        <div class="search-box">
+          <span>⌕</span>
+          <input
+            type="text"
+            [formControl]="searchControl"
+            [placeholder]="'ADMIN.USERS.SEARCH' | translate"
+          />
+        </div>
+
+        @if (cargando) {
+          <p class="state-message">{{ 'ADMIN.USERS.LOADING' | translate }}</p>
+        } @else if (error) {
+          <p class="state-message error">{{ error }}</p>
+        } @else if (!usuariosFiltrados.length) {
+          <p class="state-message">{{ 'ADMIN.USERS.EMPTY' | translate }}</p>
+        } @else {
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>{{ 'COMMON.NAME' | translate }}</th>
+                  <th>{{ 'COMMON.EMAIL' | translate }}</th>
+                  <th>{{ 'COMMON.COMPANY' | translate }}</th>
+                  <th>{{ 'COMMON.ROLE' | translate }}</th>
+                  <th>{{ 'COMMON.STATUS' | translate }}</th>
+                  <th>{{ 'COMMON.ACTION' | translate }}</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (usuario of usuariosPaginados; track usuario.id) {
+                  <tr>
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.correo }}</td>
+                    <td>{{ usuario.empresa }}</td>
+                    <td>
+                      <span class="role-badge" [class.admin]="usuario.rol === 'ADMIN'">
+                        {{ usuario.rol }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="status-badge" [class.inactive]="!usuario.estado">
+                        {{ usuario.estado ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
+                      </span>
+                    </td>
+                    <td>
+                      <button type="button" class="edit-btn" (click)="editarUsuario(usuario)">
+                        {{ 'COMMON.EDIT' | translate }}
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <footer class="pagination-footer">
+            <p>
+              {{ 'ADMIN.USERS.SHOWING' | translate:{
+                from: desdeRegistro,
+                to: hastaRegistro,
+                total: usuariosFiltrados.length
+              } }}
+            </p>
+
+            <div class="pagination-actions">
+              <button type="button" (click)="paginaAnterior()" [disabled]="paginaActual <= 1">
+                {{ 'COMMON.PREVIOUS' | translate }}
+              </button>
+
+              <span>
+                {{ 'ADMIN.USERS.PAGE_OF' | translate:{
+                  page: paginaActual,
+                  total: totalPaginas
+                } }}
+              </span>
+
+              <button type="button" (click)="paginaSiguiente()" [disabled]="paginaActual >= totalPaginas">
+                {{ 'COMMON.NEXT' | translate }}
+              </button>
+            </div>
+          </footer>
+        }
+      </section>
+    }
+
+    @if (activeTab === 'empresas') {
+      <section class="admin-card">
+        <div class="card-header">
+          <div>
+            <h1>{{ 'ADMIN.COMPANIES.TITLE' | translate }}</h1>
+            <p>{{ 'ADMIN.COMPANIES.SUBTITLE' | translate }}</p>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>{{ 'COMMON.COMPANY' | translate }}</th>
+                <th>{{ 'ADMIN.COMPANIES.USERS' | translate }}</th>
+                <th>{{ 'COMMON.STATUS' | translate }}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Empresa XYZ</td>
+                <td>3</td>
+                <td><span class="status-badge">{{ 'COMMON.ACTIVE' | translate }}</span></td>
+              </tr>
+              <tr>
+                <td>Empresa ABC</td>
+                <td>1</td>
+                <td><span class="status-badge">{{ 'COMMON.ACTIVE' | translate }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+  </main>
+
+  @if (mostrarModalCrear) {
+    <div class="modal-backdrop" (click)="cerrarModalCrearUsuario()">
+      <section class="user-modal" (click)="$event.stopPropagation()">
+        <button type="button" class="close-btn" (click)="cerrarModalCrearUsuario()">×</button>
+
+        <button type="button" class="back-btn" (click)="cerrarModalCrearUsuario()">
+          ← {{ 'COMMON.BACK' | translate }}
+        </button>
+
+        <div class="modal-header">
+          <h2>{{ 'ADMIN.MODAL.CREATE_USER_TITLE' | translate }}</h2>
+          <p>{{ 'ADMIN.MODAL.CREATE_USER_SUBTITLE' | translate }}</p>
+        </div>
+
+        <form [formGroup]="userForm" (ngSubmit)="crearUsuario()" class="user-form">
+          <div class="field">
+            <label>{{ 'COMMON.NAME' | translate }}</label>
+            <input type="text" formControlName="nombre" [placeholder]="'COMMON.NAME' | translate" />
+          </div>
+
+          <div class="field">
+            <label>{{ 'COMMON.EMAIL' | translate }}</label>
+            <input type="email" formControlName="correo" placeholder="correo@ejemplo.com" />
+          </div>
+
+          <div class="field">
+            <label>{{ 'COMMON.PASSWORD' | translate }}</label>
+            <input type="password" formControlName="contrasena" placeholder="••••••••" />
+          </div>
+
+          <div class="field">
+            <label>{{ 'COMMON.COMPANY' | translate }}</label>
+            <input type="text" formControlName="empresa" [placeholder]="'COMMON.COMPANY' | translate" />
+          </div>
+
+          <div class="field">
+            <label>{{ 'COMMON.STATUS' | translate }}</label>
+            <select formControlName="estado">
+              <option [value]="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+              <option [value]="false">{{ 'COMMON.INACTIVE' | translate }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>{{ 'COMMON.ROLE' | translate }}</label>
+            <select formControlName="rol">
+              <option value="OPERADOR">{{ 'COMMON.USER' | translate }}</option>
+              <option value="GERENTE">{{ 'COMMON.MANAGER' | translate }}</option>
+              <option value="ADMIN">{{ 'COMMON.ADMINISTRATOR' | translate }}</option>
+            </select>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="save-btn">
+                {{ 'ADMIN.MODAL.CREATE_USER_BUTTON' | translate }}
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  }
+
+  @if (mostrarModalEditar && usuarioEditando) {
+  <div class="modal-backdrop" (click)="cerrarModalEditarUsuario()">
+    <section class="user-modal" (click)="$event.stopPropagation()">
+      <button type="button" class="close-btn" (click)="cerrarModalEditarUsuario()">×</button>
+
+      <button type="button" class="back-btn" (click)="cerrarModalEditarUsuario()">
+        ← {{ 'COMMON.BACK' | translate }}
+      </button>
+
+      <div class="modal-header">
+        <h2>{{ 'ADMIN.MODAL.EDIT_USER_TITLE' | translate }}</h2>
+        <p>{{ 'ADMIN.MODAL.EDIT_USER_SUBTITLE' | translate }}</p>
+      </div>
+
+      <form [formGroup]="editForm" (ngSubmit)="guardarCambiosUsuario()" class="user-form">
+        <div class="field">
+          <label>{{ 'COMMON.NAME' | translate }}</label>
+          <input type="text" formControlName="nombre" />
+        </div>
+
+        <div class="field">
+          <label>{{ 'COMMON.EMAIL' | translate }}</label>
+          <input type="email" formControlName="correo" />
+        </div>
+
+        <div class="field">
+          <label>{{ 'COMMON.COMPANY' | translate }}</label>
+          <input type="text" formControlName="empresa" />
+        </div>
+
+        <div class="field">
+          <label>{{ 'COMMON.STATUS' | translate }}</label>
+          <select formControlName="estado">
+            <option [value]="true">{{ 'COMMON.ACTIVE' | translate }}</option>
+            <option [value]="false">{{ 'COMMON.INACTIVE' | translate }}</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>{{ 'COMMON.ROLE' | translate }}</label>
+          <select formControlName="rol">
+            <option value="OPERADOR">{{ 'COMMON.USER' | translate }}</option>
+            <option value="GERENTE">{{ 'COMMON.MANAGER' | translate }}</option>
+            <option value="ADMIN">{{ 'COMMON.ADMINISTRATOR' | translate }}</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="save-btn">
+            {{ 'COMMON.SAVE_CHANGES' | translate }}
+          </button>
+
+          <button type="button" class="delete-btn" (click)="eliminarUsuario()">
+            {{ 'ADMIN.MODAL.DELETE_USER' | translate }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+}
+
+</section>
