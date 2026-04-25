@@ -209,7 +209,7 @@ export class AuthService {
       case 'OPERADOR':
         return '/operador';
       case 'GERENTE':
-        return '/productos';
+        return '/gerente';
       default:
         return '/';
     }

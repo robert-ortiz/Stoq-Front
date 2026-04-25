@@ -47,7 +47,9 @@
     "USER": "Usuário",
     "MANAGER": "Gerente",
     "ADMINISTRATOR": "Administrador",
-    "SAVE_CHANGES": "Salvar alterações"
+    "SAVE_CHANGES": "Salvar alterações",
+    "REPORTS": "Relatórios",
+    "NOTIFICATIONS": "Notificações"
   },
   "LANGUAGE": {
     "LABEL": "Idioma",

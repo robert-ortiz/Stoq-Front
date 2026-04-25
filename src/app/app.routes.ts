@@ -94,8 +94,11 @@ export const routes: Routes = [
 },
   {
     path: 'gerente',
-    redirectTo: 'productos',
-    pathMatch: 'full'
+    canActivate: [roleGuard],
+    data: { roles: ['GERENTE'] },
+    loadComponent: () =>
+     import('./features/productos/lista-productos-gerente/lista-productos-gerente.component')
+        .then(m => m.ListaProductosGerenteComponent)
   },
   {
     path: 'auth',
