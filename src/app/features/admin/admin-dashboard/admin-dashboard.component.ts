@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef } from '@angular/core';
 
 import { AuthService } from '../../../core/services/auth.service';
@@ -12,7 +12,7 @@ import { LanguageCode, LanguageService } from '../../../core/services/language.s
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslatePipe],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css'
 })

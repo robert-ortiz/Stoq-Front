@@ -11,11 +11,11 @@ import {
   calcularTotalesEntradaSalida,
   obtenerProductosConMasMovimiento
 } from '../movimientos.selectors';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-lista-movimientos',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './lista-movimientos.component.html',
   styleUrl: './lista-movimientos.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -37,6 +37,9 @@ export class ListaMovimientosComponent implements OnInit {
   readonly verificandoPermisos = signal(true);
   readonly cargando = signal(false);
   readonly error = signal('');
+  readonly tipoSeleccionado = signal('TODOS');
+  readonly fechaInicioSeleccionada = signal('');
+  readonly fechaFinSeleccionada = signal('');
 
   private readonly paginaActual = signal(1);
   readonly tamanioPagina = 10;
@@ -59,18 +62,18 @@ export class ListaMovimientosComponent implements OnInit {
 
   readonly hayFiltrosActivos = computed(() => {
     const termino = this.busqueda().trim().length > 0;
-    const tipo = this.tipoControl.value !== 'TODOS';
-    const fechaInicio = this.fechaInicioControl.value.trim().length > 0;
-    const fechaFin = this.fechaFinControl.value.trim().length > 0;
+    const tipo = this.tipoSeleccionado().trim().toUpperCase() !== 'TODOS';
+    const fechaInicio = this.fechaInicioSeleccionada().trim().length > 0;
+    const fechaFin = this.fechaFinSeleccionada().trim().length > 0;
 
     return termino || tipo || fechaInicio || fechaFin;
   });
 
   readonly movimientosFiltrados = computed(() => {
     const termino = this.busqueda().trim().toLowerCase();
-    const tipoSeleccionado = this.tipoControl.value.trim().toUpperCase();
-    const fechaInicio = this.fechaInicioControl.value.trim();
-    const fechaFin = this.fechaFinControl.value.trim();
+    const tipoSeleccionado = this.tipoSeleccionado().trim().toUpperCase();
+    const fechaInicio = this.fechaInicioSeleccionada().trim();
+    const fechaFin = this.fechaFinSeleccionada().trim();
 
     const inicioMs = fechaInicio ? new Date(fechaInicio).getTime() : Number.NEGATIVE_INFINITY;
     const finMs = fechaFin ? new Date(fechaFin).getTime() : Number.POSITIVE_INFINITY;
@@ -144,14 +147,17 @@ export class ListaMovimientosComponent implements OnInit {
       });
 
     this.tipoControl.valueChanges.pipe(startWith('TODOS')).subscribe(() => {
+      this.tipoSeleccionado.set(this.tipoControl.value);
       this.paginaActual.set(1);
     });
 
     this.fechaInicioControl.valueChanges.pipe(startWith('')).subscribe(() => {
+      this.fechaInicioSeleccionada.set(this.fechaInicioControl.value);
       this.paginaActual.set(1);
     });
 
     this.fechaFinControl.valueChanges.pipe(startWith('')).subscribe(() => {
+      this.fechaFinSeleccionada.set(this.fechaFinControl.value);
       this.paginaActual.set(1);
     });
 
@@ -195,6 +201,10 @@ export class ListaMovimientosComponent implements OnInit {
     this.tipoControl.setValue('TODOS');
     this.fechaInicioControl.setValue('');
     this.fechaFinControl.setValue('');
+    this.busqueda.set('');
+    this.tipoSeleccionado.set('TODOS');
+    this.fechaInicioSeleccionada.set('');
+    this.fechaFinSeleccionada.set('');
     this.paginaActual.set(1);
     this.cargarMovimientos();
   }
@@ -269,6 +279,13 @@ export class ListaMovimientosComponent implements OnInit {
       return null;
     }
 
-    return trimmed.length === 16 ? `${trimmed}:00` : trimmed;
+    const normalized = trimmed.length === 16 ? `${trimmed}:00` : trimmed;
+    const date = new Date(normalized);
+
+    if (Number.isNaN(date.getTime())) {
+      return normalized;
+    }
+
+    return date.toISOString();
   }
 }

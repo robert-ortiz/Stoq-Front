@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { LanguageCode,LanguageService } from '../../../core/services/language.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
@@ -19,7 +19,7 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-lista-productos-operador',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './lista-productos-operador.component.html',
   styleUrl: './lista-productos-operador.component.css'
 })

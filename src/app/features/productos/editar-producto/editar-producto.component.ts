@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { CategoriaApi, ProductoService, UnidadApi, UpdateProductoRequest } from '../../../core/services/producto.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -10,12 +11,18 @@ import { ToastService } from '../../../core/services/toast.service';
 @Component({
   selector: 'app-editar-producto',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslatePipe],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './editar-producto.component.html',
   styleUrl: './editar-producto.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditarProductoComponent implements OnInit {
+  readonly maxLength = {
+    codigo: 255,
+    nombre: 255,
+    ubicacion: 255
+  };
+
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private productoService = inject(ProductoService);
@@ -36,9 +43,9 @@ export class EditarProductoComponent implements OnInit {
   success = '';
 
   form = this.fb.group({
-    codigo: ['', [Validators.required]],
-    nombre: ['', [Validators.required, Validators.minLength(2)]],
-    ubicacion: ['', []],
+    codigo: ['', [Validators.required, Validators.maxLength(this.maxLength.codigo)]],
+    nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(this.maxLength.nombre)]],
+    ubicacion: ['', [Validators.maxLength(this.maxLength.ubicacion)]],
     categoriaId: ['', [Validators.required]],
     unidadId: ['', [Validators.required]],
     stock_minimo: [0, [Validators.required, Validators.min(0)]]
@@ -96,13 +103,56 @@ export class EditarProductoComponent implements OnInit {
         this.toastService.success(this.translateService.instant('PRODUCTS.EDIT.SUCCESS_UPDATE'));
         this.cdr.markForCheck();
       },
-      error: () => {
+      error: (error: HttpErrorResponse) => {
         this.guardando = false;
-        this.error = this.translateService.instant('PRODUCTS.EDIT.ERROR_UPDATE');
-        this.toastService.error(this.translateService.instant('PRODUCTS.EDIT.ERROR_UPDATE_SHORT'));
+        this.error = this.resolveUpdateError(error);
+        this.toastService.error(this.error);
         this.cdr.markForCheck();
       }
     });
+  }
+
+  private resolveUpdateError(error: HttpErrorResponse): string {
+    const backendMessage = this.readBackendMessage(error?.error).toLowerCase();
+    if (
+      backendMessage.includes('255') ||
+      backendMessage.includes('value too long') ||
+      backendMessage.includes('character varying') ||
+      backendMessage.includes('no puede exceder') ||
+      backendMessage.includes('cannot exceed')
+    ) {
+      return this.translateService.instant('PRODUCTS.EDIT.FIELD_MAX_255');
+    }
+
+    if (backendMessage) {
+      return this.readBackendMessage(error?.error);
+    }
+
+    return this.translateService.instant('PRODUCTS.EDIT.ERROR_UPDATE');
+  }
+
+  private readBackendMessage(payload: unknown): string {
+    if (!payload) {
+      return '';
+    }
+
+    if (typeof payload === 'string') {
+      return payload.trim();
+    }
+
+    if (typeof payload === 'object') {
+      const map = payload as Record<string, unknown>;
+
+      if (typeof map['message'] === 'string' && map['message'].trim()) {
+        return map['message'].trim();
+      }
+
+      if (typeof map['error'] === 'string' && map['error'].trim()) {
+        return map['error'].trim();
+      }
+    }
+
+    return '';
   }
 
   private cargarDatosPantalla(productoId: string): void {

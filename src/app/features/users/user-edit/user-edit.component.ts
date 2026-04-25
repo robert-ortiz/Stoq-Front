@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject }
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserService } from '../../../core/services/user.service';
 import { RoleService } from '../../../core/services/role.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -10,7 +10,7 @@ import { FormShellComponent } from '../../../shared/components/form-shell/form-s
 
 @Component({
   selector: 'app-user-edit',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslateModule],
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

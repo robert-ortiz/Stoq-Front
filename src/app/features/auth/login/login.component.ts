@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../../app/core/services/auth.service';
 import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
 import { UserService } from '../../../core/services/user.service';
@@ -11,7 +11,7 @@ import { UserService } from '../../../core/services/user.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslateModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

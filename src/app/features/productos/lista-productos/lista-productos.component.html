@@ -89,7 +89,7 @@
 
         <div class="field app-field">
           <label for="stock_inicial" class="app-field-label">{{ 'PRODUCTS.LIST.INITIAL_STOCK' | translate }}</label>
-          <input id="stock_inicial" class="app-input" type="number" formControlName="stock_inicial" min="0" />
+          <input id="stock_inicial" class="app-input" type="number" formControlName="stock_inicial" min="1" />
           @if (stockInicial?.invalid && stockInicial?.touched) {
             <span class="field-error">
               @if (stockInicial?.errors?.['required']) {
@@ -103,7 +103,7 @@
 
         <div class="field app-field">
           <label for="stock_minimo" class="app-field-label">{{ 'PRODUCTS.LIST.MIN_STOCK' | translate }}</label>
-          <input id="stock_minimo" class="app-input" type="number" formControlName="stock_minimo" min="0" />
+          <input id="stock_minimo" class="app-input" type="number" formControlName="stock_minimo" min="1" />
           @if (stockMinimo?.invalid && stockMinimo?.touched) {
             <span class="field-error">
               @if (stockMinimo?.errors?.['required']) {

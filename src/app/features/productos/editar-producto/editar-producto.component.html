@@ -18,21 +18,29 @@
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="edit-form" novalidate>
         <div class="field app-field">
           <label for="codigo" class="app-field-label">{{ 'COMMON.CODE' | translate }}</label>
-          <input id="codigo" class="app-input" type="text" formControlName="codigo" [placeholder]="'PRODUCTS.EDIT.CODE_PLACEHOLDER' | translate" />
+          <input id="codigo" class="app-input" type="text" formControlName="codigo" [attr.maxlength]="maxLength.codigo" [placeholder]="'PRODUCTS.EDIT.CODE_PLACEHOLDER' | translate" />
           @if (codigo?.invalid && codigo?.touched) {
-            <span class="field-error">{{ 'PRODUCTS.EDIT.CODE_REQUIRED' | translate }}</span>
+            <span class="field-error">
+              @if (codigo?.errors?.['required']) {
+                {{ 'PRODUCTS.EDIT.CODE_REQUIRED' | translate }}
+              } @else if (codigo?.errors?.['maxlength']) {
+                {{ 'PRODUCTS.EDIT.FIELD_MAX_255' | translate }}
+              }
+            </span>
           }
         </div>
 
         <div class="field app-field">
           <label for="nombre" class="app-field-label">{{ 'COMMON.NAME' | translate }}</label>
-          <input id="nombre" class="app-input" type="text" formControlName="nombre" [placeholder]="'PRODUCTS.EDIT.NAME_PLACEHOLDER' | translate" />
+          <input id="nombre" class="app-input" type="text" formControlName="nombre" [attr.maxlength]="maxLength.nombre" [placeholder]="'PRODUCTS.EDIT.NAME_PLACEHOLDER' | translate" />
           @if (nombre?.invalid && nombre?.touched) {
             <span class="field-error">
               @if (nombre?.errors?.['required']) {
                 {{ 'PRODUCTS.EDIT.NAME_REQUIRED' | translate }}
               } @else if (nombre?.errors?.['minlength']) {
                 {{ 'PRODUCTS.EDIT.NAME_MIN' | translate }}
+              } @else if (nombre?.errors?.['maxlength']) {
+                {{ 'PRODUCTS.EDIT.FIELD_MAX_255' | translate }}
               }
             </span>
           }
@@ -40,7 +48,10 @@
 
         <div class="field app-field">
           <label for="ubicacion" class="app-field-label">{{ 'COMMON.LOCATION' | translate }}</label>
-          <input id="ubicacion" class="app-input" type="text" formControlName="ubicacion" [placeholder]="'PRODUCTS.EDIT.LOCATION_PLACEHOLDER' | translate" />
+          <input id="ubicacion" class="app-input" type="text" formControlName="ubicacion" [attr.maxlength]="maxLength.ubicacion" [placeholder]="'PRODUCTS.EDIT.LOCATION_PLACEHOLDER' | translate" />
+          @if (form.get('ubicacion')?.errors?.['maxlength'] && form.get('ubicacion')?.touched) {
+            <span class="field-error">{{ 'PRODUCTS.EDIT.FIELD_MAX_255' | translate }}</span>
+          }
         </div>
 
         <div class="grid-2">

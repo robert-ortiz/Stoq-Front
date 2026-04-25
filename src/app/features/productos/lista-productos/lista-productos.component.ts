@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, forkJoin, startWith } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
@@ -30,7 +30,7 @@ interface ProductoRow {
 @Component({
   selector: 'app-lista-productos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './lista-productos.component.html',
   styleUrl: './lista-productos.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -53,8 +53,8 @@ export class ListaProductosComponent implements OnInit {
     ubicacion: ['', []],
     categoriaId: ['', [Validators.required]],
     unidadId: ['', [Validators.required]],
-    stock_inicial: [0, [Validators.required, Validators.min(0)]],
-    stock_minimo: [0, [Validators.required, Validators.min(0)]]
+    stock_inicial: [1, [Validators.required, Validators.min(1)]],
+    stock_minimo: [1, [Validators.required, Validators.min(1)]]
   });
 
   productos: ProductoRow[] = [];
@@ -108,8 +108,8 @@ export class ListaProductosComponent implements OnInit {
         ubicacion: '',
         categoriaId: '',
         unidadId: '',
-        stock_inicial: 0,
-        stock_minimo: 0
+        stock_inicial: 1,
+        stock_minimo: 1
       });
     }
   }
@@ -142,8 +142,8 @@ export class ListaProductosComponent implements OnInit {
       ubicacion: (raw.ubicacion ?? '').trim(),
       categoriaId,
       unidadId,
-      stock_inicial: raw.stock_inicial ?? 0,
-      stock_minimo: raw.stock_minimo ?? 0
+      stock_inicial: raw.stock_inicial ?? 1,
+      stock_minimo: raw.stock_minimo ?? 1
     };
 
     this.productoService.createProducto(payload).subscribe({
