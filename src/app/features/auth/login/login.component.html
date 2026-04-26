@@ -1,20 +1,12 @@
 <section
   appFormShell
-  [title]="'Stoq'"
-  [subtitle]="'AUTH.LOGIN.TITLE' | translate"
+  [title]="'AUTH.LOGIN.TITLE' | translate"
+  [subtitle]="'AUTH.LOGIN.SUBTITLE' | translate"
   [backRoute]="'/'"
   [backLabel]="'COMMON.BACK' | translate"
 >
 
   <div shell-body>
-
-    
-
-    <h1>{{ 'AUTH.LOGIN.TITLE' | translate }}</h1>
-    <p class="subtitle">
-      {{ 'AUTH.LOGIN.SUBTITLE' | translate }}
-    </p>
-
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
 
       <!-- Correo -->
@@ -115,13 +107,6 @@
 
   <div shell-footer class="login-footer">
     <p>¿Necesitas ayuda? Contacta a tu administrador</p>
-
-    <a
-      routerLink="../signup"
-      class="forgot-password-link"
-    >
-      {{ 'HOME.GUEST.SIGNUP' | translate }}
-    </a>
   </div>
 
 </section>

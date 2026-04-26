@@ -104,7 +104,7 @@
       "PASSWORD_MIN": "Contraseña debe tener al menos 6 caracteres",
       "SHOW_PASSWORD": "Mostrar contraseña",
       "HIDE_PASSWORD": "Ocultar contraseña",
-      "SUBMIT": "INICIAR SESIÓN",
+      "SUBMIT": "Iniciar Sesión",
       "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
       "ERROR_INVALID_CREDENTIALS": "Correo o contraseña incorrectos"
     },
@@ -394,7 +394,7 @@
       "SIGNUP": "REGISTRARSE",
       "TITLE": "Sistema de Control de Inventario",
       "SUBTITLE": "Gestiona tu inventario de manera simple y eficiente. Controla productos, movimientos, alertas y genera reportes en tiempo real.",
-      "LOGIN_CTA": "INICIAR SESIÓN →",
+      "LOGIN_CTA": "Comenzar Ahora →",
       "SIGNUP_CTA": "CREAR CUENTA →",
       "FEATURES": {
         "REPORTS_TITLE": "Reportes en Tiempo Real",
