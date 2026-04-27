@@ -3,7 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ChangeDetectorRef } from '@angular/core';
 
 import { AuthService } from '../../../core/services/auth.service';
@@ -22,6 +22,7 @@ export class AdminDashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private userService = inject(UserService);
   private languageService = inject(LanguageService);
+  private translateService = inject(TranslateService);
   private toastService = inject(ToastService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
@@ -46,6 +47,9 @@ export class AdminDashboardComponent implements OnInit {
   mostrarModalCrear = false;
   mostrarModalEditar = false;
   creandoUsuario = false;
+  isDeleting = false;
+  showDeleteConfirmModal = false;
+  deleteConfirmMessage = '';
   usuarioEditando: EditableUser | null = null;
 
   userForm = this.fb.group({
@@ -370,13 +374,45 @@ export class AdminDashboardComponent implements OnInit {
       return;
     }
 
+    if (this.creandoUsuario || this.isDeleting) {
+      return;
+    }
+
+    const target = this.translateService.instant('USER.EDIT.DELETE_TARGET_USER');
+    this.deleteConfirmMessage = this.translateService.instant('USER.EDIT.CONFIRM_DELETE', { target });
+    this.showDeleteConfirmModal = true;
+    this.cdr.markForCheck();
+  }
+
+  cancelarEliminarUsuario(): void {
+    if (this.isDeleting) {
+      return;
+    }
+
+    this.showDeleteConfirmModal = false;
+    this.deleteConfirmMessage = '';
+    this.cdr.markForCheck();
+  }
+
+  confirmarEliminarUsuario(): void {
+    if (!this.usuarioEditando || this.isDeleting) {
+      return;
+    }
+
+    this.isDeleting = true;
+    this.showDeleteConfirmModal = false;
+    this.deleteConfirmMessage = '';
+
     this.userService.deleteUserById(this.usuarioEditando.id).subscribe({
       next: () => {
+        this.isDeleting = false;
         this.cerrarModalEditarUsuario();
         this.cargarUsuarios();
       },
       error: () => {
+        this.isDeleting = false;
         this.error = 'No se pudo eliminar el usuario.';
+        this.cdr.markForCheck();
       }
     });
   }
