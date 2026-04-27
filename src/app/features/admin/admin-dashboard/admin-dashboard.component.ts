@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -8,6 +9,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { EditableUser, UserService } from '../../../core/services/user.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -20,6 +22,7 @@ export class AdminDashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private userService = inject(UserService);
   private languageService = inject(LanguageService);
+  private toastService = inject(ToastService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
@@ -42,6 +45,7 @@ export class AdminDashboardComponent implements OnInit {
 
   mostrarModalCrear = false;
   mostrarModalEditar = false;
+  creandoUsuario = false;
   usuarioEditando: EditableUser | null = null;
 
   userForm = this.fb.group({
@@ -158,10 +162,12 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   crearUsuario(): void {
-    if (this.userForm.invalid) {
+    if (this.creandoUsuario || this.userForm.invalid) {
       this.userForm.markAllAsTouched();
       return;
     }
+
+    this.creandoUsuario = true;
 
     const value = this.userForm.getRawValue();
 
@@ -175,13 +181,134 @@ export class AdminDashboardComponent implements OnInit {
 
     this.authService.signup(payload).subscribe({
       next: () => {
+        this.creandoUsuario = false;
+        this.toastService.success('Cuenta creada con exito.');
         this.cerrarModalCrearUsuario();
         this.cargarUsuarios();
       },
-      error: () => {
-        this.error = 'No se pudo crear el usuario.';
+      error: (error: HttpErrorResponse) => {
+        this.creandoUsuario = false;
+        const message = this.resolveCreateUserError(error);
+        this.error = message;
+
+        if (this.isCorreoYaRegistrado(error, message)) {
+          this.toastService.error('El correo ya esta registrado.');
+          return;
+        }
+
+        this.toastService.error(message);
       }
     });
+  }
+
+  private isCorreoYaRegistrado(error: HttpErrorResponse, message: string): boolean {
+    if (error.status === 409) {
+      return true;
+    }
+
+    const normalized = message.toLowerCase();
+    return (
+      (normalized.includes('correo') && normalized.includes('registrado')) ||
+      normalized.includes('already registered') ||
+      normalized.includes('query did not return a unique result')
+    );
+  }
+
+  private resolveCreateUserError(error: HttpErrorResponse): string {
+    const fallback = 'No se pudo crear el usuario.';
+
+    if (error.status === 0) {
+      return 'No se pudo conectar con el servidor.';
+    }
+
+    const payload = this.toObject(error.error);
+    const message = typeof payload?.['message'] === 'string' ? payload['message'].trim() : '';
+    const details = payload?.['details'];
+
+    if (details && typeof details === 'object') {
+      const detailMessages = Object.values(details as Record<string, unknown>)
+        .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+        .map((value) => this.translateErrorMessageToSpanish(value.trim()))
+        .filter((value) => value.length > 0);
+
+      if (detailMessages.length > 0) {
+        return detailMessages.join(' ');
+      }
+    }
+
+    if (message) {
+      const translated = this.translateErrorMessageToSpanish(message);
+      if (translated) {
+        return translated;
+      }
+    }
+
+    return fallback;
+  }
+
+  private translateErrorMessageToSpanish(message: string): string {
+    const normalized = message.toLowerCase();
+
+    if (
+      (normalized.includes('correo') && normalized.includes('registrado')) ||
+      normalized.includes('already registered') ||
+      normalized.includes('query did not return a unique result')
+    ) {
+      return 'El correo ya esta registrado.';
+    }
+
+    if (normalized.includes('rol no permitido') || normalized.includes('role not allowed')) {
+      return 'El rol seleccionado no es valido.';
+    }
+
+    if (normalized.includes('rol no encontrado') || normalized.includes('role not found')) {
+      return 'No se encontro el rol seleccionado.';
+    }
+
+    if (normalized.includes('datos de entrada invalidos') || normalized.includes('invalid input')) {
+      return 'Datos de entrada invalidos.';
+    }
+
+    if (normalized.includes('contrasena') && normalized.includes('obligatoria')) {
+      return 'La contrasena es obligatoria.';
+    }
+
+    if (normalized.includes('correo') && normalized.includes('formato')) {
+      return 'El correo no tiene un formato valido.';
+    }
+
+    if (
+      normalized.includes('no se pudo conectar') ||
+      normalized.includes('failed to fetch') ||
+      normalized.includes('network')
+    ) {
+      return 'No se pudo conectar con el servidor.';
+    }
+
+    return '';
+  }
+
+  private toObject(payload: unknown): Record<string, unknown> | null {
+    if (!payload) {
+      return null;
+    }
+
+    if (typeof payload === 'object') {
+      return payload as Record<string, unknown>;
+    }
+
+    if (typeof payload === 'string') {
+      try {
+        const parsed = JSON.parse(payload) as unknown;
+        if (parsed && typeof parsed === 'object') {
+          return parsed as Record<string, unknown>;
+        }
+      } catch {
+        return null;
+      }
+    }
+
+    return null;
   }
 
   editarUsuario(usuario: EditableUser): void {

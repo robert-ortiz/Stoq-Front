@@ -14,9 +14,9 @@
       [value]="currentLanguage"
       (change)="onLanguageChange(($any($event.target).value))"
     >
-      <option value="es">ES</option>
-      <option value="en">EN</option>
-      <option value="pt">PT</option>
+      <option value="es">{{ 'LANGUAGE.ES' | translate }}</option>
+      <option value="en">{{ 'LANGUAGE.EN' | translate }}</option>
+      <option value="pt">{{ 'LANGUAGE.PT' | translate }}</option>
     </select>
 
     <button type="button" class="logout-btn" (click)="logout()">

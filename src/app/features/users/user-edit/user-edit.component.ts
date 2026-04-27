@@ -33,6 +33,8 @@ export class UserEditComponent implements OnInit {
   isLoading = false;
   isSaving = false;
   isDeleting = false;
+  showDeleteConfirmModal = false;
+  deleteConfirmMessage = '';
   errorMessage = '';
   successMessage = '';
   roles: string[] = ['ADMIN', 'OPERADOR', 'GERENTE'];
@@ -130,17 +132,25 @@ export class UserEditComponent implements OnInit {
 
     const targetKey = this.isOwnAccount ? 'USER.EDIT.DELETE_TARGET_ACCOUNT' : 'USER.EDIT.DELETE_TARGET_USER';
     const target = this.translateService.instant(targetKey);
-    const message = this.translateService.instant('USER.EDIT.CONFIRM_DELETE', { target });
+    this.deleteConfirmMessage = this.translateService.instant('USER.EDIT.CONFIRM_DELETE', { target });
+    this.showDeleteConfirmModal = true;
+    this.cdr.markForCheck();
+  }
 
-    if (!window.confirm(message)) {
+  onCancelDelete(): void {
+    if (this.isDeleting) {
       return;
     }
 
-    this.onConfirmDelete();
+    this.showDeleteConfirmModal = false;
+    this.deleteConfirmMessage = '';
+    this.cdr.markForCheck();
   }
 
   onConfirmDelete(): void {
     this.isDeleting = true;
+    this.showDeleteConfirmModal = false;
+    this.deleteConfirmMessage = '';
     this.errorMessage = '';
     this.successMessage = '';
 

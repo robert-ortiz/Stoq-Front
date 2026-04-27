@@ -21,9 +21,11 @@
     }
   </select>
 
-  <a routerLink="/auth/login" class="btn-primary app-btn app-btn-primary">
-    {{ 'HOME.GUEST.LOGIN' | translate }}
-  </a>
+  @if (!isAuthenticated) {
+    <a routerLink="/auth/login" class="btn-primary app-btn app-btn-primary">
+      {{ 'HOME.GUEST.LOGIN' | translate }}
+    </a>
+  }
 </nav>
     
   </header>
@@ -82,10 +84,6 @@
           {{ 'HOME.AUTH.WELCOME_USER' | translate: { name: displayName } }}
         </h1>
 
-        <p class="home-subtitle">
-          {{ 'HOME.AUTH.SUBTITLE' | translate }}
-        </p>
-
         <div class="session-grid">
           <article class="session-item">
             <h2>{{ 'HOME.AUTH.COMPANY' | translate }}</h2>
@@ -108,7 +106,7 @@
           </button>
 
           <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToRegistrarSalida()">
-            {{ 'HOME.AUTH.REGISTER_EXIT' | translate }}
+            {{ 'HOME.AUTH.REGISTER_EXIT_CTA' | translate }}
           </button>
 
           @if (isAdmin) {
