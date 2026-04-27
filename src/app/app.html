@@ -1,22 +1,4 @@
 <main class="app-root-shell" [class]="themeClass">
-	<div class="app-shell-branding">
-		<a routerLink="/" class="app-shell-logo" aria-label="Stoq">
-			<img src="/Logo.png" alt="Stoq" width="56" height="56" />
-			<span class="app-shell-logo-text">Stoq</span>
-		</a>
-		<section class="language-switcher" aria-label="Language switcher">
-			<label for="app-language-select">{{ 'LANGUAGE.LABEL' | translate }}</label>
-			<select
-				id="app-language-select"
-				[class]="'language-select ' + themeClass"
-				[value]="currentLanguage"
-				(change)="onLanguageChange(($any($event.target).value))">
-				@for (lang of availableLanguages; track lang.code) {
-					<option [value]="lang.code">{{ lang.flag }} {{ lang.labelKey | translate }}</option>
-				}
-			</select>
-		</section>
-	</div>
-	<router-outlet></router-outlet>
-	<app-toast-container></app-toast-container>
+  <router-outlet></router-outlet>
+  <app-toast-container></app-toast-container>
 </main>

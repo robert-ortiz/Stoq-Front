@@ -24,6 +24,8 @@
               {{ 'AUTH.SIGNUP.FIRST_NAME_REQUIRED' | translate }}
             } @else if (nombre?.errors?.['minlength']) {
               {{ 'AUTH.SIGNUP.MIN_1_CHAR' | translate }}
+            } @else if (nombre?.errors?.['pattern']) {
+              {{ 'AUTH.SIGNUP.NAME_ALLOWED_CHARS' | translate }}
             } @else if (nombre?.errors?.['maxlength']) {
               {{ 'AUTH.SIGNUP.MAX_CHARS' | translate: { count: maxLength.nombre } }}
             }
@@ -49,6 +51,8 @@
               {{ 'AUTH.SIGNUP.LAST_NAME_1_REQUIRED' | translate }}
             } @else if (apellido1?.errors?.['minlength']) {
               {{ 'AUTH.SIGNUP.MIN_1_CHAR' | translate }}
+            } @else if (apellido1?.errors?.['pattern']) {
+              {{ 'AUTH.SIGNUP.NAME_ALLOWED_CHARS' | translate }}
             } @else if (apellido1?.errors?.['maxlength']) {
               {{ 'AUTH.SIGNUP.MAX_CHARS' | translate: { count: maxLength.apellido1 } }}
             }
@@ -68,9 +72,13 @@
           [placeholder]="'AUTH.SIGNUP.LAST_NAME_2_PLACEHOLDER' | translate"
           [attr.aria-label]="'AUTH.SIGNUP.LAST_NAME_2' | translate"
         />
-        @if (apellido2?.errors?.['maxlength'] && apellido2?.touched) {
+        @if (apellido2?.invalid && apellido2?.touched) {
           <span class="error-text" role="alert">
-            {{ 'AUTH.SIGNUP.MAX_CHARS' | translate: { count: maxLength.apellido2 } }}
+            @if (apellido2?.errors?.['pattern']) {
+              {{ 'AUTH.SIGNUP.NAME_ALLOWED_CHARS' | translate }}
+            } @else if (apellido2?.errors?.['maxlength']) {
+              {{ 'AUTH.SIGNUP.MAX_CHARS' | translate: { count: maxLength.apellido2 } }}
+            }
           </span>
         }
       </div> 

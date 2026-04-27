@@ -1,14 +1,14 @@
 import { Component, ChangeDetectionStrategy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,11 +22,19 @@ export class HomePageComponent implements OnInit {
   private router = inject(Router);
   private translateService = inject(TranslateService);
 
+  currentLanguage = 'es';
+
   private backendDisplayName: string | null = null;
   private backendCompany: string | null = null;
   private backendRole: string | null = null;
 
   ngOnInit(): void {
+    this.currentLanguage =
+      this.translateService.currentLang ||
+      this.translateService.defaultLang ||
+      localStorage.getItem('language') ||
+      'es';
+
     if (!this.isAuthenticated) {
       return;
     }
@@ -51,12 +59,40 @@ export class HomePageComponent implements OnInit {
     });
   }
 
+  toggleLanguage(): void {
+    const languages = ['es', 'en', 'pt'];
+    const currentIndex = languages.indexOf(this.currentLanguage);
+    const nextIndex = (currentIndex + 1) % languages.length;
+
+    this.currentLanguage = languages[nextIndex];
+
+    this.translateService.use(this.currentLanguage);
+    localStorage.setItem('language', this.currentLanguage);
+  }
+
+  get nextLanguageLabel(): string {
+    switch (this.currentLanguage) {
+      case 'es':
+        return 'EN';
+      case 'en':
+        return 'PT';
+      case 'pt':
+        return 'ES';
+      default:
+        return 'EN';
+    }
+  }
+
   get isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
   }
 
   get displayName(): string {
-    return this.backendDisplayName || this.authService.getDisplayName() || this.translateService.instant('HOME.AUTH.DEFAULT_USER');
+    return (
+      this.backendDisplayName ||
+      this.authService.getDisplayName() ||
+      this.translateService.instant('HOME.AUTH.DEFAULT_USER')
+    );
   }
 
   get role(): string {
@@ -77,7 +113,11 @@ export class HomePageComponent implements OnInit {
   }
 
   get company(): string {
-    return this.backendCompany || this.authService.getCompany() || this.translateService.instant('HOME.AUTH.DEFAULT_COMPANY');
+    return (
+      this.backendCompany ||
+      this.authService.getCompany() ||
+      this.translateService.instant('HOME.AUTH.DEFAULT_COMPANY')
+    );
   }
 
   get isAdmin(): boolean {
@@ -115,5 +155,16 @@ export class HomePageComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigateByUrl('/auth/login');
+  }
+  availableLanguages = [
+    { code: 'es', flag: '🇪🇸', labelKey: 'LANGUAGE.ES' },
+    { code: 'en', flag: '🇬🇧', labelKey: 'LANGUAGE.EN' },
+    { code: 'pt', flag: '🇵🇹', labelKey: 'LANGUAGE.PT' }
+  ];
+
+  onLanguageChange(language: string): void {
+    this.currentLanguage = language;
+    this.translateService.use(language);
+    localStorage.setItem('language', language);
   }
 }

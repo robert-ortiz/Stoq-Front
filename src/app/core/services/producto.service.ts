@@ -152,6 +152,10 @@ export class ProductoService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
+  eliminarProducto(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
   private normalize(value: string | undefined | null): string {
     return (value ?? '').trim().toLowerCase();
   }

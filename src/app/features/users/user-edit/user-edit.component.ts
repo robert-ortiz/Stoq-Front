@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject }
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserService } from '../../../core/services/user.service';
 import { RoleService } from '../../../core/services/role.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -10,7 +10,7 @@ import { FormShellComponent } from '../../../shared/components/form-shell/form-s
 
 @Component({
   selector: 'app-user-edit',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslateModule],
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,6 +33,8 @@ export class UserEditComponent implements OnInit {
   isLoading = false;
   isSaving = false;
   isDeleting = false;
+  showDeleteConfirmModal = false;
+  deleteConfirmMessage = '';
   errorMessage = '';
   successMessage = '';
   roles: string[] = ['ADMIN', 'OPERADOR', 'GERENTE'];
@@ -130,17 +132,25 @@ export class UserEditComponent implements OnInit {
 
     const targetKey = this.isOwnAccount ? 'USER.EDIT.DELETE_TARGET_ACCOUNT' : 'USER.EDIT.DELETE_TARGET_USER';
     const target = this.translateService.instant(targetKey);
-    const message = this.translateService.instant('USER.EDIT.CONFIRM_DELETE', { target });
+    this.deleteConfirmMessage = this.translateService.instant('USER.EDIT.CONFIRM_DELETE', { target });
+    this.showDeleteConfirmModal = true;
+    this.cdr.markForCheck();
+  }
 
-    if (!window.confirm(message)) {
+  onCancelDelete(): void {
+    if (this.isDeleting) {
       return;
     }
 
-    this.onConfirmDelete();
+    this.showDeleteConfirmModal = false;
+    this.deleteConfirmMessage = '';
+    this.cdr.markForCheck();
   }
 
   onConfirmDelete(): void {
     this.isDeleting = true;
+    this.showDeleteConfirmModal = false;
+    this.deleteConfirmMessage = '';
     this.errorMessage = '';
     this.successMessage = '';
 

@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { ValidacionSalida } from '../../../core/services/movimiento.service';
 
 @Component({
   selector: 'app-stock-alert',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, TranslateModule],
   template: `
     <div class="stock-validation" [class.valid]="validacion.permitido" [class.invalid]="!validacion.permitido">
       <div class="alert-header">

@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { RoleService } from '../../../core/services/role.service';
 import { FormShellComponent } from '../../../shared/components/form-shell/form-shell.component';
@@ -17,7 +17,7 @@ function validadorCoincidenciaContrasena(group: FormGroup) {
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormShellComponent, TranslateModule],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,6 +26,8 @@ function validadorCoincidenciaContrasena(group: FormGroup) {
   }
 })
 export class SignupComponent {
+  private static readonly NAME_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ0-9 ]+$/;
+
   form: FormGroup;
   isLoading = false;
   errorMessage = '';
@@ -46,9 +48,22 @@ export class SignupComponent {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group(
       {
-        nombre: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(this.maxLength.nombre)]],
-        apellido1: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(this.maxLength.apellido1)]],
-        apellido2: ['', [Validators.maxLength(this.maxLength.apellido2)]],
+        nombre: ['', [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(this.maxLength.nombre),
+          Validators.pattern(SignupComponent.NAME_PATTERN)
+        ]],
+        apellido1: ['', [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(this.maxLength.apellido1),
+          Validators.pattern(SignupComponent.NAME_PATTERN)
+        ]],
+        apellido2: ['', [
+          Validators.maxLength(this.maxLength.apellido2),
+          Validators.pattern(SignupComponent.NAME_PATTERN)
+        ]],
         correo: ['', [Validators.required, Validators.email, Validators.maxLength(this.maxLength.correo)]],
         empresa: ['', [Validators.maxLength(this.maxLength.empresa)]],
         rol: ['OPERADOR', [Validators.required]],

@@ -1,0 +1,471 @@
+<section class="operator-products-page">
+  <header class="operator-header">
+    <a routerLink="/" class="brand">
+      <img src="/Logo.svg" alt="Stoq" width="44" height="44" />
+      <div>
+        <strong>Stoq</strong>
+        <span>{{ 'COMMON.SYSTEM_NAME' | translate }}</span>
+      </div>
+    </a>
+
+    <div class="header-actions">
+      <button type="button" class="report-btn" (click)="irAReportes()">
+        📄 {{ 'COMMON.REPORTS' | translate }}
+      </button>
+
+      <select
+        class="language-select"
+        [value]="currentLanguage"
+        (change)="onLanguageChange(($any($event.target).value))">
+        <option value="es">{{ 'LANGUAGE.ES' | translate }}</option>
+        <option value="en">{{ 'LANGUAGE.EN' | translate }}</option>
+        <option value="pt">{{ 'LANGUAGE.PT' | translate }}</option>
+      </select>
+
+      <button type="button" class="report-btn" (click)="verNotificaciones()">
+        🔔 {{ 'COMMON.NOTIFICATIONS' | translate }}
+      </button>
+
+      <button type="button" class="logout-btn" (click)="logout()">
+        ↪ {{ 'COMMON.LOGOUT' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <main class="operator-content">
+    <section class="top-actions">
+      <div class="movement-actions">
+        <button type="button" class="movement-btn entry" (click)="abrirModalEntrada()">
+          ↓ {{ 'COMMON.REGISTER_ENTRY' | translate }}
+        </button>
+
+        <button type="button" class="movement-btn exit" (click)="abrirModalSalida()">
+          ↑ {{ 'COMMON.REGISTER_EXIT' | translate }}
+        </button>
+      </div>
+
+      <button type="button" class="new-product-btn" (click)="abrirModalCrearProducto()">
+        + {{ 'PRODUCTS.LIST.NEW_PRODUCT' | translate }}
+      </button>
+    </section>
+
+    <section class="products-card">
+      <div class="card-header">
+        <div>
+          <h1>{{ 'PRODUCTS.LIST.TITLE' | translate }}</h1>
+        </div>
+      </div>
+
+      <div class="search-box">
+        <span>⌕</span>
+        <input
+          type="text"
+          [formControl]="searchControl"
+          [placeholder]="'PRODUCTS.LIST.SEARCH_PLACEHOLDER' | translate"
+        />
+      </div>
+
+      @if (cargando) {
+        <p class="state-message">{{ 'PRODUCTS.LIST.LOADING' | translate }}</p>
+      } @else if (error) {
+        <p class="state-message error">{{ error }}</p>
+      } @else if (!productosFiltrados.length) {
+        <p class="state-message">{{ 'PRODUCTS.LIST.EMPTY_FILTER' | translate }}</p>
+      } @else {
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>{{ 'COMMON.CODE' | translate }}</th>
+                <th>{{ 'COMMON.NAME' | translate }}</th>
+                <th>{{ 'COMMON.CATEGORY' | translate }}</th>
+                <th>{{ 'COMMON.UNIT' | translate }}</th>
+                <th>{{ 'PRODUCTS.LIST.CURRENT_STOCK' | translate }}</th>
+                <th>{{ 'PRODUCTS.LIST.MIN_STOCK' | translate }}</th>
+                <th>{{ 'COMMON.STATUS' | translate }}</th>
+                <th>{{ 'COMMON.ACTION' | translate }}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (producto of productosPaginados; track producto.id) {
+                <tr>
+                  <td>{{ producto.codigo }}</td>
+                  <td>{{ producto.nombre }}</td>
+                  <td>{{ producto.categoria?.nombre }}</td>
+                  <td>{{ producto.unidad?.abreviatura }}</td>
+                  <td>{{ producto.stockActual }}</td>
+                  <td>{{ producto.stockMinimo }}</td>
+                  <td>
+                    <span class="status-badge" [class.inactive]="!producto.estado">
+                      {{ producto.estado ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="row-actions">
+                      <button type="button" class="edit-btn" (click)="irAEditar(producto)">
+                        {{ 'COMMON.EDIT' | translate }}
+                      </button>
+
+                      <button type="button" class="delete-btn" (click)="solicitarEliminarProducto(producto)">
+                        {{ 'COMMON.DELETE' | translate }}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <footer class="pagination-footer">
+          <p>
+            {{ 'PRODUCTS.LIST.SHOWING' | translate:{ from: desdeRegistro, to: hastaRegistro, total: productosFiltrados.length } }}
+          </p>
+
+          <div class="pagination-actions">
+            <button type="button" (click)="paginaAnterior()" [disabled]="paginaActual <= 1">
+              {{ 'COMMON.PREVIOUS' | translate }}
+            </button>
+
+            <span>
+              {{ 'PRODUCTS.LIST.PAGE_OF' | translate:{ page: paginaActual, total: totalPaginas } }}
+            </span>
+
+            <button type="button" (click)="paginaSiguiente()" [disabled]="paginaActual >= totalPaginas">
+              {{ 'COMMON.NEXT' | translate }}
+            </button>
+          </div>
+        </footer>
+      }
+    </section>
+  </main>
+
+  @if (mostrarModalEntrada) {
+    <div class="modal-backdrop" (click)="cerrarModalEntrada()">
+      <section class="movement-modal" (click)="$event.stopPropagation()">
+        <form [formGroup]="entradaForm" (ngSubmit)="registrarEntrada()">
+          <h2>Registrar Entrada</h2>
+          <button type="submit">Guardar</button>
+        </form>
+      </section>
+    </div>
+  }
+
+  @if (mostrarModalSalida) {
+    <div class="modal-backdrop" (click)="cerrarModalSalida()">
+      <section class="movement-modal" (click)="$event.stopPropagation()">
+        <form [formGroup]="salidaForm" (ngSubmit)="registrarSalida()">
+          <h2>Registrar Salida</h2>
+          <button type="submit">Guardar</button>
+        </form>
+      </section>
+    </div>
+  }
+
+  @if (mostrarModalCrear) {
+    <div class="modal-backdrop" (click)="cerrarModalCrearProducto()">
+      <section class="movement-modal" (click)="$event.stopPropagation()">
+        <form [formGroup]="createForm" (ngSubmit)="crearProducto()">
+          <h2>Crear Producto</h2>
+          <button type="submit">Guardar</button>
+        </form>
+      </section>
+    </div>
+  }
+
+  @if (mostrarModalEliminar && productoAEliminar) {
+    <div class="modal-backdrop" (click)="cancelarEliminarProducto()">
+      <section class="confirm-modal" (click)="$event.stopPropagation()">
+        <h2>Eliminar producto</h2>
+        <p>¿Seguro que deseas eliminar {{ productoAEliminar.nombre }}?</p>
+
+        <div class="modal-actions">
+          <button type="button" (click)="cancelarEliminarProducto()">Cancelar</button>
+          <button type="button" class="delete-btn" (click)="confirmarEliminarProducto()">
+            Eliminar
+          </button>
+        </div>
+      </section>
+    </div>
+  }
+
+  <!-- Modal Entrada -->
+<div *ngIf="mostrarModalEntrada" class="modal-backdrop" (click)="cerrarModalEntrada()">
+  <section class="movement-modal" (click)="$event.stopPropagation()">
+    <button type="button" class="close-btn" (click)="cerrarModalEntrada()">×</button>
+
+    <div class="modal-title-row">
+      <div class="modal-icon entry">↓</div>
+      <div>
+        <h2>{{ 'ENTRY.MODAL.TITLE' | translate }}</h2>
+        <p>{{ 'ENTRY.MODAL.SUBTITLE' | translate }}</p>
+      </div>
+    </div>
+
+    <form [formGroup]="entradaForm" (ngSubmit)="registrarEntrada()" class="modal-form">
+      <div class="field">
+        <label>{{ 'COMMON.PRODUCT' | translate }} *</label>
+        <select formControlName="productoId">
+          <option value="">{{ 'ENTRY.MODAL.SELECT_PRODUCT' | translate }}</option>
+          <option *ngFor="let producto of productos" [value]="producto.id">
+            {{ producto.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>{{ 'COMMON.QUANTITY' | translate }} *</label>
+        <input
+          type="number"
+          formControlName="cantidad"
+          [placeholder]="'ENTRY.MODAL.QUANTITY_PLACEHOLDER' | translate"
+        />
+      </div>
+
+      <div class="field">
+        <label>{{ 'COMMON.DATE' | translate }} *</label>
+        <input type="date" formControlName="fecha" />
+      </div>
+
+      <div class="field">
+        <label>{{ 'COMMON.NOTES' | translate }}</label>
+        <textarea
+          formControlName="motivo"
+          [placeholder]="'COMMON.OPTIONAL_NOTES' | translate">
+        </textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="cerrarModalEntrada()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+
+        <button type="submit" class="submit-btn entry">
+          {{ 'COMMON.REGISTER_ENTRY' | translate }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<!-- Modal Salida -->
+<div *ngIf="mostrarModalSalida" class="modal-backdrop" (click)="cerrarModalSalida()">
+  <section class="movement-modal" (click)="$event.stopPropagation()">
+    <button type="button" class="close-btn" (click)="cerrarModalSalida()">×</button>
+
+    <div class="modal-title-row">
+      <div class="modal-icon exit">↑</div>
+      <div>
+        <h2>{{ 'EXIT.MODAL.TITLE' | translate }}</h2>
+        <p>{{ 'EXIT.MODAL.SUBTITLE' | translate }}</p>
+      </div>
+    </div>
+
+    <form [formGroup]="salidaForm" (ngSubmit)="registrarSalida()" class="modal-form">
+      <div class="field">
+        <label>{{ 'COMMON.PRODUCT' | translate }} *</label>
+        <select formControlName="productoId">
+          <option value="">{{ 'EXIT.MODAL.SELECT_PRODUCT' | translate }}</option>
+          <option *ngFor="let producto of productos" [value]="producto.id">
+            {{ producto.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>{{ 'COMMON.QUANTITY' | translate }} *</label>
+        <input
+          type="number"
+          formControlName="cantidad"
+          [placeholder]="'EXIT.MODAL.QUANTITY_PLACEHOLDER' | translate"
+        />
+      </div>
+
+      <div class="field">
+        <label>{{ 'COMMON.DATE' | translate }} *</label>
+        <input type="date" formControlName="fecha" />
+      </div>
+
+      <div class="field">
+        <label>{{ 'COMMON.NOTES' | translate }}</label>
+        <textarea
+          formControlName="motivo"
+          [placeholder]="'COMMON.OPTIONAL_NOTES' | translate">
+        </textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="cerrarModalSalida()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+
+        <button type="submit" class="submit-btn exit">
+          {{ 'COMMON.REGISTER_EXIT' | translate }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<!-- Modal Crear Producto -->
+<div *ngIf="mostrarModalCrear" class="modal-backdrop" (click)="cerrarModalCrearProducto()">
+  <section class="create-product-modal" (click)="$event.stopPropagation()">
+    <button type="button" class="close-btn" (click)="cerrarModalCrearProducto()">×</button>
+
+    <div class="modal-title-row">
+      <div class="modal-icon product">
+        <img src="/Logo.svg" alt="Stoq" width="38" height="38" />
+      </div>
+      <div>
+        <h2>{{ 'PRODUCTS.LIST.CREATE_TITLE' | translate }}</h2>
+        <p>{{ 'PRODUCTS.LIST.CREATE_HELPER' | translate }}</p>
+      </div>
+    </div>
+
+    <form [formGroup]="createForm" (ngSubmit)="crearProducto()" class="create-grid">
+      <div class="field">
+        <label>{{ 'COMMON.CODE' | translate }}</label>
+        <input
+          type="text"
+          formControlName="codigo"
+          [placeholder]="'PRODUCTS.LIST.CODE_PLACEHOLDER' | translate"
+        />
+      </div>
+
+      <div class="field">
+        <label>{{ 'COMMON.NAME' | translate }}</label>
+        <input
+          type="text"
+          formControlName="nombre"
+          [placeholder]="'PRODUCTS.LIST.NAME_PLACEHOLDER' | translate"
+        />
+      </div>
+
+      <div class="field">
+        <label>{{ 'COMMON.CATEGORY' | translate }}</label>
+        <select formControlName="categoriaId">
+          <option value="">{{ 'PRODUCTS.LIST.SELECT_CATEGORY' | translate }}</option>
+          <option *ngFor="let categoria of categorias" [value]="categoria.id">
+            {{ categoria.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>{{ 'COMMON.UNIT' | translate }}</label>
+        <select formControlName="unidadId">
+          <option value="">{{ 'PRODUCTS.LIST.SELECT_UNIT' | translate }}</option>
+          <option *ngFor="let unidad of unidades" [value]="unidad.id">
+            {{ unidad.abreviatura }} - {{ unidad.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>{{ 'PRODUCTS.LIST.INITIAL_STOCK' | translate }}</label>
+        <input type="number" formControlName="stock_inicial" />
+      </div>
+
+      <div class="field">
+        <label>{{ 'PRODUCTS.LIST.MIN_STOCK' | translate }}</label>
+        <input type="number" formControlName="stock_minimo" />
+      </div>
+
+      <div class="create-modal-actions">
+        <button type="submit" class="submit-btn product">
+          {{ 'PRODUCTS.LIST.CREATE_CTA' | translate }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<!-- Modal Eliminar Producto -->
+<div *ngIf="mostrarModalEliminar && productoAEliminar" class="modal-backdrop" (click)="cancelarEliminarProducto()">
+  <section class="confirm-modal" (click)="$event.stopPropagation()">
+    <button type="button" class="close-btn" (click)="cancelarEliminarProducto()">×</button>
+
+    <h2>{{ 'COMMON.DELETE' | translate }}</h2>
+    <p>
+      ¿Seguro que deseas eliminar
+      <strong>{{ productoAEliminar.nombre }}</strong>?
+    </p>
+
+    <div class="modal-actions">
+      <button type="button" class="cancel-btn" (click)="cancelarEliminarProducto()">
+        {{ 'COMMON.CANCEL' | translate }}
+      </button>
+
+      <button type="button" class="delete-confirm-btn" (click)="confirmarEliminarProducto()">
+        {{ 'COMMON.DELETE' | translate }}
+      </button>
+    </div>
+  </section>
+</div>
+<div *ngIf="mostrarModalEditar" class="modal-backdrop" (click)="cerrarModalEditarProducto()">
+  <section class="create-product-modal" (click)="$event.stopPropagation()">
+    <button type="button" class="close-btn" (click)="cerrarModalEditarProducto()">×</button>
+
+    <div class="modal-title-row">
+      <div class="modal-icon product">
+        ✎
+      </div>
+      <div>
+        <h2>Editar Producto</h2>
+        <p>Actualiza la información del producto.</p>
+      </div>
+    </div>
+
+    <form [formGroup]="editForm" (ngSubmit)="guardarCambiosProducto()" class="create-grid">
+      <div class="field">
+        <label>Código</label>
+        <input type="text" formControlName="codigo" />
+      </div>
+
+      <div class="field">
+        <label>Nombre</label>
+        <input type="text" formControlName="nombre" />
+      </div>
+
+      <div class="field">
+        <label>Categoría</label>
+        <select formControlName="categoriaId">
+          <option *ngFor="let categoria of categorias" [value]="categoria.id">
+            {{ categoria.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Unidad</label>
+        <select formControlName="unidadId">
+          <option *ngFor="let unidad of unidades" [value]="unidad.id">
+            {{ unidad.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Stock mínimo</label>
+        <input type="number" formControlName="stock_minimo" />
+      </div>
+
+      <div class="field">
+        <label>Estado</label>
+        <select formControlName="estado">
+          <option [ngValue]="true">Activo</option>
+          <option [ngValue]="false">Inactivo</option>
+        </select>
+      </div>
+
+      <div class="create-modal-actions">
+        <button type="submit" class="submit-btn product">
+          Guardar cambios
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+
+</section>

@@ -1,5 +1,7 @@
 {
   "COMMON": {
+    "NOTES": "Notes or observations",
+    "OPTIONAL_NOTES": "Add additional details (optional)",
     "BACK": "BACK",
     "HOME": "Home",
     "PRODUCTS": "Products",
@@ -39,7 +41,15 @@
     "NEXT": "Next",
     "ERROR": "Error",
     "SUCCESS": "Success",
-    "CLOSE_NOTIFICATION": "Close notification"
+    "CLOSE_NOTIFICATION": "Close notification",
+    "COMPANY": "Company",
+    "PASSWORD": "Password",
+    "USER": "User",
+    "MANAGER": "Manager",
+    "ADMINISTRATOR": "Administrator",
+    "SAVE_CHANGES": "Save changes",
+    "REPORTS": "Reports",
+    "NOTIFICATIONS": "Notifications"
   },
   "LANGUAGE": {
     "LABEL": "Language",
@@ -47,9 +57,42 @@
     "EN": "English",
     "PT": "Portuguese"
   },
+
+  "ADMIN": {
+    "TABS": {
+      "USERS": "Users",
+      "COMPANIES": "Companies"
+    },
+    "USERS": {
+      "TITLE": "User List",
+      "SUBTITLE": "Manage system users with their roles and permissions",
+      "NEW_USER": "New user",
+      "SEARCH": "Search by name, email or company",
+      "LOADING": "Loading users...",
+      "EMPTY": "No users found.",
+      "SHOWING": "Showing {{from}}-{{to}} of {{total}}",
+      "PAGE_OF": "Page {{page}} of {{total}}"
+    },
+    "COMPANIES": {
+      "TITLE": "Companies",
+      "SUBTITLE": "Reference company view. Management will be implemented later.",
+      "USERS": "Users"
+    },
+    "MODAL": {
+      "CREATE_USER_TITLE": "Create User",
+      "CREATE_USER_SUBTITLE": "Fill in the data to create a new system user.",
+      "CREATE_USER_BUTTON": "Create user",
+      "EDIT_USER_TITLE": "Edit User",
+      "EDIT_USER_SUBTITLE": "Update the main information of the account.",
+      "DELETE_USER": "Delete account"
+    }
+  },
+
+
   "AUTH": {
     "LOGIN": {
-      "TITLE": "Log In",
+      "TITLE": "Login",
+      "SUBTITLE": "Enter your credentials to access the system",
       "EMAIL_LABEL": "Email",
       "EMAIL_PLACEHOLDER": "Enter your email",
       "EMAIL_REQUIRED": "Email is required",
@@ -70,6 +113,7 @@
       "FIRST_NAME_PLACEHOLDER": "John",
       "FIRST_NAME_REQUIRED": "First name is required",
       "MIN_1_CHAR": "Must have at least 1 character",
+      "NAME_ALLOWED_CHARS": "Only letters, numbers and spaces are allowed",
       "MAX_CHARS": "Maximum {{count}} characters",
       "LAST_NAME_1": "Last Name",
       "LAST_NAME_1_PLACEHOLDER": "Doe",
@@ -193,10 +237,10 @@
       "UNIT_REQUIRED": "Unit is required.",
       "INITIAL_STOCK": "Initial stock",
       "INITIAL_STOCK_REQUIRED": "Initial stock is required.",
-      "INITIAL_STOCK_MIN": "Initial stock must be 0 or greater.",
+      "INITIAL_STOCK_MIN": "Initial stock must be greater than 0.",
       "MIN_STOCK": "Minimum stock",
       "MIN_STOCK_REQUIRED": "Minimum stock is required.",
-      "MIN_STOCK_MIN": "Minimum stock must be 0 or greater.",
+      "MIN_STOCK_MIN": "Minimum stock must be greater than 0.",
       "CREATE_CTA": "Create product",
       "SEARCH_LABEL": "Search product",
       "SEARCH_PLACEHOLDER": "Search by code, name, category or unit",
@@ -235,6 +279,7 @@
       "MIN_STOCK": "Minimum stock",
       "MIN_STOCK_REQUIRED": "Minimum stock is required.",
       "MIN_STOCK_NEGATIVE": "Minimum stock cannot be negative.",
+      "FIELD_MAX_255": "The field cannot exceed 255 characters.",
       "BACK_TO_LIST": "Back to list",
       "SAVE_CHANGES": "Save changes",
       "ERROR_NO_ID": "Product identifier not found.",
@@ -245,6 +290,12 @@
     }
   },
   "ENTRY": {
+    "MODAL": {
+      "TITLE": "Register Entry",
+      "SUBTITLE": "Register products entering inventory",
+      "SELECT_PRODUCT": "Select a product",
+      "QUANTITY_PLACEHOLDER": "Enter the quantity"
+    },
     "REGISTER": {
       "TITLE": "Product Entry Registration",
       "SUBTITLE": "Add stock to inventory",
@@ -268,6 +319,12 @@
     }
   },
   "EXIT": {
+    "MODAL": {
+      "TITLE": "Register Exit",
+      "SUBTITLE": "Register products leaving inventory",
+      "SELECT_PRODUCT": "Select a product",
+      "QUANTITY_PLACEHOLDER": "Enter the quantity"
+    },
     "REGISTER": {
       "TITLE": "Product Exit Registration",
       "SUBTITLE": "Remove products from inventory",
@@ -307,6 +364,7 @@
       "DELETING": "Deleting...",
       "DELETE_ACCOUNT": "Delete account",
       "DELETE_USER": "Delete user",
+      "CONFIRM_DELETE_TITLE": "Confirm deletion",
       "DELETE_TARGET_ACCOUNT": "your account",
       "DELETE_TARGET_USER": "this user",
       "CONFIRM_DELETE": "Are you sure you want to delete {{target}}? This action cannot be undone.",
@@ -336,8 +394,17 @@
       "SIGNUP": "SIGN UP",
       "TITLE": "Inventory Control System",
       "SUBTITLE": "Manage your inventory in a simple and efficient way. Control products, movements, alerts, and generate real-time reports.",
-      "LOGIN_CTA": "LOG IN →",
-      "SIGNUP_CTA": "CREATE ACCOUNT →"
+      "LOGIN_CTA": "Start Now →",
+      "SIGNUP_CTA": "CREATE ACCOUNT →",
+      "FEATURES": {
+        "REPORTS_TITLE": "Real-Time Reports",
+        "REPORTS_TEXT": "View detailed statistics and updated reports instantly about your inventory.",
+        "MANAGEMENT_TITLE": "Smart Management",
+        "MANAGEMENT_TEXT": "Control products, movements, and automatic alerts when stock is low.",
+        "SECURITY_TITLE": "Secure and Reliable",
+        "SECURITY_TEXT": "Your data is protected with the highest security standards."
+      }
+    
     },
     "AUTH": {
       "PRODUCTS": "PRODUCTS",
@@ -360,14 +427,16 @@
       "ROLE": "Role",
       "VIEW_PRODUCTS_CTA": "VIEW PRODUCTS →",
       "REGISTER_ENTRY_CTA": "REGISTER ENTRY →",
+      "REGISTER_EXIT_CTA": "REGISTER EXIT →",
       "ADD_PRODUCT_CTA": "ADD PRODUCT →",
-      "MY_PROFILE_CTA": "MY PROFILE →",
+      "MY_PROFILE_CTA": "EDIT PROFILE →",
       "AVAILABLE_PANELS": "Available panels",
       "ADMIN_PANEL": "Admin panel",
       "OPERATOR_PANEL": "Operator panel",
       "MANAGER_PANEL": "Manager panel",
       "GO_PRODUCTS": "Go to Products"
-    }
+    },
+    "FOOTER": "© 2026 Stoq. Inventory Management System."
   },
   "MOVEMENTS": {
     "TITLE": "Inventory Movements",

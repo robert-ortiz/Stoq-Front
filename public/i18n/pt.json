@@ -1,5 +1,7 @@
 {
   "COMMON": {
+    "NOTES": "Notas ou observações",
+    "OPTIONAL_NOTES": "Adicione detalhes adicionais (opcional)",
     "BACK": "VOLTAR",
     "HOME": "Início",
     "PRODUCTS": "Produtos",
@@ -39,7 +41,15 @@
     "NEXT": "Próxima",
     "ERROR": "Erro",
     "SUCCESS": "Sucesso",
-    "CLOSE_NOTIFICATION": "Fechar notificação"
+    "CLOSE_NOTIFICATION": "Fechar notificação",
+    "COMPANY": "Empresa",
+    "PASSWORD": "Senha",
+    "USER": "Usuário",
+    "MANAGER": "Gerente",
+    "ADMINISTRATOR": "Administrador",
+    "SAVE_CHANGES": "Salvar alterações",
+    "REPORTS": "Relatórios",
+    "NOTIFICATIONS": "Notificações"
   },
   "LANGUAGE": {
     "LABEL": "Idioma",
@@ -47,9 +57,42 @@
     "EN": "Inglês",
     "PT": "Português"
   },
+
+  "ADMIN": {
+    "TABS": {
+      "USERS": "Usuários",
+      "COMPANIES": "Empresas"
+    },
+    "USERS": {
+      "TITLE": "Lista de Usuários",
+      "SUBTITLE": "Gerencie os usuários do sistema com seus papéis e permissões",
+      "NEW_USER": "Novo usuário",
+      "SEARCH": "Pesquisar por nome, email ou empresa",
+      "LOADING": "Carregando usuários...",
+      "EMPTY": "Nenhum usuário encontrado.",
+      "SHOWING": "Mostrando {{from}}-{{to}} de {{total}}",
+      "PAGE_OF": "Página {{page}} de {{total}}"
+    },
+    "COMPANIES": {
+      "TITLE": "Empresas",
+      "SUBTITLE": "Visualização referencial de empresas. O gerenciamento será implementado posteriormente.",
+      "USERS": "Usuários"
+    },
+    "MODAL": {
+      "CREATE_USER_TITLE": "Criar Usuário",
+      "CREATE_USER_SUBTITLE": "Preencha os dados para criar um novo usuário no sistema.",
+      "CREATE_USER_BUTTON": "Criar usuário",
+      "EDIT_USER_TITLE": "Editar usuário",
+      "EDIT_USER_SUBTITLE": "Atualize as informações da conta principal.",
+      "DELETE_USER": "Excluir conta"
+    }
+  },
+
+
   "AUTH": {
     "LOGIN": {
       "TITLE": "Iniciar Sessão",
+      "SUBTITLE": "Insira suas credenciais para acessar o sistema.",
       "EMAIL_LABEL": "Email",
       "EMAIL_PLACEHOLDER": "Digite seu email",
       "EMAIL_REQUIRED": "Email é obrigatório",
@@ -70,6 +113,7 @@
       "FIRST_NAME_PLACEHOLDER": "João",
       "FIRST_NAME_REQUIRED": "Nome é obrigatório",
       "MIN_1_CHAR": "Deve ter pelo menos 1 caractere",
+      "NAME_ALLOWED_CHARS": "Apenas letras, numeros e espacos sao permitidos",
       "MAX_CHARS": "Máximo de {{count}} caracteres",
       "LAST_NAME_1": "Primeiro Sobrenome",
       "LAST_NAME_1_PLACEHOLDER": "Silva",
@@ -193,10 +237,10 @@
       "UNIT_REQUIRED": "A unidade é obrigatória.",
       "INITIAL_STOCK": "Estoque inicial",
       "INITIAL_STOCK_REQUIRED": "O estoque inicial é obrigatório.",
-      "INITIAL_STOCK_MIN": "O estoque inicial deve ser 0 ou maior.",
+      "INITIAL_STOCK_MIN": "O estoque inicial deve ser maior que 0.",
       "MIN_STOCK": "Estoque mínimo",
       "MIN_STOCK_REQUIRED": "O estoque mínimo é obrigatório.",
-      "MIN_STOCK_MIN": "O estoque mínimo deve ser 0 ou maior.",
+      "MIN_STOCK_MIN": "O estoque mínimo deve ser maior que 0.",
       "CREATE_CTA": "Criar produto",
       "SEARCH_LABEL": "Buscar produto",
       "SEARCH_PLACEHOLDER": "Buscar por código, nome, categoria ou unidade",
@@ -235,6 +279,7 @@
       "MIN_STOCK": "Estoque mínimo",
       "MIN_STOCK_REQUIRED": "O estoque mínimo é obrigatório.",
       "MIN_STOCK_NEGATIVE": "O estoque mínimo não pode ser negativo.",
+      "FIELD_MAX_255": "O campo nao pode exceder 255 caracteres.",
       "BACK_TO_LIST": "Voltar à lista",
       "SAVE_CHANGES": "Salvar alterações",
       "ERROR_NO_ID": "Identificador do produto não encontrado.",
@@ -245,6 +290,12 @@
     }
   },
   "ENTRY": {
+    "MODAL": {
+      "TITLE": "Registrar Entrada",
+      "SUBTITLE": "Registre produtos que entram no inventário",
+      "SELECT_PRODUCT": "Selecione um produto",
+      "QUANTITY_PLACEHOLDER": "Digite a quantidade"
+    },
     "REGISTER": {
       "TITLE": "Registro de Entrada de Produtos",
       "SUBTITLE": "Adicionar estoque ao inventário",
@@ -268,6 +319,12 @@
     }
   },
   "EXIT": {
+    "MODAL": {
+      "TITLE": "Registrar Saída",
+      "SUBTITLE": "Registre produtos que saem do inventário",
+      "SELECT_PRODUCT": "Selecione um produto",
+      "QUANTITY_PLACEHOLDER": "Digite a quantidade"
+    },
     "REGISTER": {
       "TITLE": "Registro de Saída de Produtos",
       "SUBTITLE": "Retirar produtos do inventário",
@@ -307,6 +364,7 @@
       "DELETING": "Excluindo...",
       "DELETE_ACCOUNT": "Excluir conta",
       "DELETE_USER": "Excluir usuário",
+      "CONFIRM_DELETE_TITLE": "Confirmar exclusão",
       "DELETE_TARGET_ACCOUNT": "sua conta",
       "DELETE_TARGET_USER": "este usuário",
       "CONFIRM_DELETE": "Tem certeza de que deseja excluir {{target}}? Esta ação não pode ser desfeita.",
@@ -336,8 +394,17 @@
       "SIGNUP": "CADASTRAR",
       "TITLE": "Sistema de Controle de Inventário",
       "SUBTITLE": "Gerencie seu inventário de forma simples e eficiente. Controle produtos, movimentações, alertas e gere relatórios em tempo real.",
-      "LOGIN_CTA": "INICIAR SESSÃO →",
-      "SIGNUP_CTA": "CRIAR CONTA →"
+      "LOGIN_CTA": "Comece Agora →",
+      "SIGNUP_CTA": "CRIAR CONTA →",
+      "FEATURES": {
+        "REPORTS_TITLE": "Relatórios em Tempo Real",
+        "REPORTS_TEXT": "Visualize estatísticas detalhadas e relatórios atualizados instantaneamente sobre seu inventário.",
+        "MANAGEMENT_TITLE": "Gestão Inteligente",
+        "MANAGEMENT_TEXT": "Controle produtos, movimentações e alertas automáticos quando o estoque estiver baixo.",
+        "SECURITY_TITLE": "Seguro e Confiável",
+        "SECURITY_TEXT": "Seus dados estão protegidos com os mais altos padrões de segurança."
+      }
+
     },
     "AUTH": {
       "PRODUCTS": "PRODUTOS",
@@ -360,14 +427,16 @@
       "ROLE": "Função",
       "VIEW_PRODUCTS_CTA": "VER PRODUTOS →",
       "REGISTER_ENTRY_CTA": "REGISTRAR ENTRADA →",
+      "REGISTER_EXIT_CTA": "REGISTRAR SAÍDA →",
       "ADD_PRODUCT_CTA": "ADICIONAR PRODUTO →",
-      "MY_PROFILE_CTA": "MEU PERFIL →",
+      "MY_PROFILE_CTA": "EDITAR PERFIL →",
       "AVAILABLE_PANELS": "Painéis disponíveis",
       "ADMIN_PANEL": "Painel Admin",
       "OPERATOR_PANEL": "Painel Operador",
       "MANAGER_PANEL": "Painel Gerente",
       "GO_PRODUCTS": "Ir para Produtos"
-    }
+    },
+    "FOOTER": "© 2026 Stoq. Sistema de gestão de inventário."
   },
   "MOVEMENTS": {
     "TITLE": "Movimentos de Inventário",

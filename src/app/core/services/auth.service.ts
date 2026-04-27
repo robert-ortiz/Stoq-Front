@@ -211,7 +211,7 @@ export class AuthService {
       case 'GERENTE':
         return '/productos';
       default:
-        return '/productos';
+        return '/';
     }
   }
 

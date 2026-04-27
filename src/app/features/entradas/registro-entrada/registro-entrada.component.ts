@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router, RouterModule } from '@angular/router';
 import { ProductoApi, ProductoService } from '../../../core/services/producto.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
@@ -11,7 +11,7 @@ import { FormShellComponent } from '../../../shared/components/form-shell/form-s
 @Component({
   selector: 'app-registro-entrada',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslatePipe, FormShellComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslateModule, FormShellComponent],
   templateUrl: './registro-entrada.component.html',
   styleUrl: './registro-entrada.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
