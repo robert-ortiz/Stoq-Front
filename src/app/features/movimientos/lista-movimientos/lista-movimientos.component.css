@@ -1,13 +1,28 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(11, 114, 133, 0.14), transparent 32%),
+    radial-gradient(circle at 84% 6%, rgba(232, 156, 46, 0.17), transparent 36%),
+    var(--bg);
+}
+
 .movimientos-page {
-  display: grid;
-  gap: 12px;
+  min-height: 100vh;
 }
 
 .app-toolbar {
+  width: 100%;
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 12px;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-2);
+  backdrop-filter: blur(10px);
 }
 
 .app-brand {
@@ -22,6 +37,7 @@
 .app-brand img {
   flex: none;
   display: block;
+  border-radius: 10px;
 }
 
 .app-brand-copy {
@@ -45,6 +61,15 @@
   min-width: 0;
 }
 
+.app-title-block h1 {
+  font-size: clamp(1.5rem, 2vw, 1.9rem);
+}
+
+.app-title-block p {
+  margin-top: 4px;
+  color: var(--text-soft);
+}
+
 .app-actions {
   display: flex;
   justify-content: flex-end;
@@ -52,59 +77,14 @@
   flex-wrap: wrap;
 }
 
-.filters-card,
+.movimientos-content {
+  display: grid;
+  gap: 12px;
+}
+
 .table-card,
-.kpi-preview,
 .state-card {
   padding: 14px;
-}
-
-.filters-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-}
-
-.filter-actions {
-  margin-top: 10px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.filters-feedback {
-  margin-top: 10px;
-  color: var(--primary-strong);
-  font-weight: 600;
-}
-
-.kpi-preview {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 10px;
-}
-
-.kpi-item {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-m);
-  padding: 10px;
-  background: #fbfefe;
-  display: grid;
-  gap: 3px;
-}
-
-.kpi-label {
-  color: var(--text-soft);
-  font-size: 0.82rem;
-}
-
-.kpi-item strong {
-  font-size: 1.2rem;
-}
-
-.top-products p {
-  display: grid;
-  gap: 3px;
 }
 
 .table-wrapper {
@@ -159,7 +139,7 @@ th {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
@@ -167,6 +147,7 @@ th {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .skeleton-group {
@@ -180,11 +161,6 @@ th {
   background: linear-gradient(90deg, #edf4f5 0%, #f8fbfb 45%, #edf4f5 100%);
   background-size: 220% 100%;
   animation: shimmer 1.2s ease-in-out infinite;
-}
-
-.state-card {
-  display: grid;
-  gap: 8px;
 }
 
 .state-card.inner {
@@ -210,21 +186,25 @@ th {
   from {
     background-position: 200% 0;
   }
+
   to {
     background-position: -20% 0;
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .app-toolbar {
     grid-template-columns: 1fr;
     justify-items: start;
+    padding: 16px;
   }
 
   .app-actions {
     justify-content: flex-start;
   }
+}
 
+@media (max-width: 760px) {
   .pagination-footer {
     align-items: flex-start;
     flex-direction: column;

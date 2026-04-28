@@ -147,9 +147,9 @@ button:disabled {
 }
 
 .app-shell {
-  width: min(1440px, 100%);
+  width: min(1120px, 100%);
   margin: 0 auto;
-  padding: 24px 20px 32px;
+  padding: 24px 16px 32px;
 }
 
 .app-card {

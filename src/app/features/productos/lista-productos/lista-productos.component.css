@@ -8,32 +8,77 @@
 }
 
 .lista-productos-page {
-  width: min(1440px, 100%);
+  width: 100%;
   max-width: none;
   margin: 0 auto;
-  padding: 24px 20px 32px;
+  padding: 24px 24px 32px;
+  display: grid;
+  gap: 14px;
+  box-sizing: border-box;
 }
 
 .lista-header {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
   align-items: flex-start;
-  margin-bottom: 16px;
+  gap: 16px;
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-2);
+  backdrop-filter: blur(10px);
 }
 
-.lista-header h1 {
-  font-size: 1.7rem;
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  flex: none;
 }
 
-.lista-header p {
-  margin-top: 4px;
+.app-brand img {
+  flex: none;
+  display: block;
+  border-radius: 10px;
+}
+
+.app-brand-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.app-brand-copy strong {
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.app-brand-copy span {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  line-height: 1.1;
 }
 
 .header-actions {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.lista-content {
+  display: grid;
+  gap: 14px;
+}
+
+.content-heading h1 {
+  font-size: clamp(1.55rem, 2vw, 1.9rem);
 }
 
 .search-card,
@@ -52,20 +97,20 @@
 }
 
 .create-card {
-  padding: 14px;
-  margin-bottom: 14px;
+  padding: 16px;
 }
 
 .create-card h2 {
   font-size: 1rem;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: var(--text);
 }
 
 .create-form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 10px;
+  margin-top: 12px;
 }
 
 .field {
@@ -80,13 +125,16 @@
 
 .field input,
 .field select {
+  width: 100%;
   border: 1px solid var(--border);
   border-radius: var(--radius-m);
   padding: 10px 11px;
+  background: #fff;
 }
 
 .field input:focus,
-.field select:focus {
+.field select:focus,
+.search-card input:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(11, 114, 133, 0.16);
@@ -104,27 +152,16 @@
 }
 
 .search-card {
-  padding: 14px;
-  margin-bottom: 14px;
+  padding: 14px 16px;
   display: grid;
   gap: 8px;
-}
-
-.search-card label {
-  font-size: 0.85rem;
-  font-weight: 700;
 }
 
 .search-card input {
   border: 1px solid var(--border);
   border-radius: var(--radius-m);
   padding: 11px 12px;
-}
-
-.search-card input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(11, 114, 133, 0.16);
+  background: #fff;
 }
 
 .table-card {
@@ -147,6 +184,7 @@ td {
   padding: 10px;
   border-bottom: 1px solid #e8f0f1;
   font-size: 0.9rem;
+  vertical-align: top;
 }
 
 th {
@@ -225,7 +263,7 @@ th {
 }
 
 .state-message {
-  margin: 18px;
+  margin: 18px 0;
 }
 
 .state-message.error {
@@ -273,64 +311,50 @@ th {
 
 .pagination-footer {
   margin-top: 12px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .pagination-buttons {
   display: flex;
-.app-brand {
-  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  color: inherit;
-  min-width: 0;
-}
-
-.app-brand img {
-  flex: none;
-  display: block;
-  border-radius: 10px;
-}
-
-.app-brand-copy {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-}
-
-.app-brand-copy strong {
-  font-size: 1.05rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.app-brand-copy span {
-  font-size: 0.78rem;
-  color: var(--text-soft);
-  line-height: 1.1;
-}
-
   gap: 8px;
-  align-items: center;
+  flex-wrap: wrap;
 }
 
-  justify-content: flex-end;
-@media (max-width: 760px) {
+@media (max-width: 900px) {
+  .lista-productos-page {
+    padding: 20px 16px 28px;
+  }
+
   .lista-header {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .header-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 760px) {
+  .create-form {
+    grid-template-columns: 1fr;
+  }
+
+  .create-actions {
+    justify-content: stretch;
+  }
+
+  .create-actions .btn-primary {
     width: 100%;
   }
 
   .pagination-footer {
-    flex-direction: column;
     align-items: flex-start;
+    flex-direction: column;
   }
 }
