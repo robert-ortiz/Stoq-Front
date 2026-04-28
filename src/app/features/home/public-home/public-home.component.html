@@ -1,0 +1,71 @@
+<div class="home-wrapper">
+  <header class="topbar">
+    <a routerLink="/" class="logo-link" [attr.aria-label]="'HOME.BRAND_ARIA' | translate">
+      <div class="logo-icon">
+        <img src="/Logo.svg" [attr.alt]="'HOME.BRAND_ALT' | translate" width="40" height="40" />
+      </div>
+      <span class="brand">Stoq</span>
+    </a>
+
+    <nav class="nav-actions">
+      <select
+        class="home-language-select"
+        [value]="currentLanguage"
+        (change)="onLanguageChange($any($event.target).value)"
+        aria-label="Language switcher"
+      >
+        @for (lang of availableLanguages; track lang.code) {
+          <option [value]="lang.code">
+            {{ lang.labelKey | translate }}
+          </option>
+        }
+      </select>
+
+      <a routerLink="/auth/login" class="btn-primary app-btn app-btn-primary">
+        {{ 'HOME.GUEST.LOGIN' | translate }}
+      </a>
+    </nav>
+  </header>
+
+  <main class="home-card">
+    <section class="guest-hero">
+      <div class="logo-icon-large">
+        <img src="/Logo.svg" [attr.alt]="'HOME.BRAND_ALT' | translate" width="80" height="80" />
+      </div>
+
+      <h1 class="home-title">{{ 'HOME.GUEST.TITLE' | translate }}</h1>
+
+      <p class="home-subtitle">
+        {{ 'HOME.GUEST.SUBTITLE' | translate }}
+      </p>
+
+      <a routerLink="/auth/login" class="hero-button">
+        {{ 'HOME.GUEST.LOGIN_CTA' | translate }}
+      </a>
+    </section>
+
+    <section class="feature-grid">
+      <article class="feature-card">
+        <div class="feature-icon blue">⌁</div>
+        <h3>{{ 'HOME.GUEST.FEATURES.REPORTS_TITLE' | translate }}</h3>
+        <p>{{ 'HOME.GUEST.FEATURES.REPORTS_TEXT' | translate }}</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon green">↗</div>
+        <h3>{{ 'HOME.GUEST.FEATURES.MANAGEMENT_TITLE' | translate }}</h3>
+        <p>{{ 'HOME.GUEST.FEATURES.MANAGEMENT_TEXT' | translate }}</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon purple">♢</div>
+        <h3>{{ 'HOME.GUEST.FEATURES.SECURITY_TITLE' | translate }}</h3>
+        <p>{{ 'HOME.GUEST.FEATURES.SECURITY_TEXT' | translate }}</p>
+      </article>
+    </section>
+
+    <footer class="home-footer">
+      {{ 'HOME.FOOTER' | translate }}
+    </footer>
+  </main>
+</div>

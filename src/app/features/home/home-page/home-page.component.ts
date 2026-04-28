@@ -5,6 +5,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserService } from '../../../core/services/user.service';
 
+interface NavigationButton {
+  icon: string;
+  label: string;
+  route: string;
+  description: string;
+}
+
 @Component({
   selector: 'app-home-page',
   standalone: true,
@@ -59,30 +66,6 @@ export class HomePageComponent implements OnInit {
     });
   }
 
-  toggleLanguage(): void {
-    const languages = ['es', 'en', 'pt'];
-    const currentIndex = languages.indexOf(this.currentLanguage);
-    const nextIndex = (currentIndex + 1) % languages.length;
-
-    this.currentLanguage = languages[nextIndex];
-
-    this.translateService.use(this.currentLanguage);
-    localStorage.setItem('language', this.currentLanguage);
-  }
-
-  get nextLanguageLabel(): string {
-    switch (this.currentLanguage) {
-      case 'es':
-        return 'EN';
-      case 'en':
-        return 'PT';
-      case 'pt':
-        return 'ES';
-      default:
-        return 'EN';
-    }
-  }
-
   get isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
   }
@@ -132,30 +115,79 @@ export class HomePageComponent implements OnInit {
     return this.role === 'GERENTE';
   }
 
-  goToProductos(): void {
-    this.router.navigateByUrl('/productos');
+  get navigationButtons(): NavigationButton[] {
+    if (this.isAdmin) {
+      return [
+        {
+          icon: '🏢',
+          label: 'HOME.AUTH.USERS_AND_COMPANIES_CTA',
+          route: '/admin',
+          description: 'HOME.AUTH.MANAGE_USERS_AND_COMPANIES'
+        },
+        {
+          icon: '📊',
+          label: 'HOME.AUTH.MOVEMENTS_CTA',
+          route: '/movimientos',
+          description: 'HOME.AUTH.VIEW_MOVEMENT_HISTORY'
+        }
+      ];
+    }
+
+    if (this.isManager) {
+      return [
+        {
+          icon: '📦',
+          label: 'HOME.AUTH.VIEW_PRODUCTS_CTA',
+          route: '/gerente',
+          description: 'HOME.AUTH.MANAGE_PRODUCTS'
+        },
+        {
+          icon: '📄',
+          label: 'COMMON.REPORTS',
+          route: '/reportes',
+          description: 'HOME.AUTH.VIEW_ANALYTICS'
+        },
+        {
+          icon: '🔔',
+          label: 'COMMON.NOTIFICATIONS',
+          route: '/notificaciones',
+          description: 'HOME.AUTH.CHECK_ALERTS'
+        }
+      ];
+    }
+
+    if (this.isOperator) {
+      return [
+        {
+          icon: '📦',
+          label: 'HOME.AUTH.VIEW_PRODUCTS_CTA',
+          route: '/operador',
+          description: 'HOME.AUTH.MANAGE_PRODUCTS'
+        },
+        {
+          icon: '↓',
+          label: 'HOME.AUTH.REGISTER_ENTRY_CTA',
+          route: '/entradas/registro',
+          description: 'HOME.AUTH.RECORD_INCOMING'
+        },
+        {
+          icon: '↑',
+          label: 'HOME.AUTH.REGISTER_EXIT_CTA',
+          route: '/salidas/registro',
+          description: 'HOME.AUTH.RECORD_OUTGOING'
+        },
+        {
+          icon: '➕',
+          label: 'HOME.AUTH.ADD_PRODUCT_CTA',
+          route: '/productos?create=1',
+          description: 'HOME.AUTH.CREATE_NEW_PRODUCT'
+        }
+      ];
+    }
+
+    return [];
   }
 
-  goToCrearProducto(): void {
-    this.router.navigate(['/productos'], { queryParams: { create: 1 } });
-  }
-
-  goToRegistrarEntrada(): void {
-    this.router.navigateByUrl('/entradas/registro');
-  }
-
-  goToMovimientos(): void {
-    this.router.navigateByUrl('/movimientos');
-  }
-
-  goToRegistrarSalida(): void {
-    this.router.navigateByUrl('/salidas/registro');
-  }
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigateByUrl('/auth/login');
-  }
   availableLanguages = [
     { code: 'es', flag: '🇪🇸', labelKey: 'LANGUAGE.ES' },
     { code: 'en', flag: '🇬🇧', labelKey: 'LANGUAGE.EN' },
@@ -166,5 +198,14 @@ export class HomePageComponent implements OnInit {
     this.currentLanguage = language;
     this.translateService.use(language);
     localStorage.setItem('language', language);
+  }
+
+  navigateTo(route: string): void {
+    this.router.navigateByUrl(route);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigateByUrl('/auth/login');
   }
 }

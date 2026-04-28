@@ -48,6 +48,9 @@
     "MANAGER": "Manager",
     "ADMINISTRATOR": "Administrator",
     "SAVE_CHANGES": "Save changes",
+    "LOADING": "Loading...",
+    "VIEW": "View",
+    "DISMISS": "Close",
     "REPORTS": "Reports",
     "NOTIFICATIONS": "Notifications"
   },
@@ -425,6 +428,10 @@
       "ROLE_OPERATOR": "Operator",
       "ROLE_MANAGER": "Manager",
       "ROLE": "Role",
+      "USERS_AND_COMPANIES_CTA": "Users and companies",
+      "MANAGE_USERS_AND_COMPANIES": "View users and companies",
+      "MOVEMENTS_CTA": "Movements",
+      "VIEW_MOVEMENT_HISTORY": "View movement history",
       "VIEW_PRODUCTS_CTA": "VIEW PRODUCTS →",
       "REGISTER_ENTRY_CTA": "REGISTER ENTRY →",
       "REGISTER_EXIT_CTA": "REGISTER EXIT →",
@@ -437,6 +444,27 @@
       "GO_PRODUCTS": "Go to Products"
     },
     "FOOTER": "© 2026 Stoq. Inventory Management System."
+  },
+  "REPORTS": {
+    "SUBTITLE": "A simple summary of inventory status and the most important movements.",
+    "INVENTORY_SUMMARY": "Inventory summary",
+    "INVENTORY_SUMMARY_DESC": "Check how many products are available and spot shortages early.",
+    "MOVEMENT_TRENDS": "Movement trends",
+    "MOVEMENT_TRENDS_DESC": "See whether entries and exits are going up or down.",
+    "CRITICAL_STOCK": "Critical stock",
+    "CRITICAL_STOCK_DESC": "Identify low-stock products and act before they run out.",
+    "DETAILED_MOVEMENTS": "Detailed movements",
+    "DETAILED_MOVEMENTS_DESC": "Review the full history of entries and exits."
+  },
+  "NOTIFICATIONS": {
+    "ALERTS_SUBTITLE": "Recent alerts to review inventory without hassle.",
+    "NO_ALERTS": "There are no alerts right now.",
+    "LOW_STOCK": "Low stock",
+    "PRODUCT_BELOW_MINIMUM": "The product is below the allowed minimum.",
+    "STOCK_UPDATED": "Stock updated",
+    "INVENTORY_MOVEMENT_COMPLETED": "The inventory was updated successfully.",
+    "NEW_MOVEMENT": "New movement",
+    "RECENT_INVENTORY_ACTIVITY": "Recent inventory activity was recorded."
   },
   "MOVEMENTS": {
     "TITLE": "Inventory Movements",

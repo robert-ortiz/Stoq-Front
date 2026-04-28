@@ -1,12 +1,19 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { HomePageComponent } from './features/home/home-page/home-page.component';
+import { PublicHomeComponent } from './features/home/public-home/public-home.component';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
+    component: PublicHomeComponent
+  },
+  {
+    path: 'home',
+    canActivate: [authGuard],
     component: HomePageComponent
   },
   {
@@ -76,7 +83,6 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-
     canActivate: [roleGuard],
     data: { roles: ['ADMIN'] },
     loadComponent: () =>
@@ -85,21 +91,40 @@ export const routes: Routes = [
       )
   },
   {
-  path: 'operador',
-  canActivate: [roleGuard],
-  data: { roles: ['OPERADOR'] },
-  loadComponent: () =>
-    import('./features/productos/lista-productos-operador/lista-productos-operador.component').then(
-      (m) => m.ListaProductosOperadorComponent
-    )
-},
+    path: 'operador',
+    canActivate: [roleGuard],
+    data: { roles: ['OPERADOR'] },
+    loadComponent: () =>
+      import('./features/productos/lista-productos-operador/lista-productos-operador.component').then(
+        (m) => m.ListaProductosOperadorComponent
+      )
+  },
   {
     path: 'gerente',
     canActivate: [roleGuard],
     data: { roles: ['GERENTE'] },
     loadComponent: () =>
-     import('./features/productos/lista-productos-gerente/lista-productos-gerente.component')
-        .then(m => m.ListaProductosGerenteComponent)
+      import('./features/productos/lista-productos-gerente/lista-productos-gerente.component').then(
+        (m) => m.ListaProductosGerenteComponent
+      )
+  },
+  {
+    path: 'reportes',
+    canActivate: [roleGuard],
+    data: { roles: ['GERENTE'] },
+    loadComponent: () =>
+      import('./features/reportes/lista-reportes/lista-reportes.component').then(
+        (m) => m.ListaReportesComponent
+      )
+  },
+  {
+    path: 'notificaciones',
+    canActivate: [roleGuard],
+    data: { roles: ['GERENTE'] },
+    loadComponent: () =>
+      import('./features/notificaciones/lista-notificaciones/lista-notificaciones.component').then(
+        (m) => m.ListaNotificacionesComponent
+      )
   },
   {
     path: 'auth',

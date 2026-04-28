@@ -49,6 +49,9 @@
     "MANAGER": "Gerente",
     "ADMINISTRATOR": "Administrador",
     "SAVE_CHANGES": "Guardar cambios",
+    "LOADING": "Cargando...",
+    "VIEW": "Ver",
+    "DISMISS": "Cerrar",
     "REPORTS": "Reportes",
     "NOTIFICATIONS": "Notificaciones"
   },
@@ -425,6 +428,10 @@
       "ROLE_OPERATOR": "Operador",
       "ROLE_MANAGER": "Gerente",
       "ROLE": "Rol",
+      "USERS_AND_COMPANIES_CTA": "Usuarios y empresas",
+      "MANAGE_USERS_AND_COMPANIES": "Ver usuarios y empresas",
+      "MOVEMENTS_CTA": "Movimientos",
+      "VIEW_MOVEMENT_HISTORY": "Ver historial de movimientos",
       "VIEW_PRODUCTS_CTA": "VER PRODUCTOS →",
       "REGISTER_ENTRY_CTA": "REGISTRAR ENTRADA →",
       "REGISTER_EXIT_CTA": "REGISTRAR SALIDA →",
@@ -437,6 +444,27 @@
       "GO_PRODUCTS": "Ir a Productos"
     },
     "FOOTER": "© 2026 Stoq. Sistema de gestión de inventario."
+  },
+  "REPORTS": {
+    "SUBTITLE": "Resumen simple del estado del inventario y de los movimientos más importantes.",
+    "INVENTORY_SUMMARY": "Resumen del inventario",
+    "INVENTORY_SUMMARY_DESC": "Consulta cuántos productos hay disponibles y detecta faltantes a tiempo.",
+    "MOVEMENT_TRENDS": "Tendencia de movimientos",
+    "MOVEMENT_TRENDS_DESC": "Revisa si las entradas y salidas están aumentando o bajando.",
+    "CRITICAL_STOCK": "Stock crítico",
+    "CRITICAL_STOCK_DESC": "Identifica productos con poca existencia para actuar antes de que se agoten.",
+    "DETAILED_MOVEMENTS": "Movimientos detallados",
+    "DETAILED_MOVEMENTS_DESC": "Revisa el historial completo de entradas y salidas."
+  },
+  "NOTIFICATIONS": {
+    "ALERTS_SUBTITLE": "Alertas recientes para revisar el inventario sin complicaciones.",
+    "NO_ALERTS": "No hay alertas por ahora.",
+    "LOW_STOCK": "Stock bajo",
+    "PRODUCT_BELOW_MINIMUM": "El producto está por debajo del mínimo permitido.",
+    "STOCK_UPDATED": "Stock actualizado",
+    "INVENTORY_MOVEMENT_COMPLETED": "El inventario se actualizó correctamente.",
+    "NEW_MOVEMENT": "Nuevo movimiento",
+    "RECENT_INVENTORY_ACTIVITY": "Se registró una actividad reciente en inventario."
   },
   "MOVEMENTS": {
     "TITLE": "Movimientos de Inventario",

@@ -1,0 +1,81 @@
+<section class="reports-page">
+  <header class="reports-header">
+    <a routerLink="/home" class="brand">
+      <img src="/Logo.svg" alt="Stoq" width="44" height="44" />
+      <div>
+        <strong>Stoq</strong>
+        <span>{{ 'COMMON.SYSTEM_NAME' | translate }}</span>
+      </div>
+    </a>
+
+    <div class="header-actions">
+      <select
+        class="language-select"
+        [value]="currentLanguage"
+        (change)="onLanguageChange(($any($event.target).value))"
+      >
+        <option value="es">{{ 'LANGUAGE.ES' | translate }}</option>
+        <option value="en">{{ 'LANGUAGE.EN' | translate }}</option>
+        <option value="pt">{{ 'LANGUAGE.PT' | translate }}</option>
+      </select>
+
+      <button type="button" class="logout-btn" (click)="logout()">
+        ↪ {{ 'COMMON.LOGOUT' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <main class="reports-content">
+    <section class="reports-card">
+      <div class="card-header">
+        <div>
+          <button type="button" class="back-btn" (click)="goBack()">
+            ← {{ 'COMMON.BACK' | translate }}
+          </button>
+          <h1>{{ 'COMMON.REPORTS' | translate }}</h1>
+          <p>{{ 'REPORTS.SUBTITLE' | translate }}</p>
+        </div>
+      </div>
+
+      @if (cargando) {
+        <div class="loading-state">
+          <p>{{ 'COMMON.LOADING' | translate }}</p>
+        </div>
+      } @else {
+        <div class="reports-grid">
+          <article class="report-card">
+            <h3>📊 {{ 'REPORTS.INVENTORY_SUMMARY' | translate }}</h3>
+            <p>{{ 'REPORTS.INVENTORY_SUMMARY_DESC' | translate }}</p>
+            <button type="button" class="report-btn">
+              {{ 'COMMON.VIEW' | translate }}
+            </button>
+          </article>
+
+          <article class="report-card">
+            <h3>📈 {{ 'REPORTS.MOVEMENT_TRENDS' | translate }}</h3>
+            <p>{{ 'REPORTS.MOVEMENT_TRENDS_DESC' | translate }}</p>
+            <button type="button" class="report-btn">
+              {{ 'COMMON.VIEW' | translate }}
+            </button>
+          </article>
+
+          <article class="report-card">
+            <h3>⚠️ {{ 'REPORTS.CRITICAL_STOCK' | translate }}</h3>
+            <p>{{ 'REPORTS.CRITICAL_STOCK_DESC' | translate }}</p>
+            <button type="button" class="report-btn">
+              {{ 'COMMON.VIEW' | translate }}
+            </button>
+          </article>
+
+          <article class="report-card">
+            <h3>📋 {{ 'REPORTS.DETAILED_MOVEMENTS' | translate }}</h3>
+            <p>{{ 'REPORTS.DETAILED_MOVEMENTS_DESC' | translate }}</p>
+            <button type="button" class="report-btn">
+              {{ 'COMMON.VIEW' | translate }}
+            </button>
+          </article>
+        </div>
+      }
+    </section>
+  </main>
+</section>

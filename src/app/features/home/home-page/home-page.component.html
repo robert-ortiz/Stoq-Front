@@ -8,73 +8,27 @@
     </a>
 
     <nav class="nav-actions">
-  <select
-    class="home-language-select"
-    [value]="currentLanguage"
-    (change)="onLanguageChange($any($event.target).value)"
-    aria-label="Language switcher"
-  >
-    @for (lang of availableLanguages; track lang.code) {
-      <option [value]="lang.code">
-        {{ lang.labelKey | translate }}
-      </option>
-    }
-  </select>
+      <select
+        class="home-language-select"
+        [value]="currentLanguage"
+        (change)="onLanguageChange($any($event.target).value)"
+        aria-label="Language switcher"
+      >
+        @for (lang of availableLanguages; track lang.code) {
+          <option [value]="lang.code">
+            {{ lang.labelKey | translate }}
+          </option>
+        }
+      </select>
 
-  @if (!isAuthenticated) {
-    <a routerLink="/auth/login" class="btn-primary app-btn app-btn-primary">
-      {{ 'HOME.GUEST.LOGIN' | translate }}
-    </a>
-  }
-</nav>
-    
+      <button type="button" class="logout-btn" (click)="logout()">
+        ↪ {{ 'COMMON.LOGOUT' | translate }}
+      </button>
+    </nav>
   </header>
 
   <main class="home-card">
-
-    @if (!isAuthenticated) {
-      <section class="guest-hero">
-        <div class="logo-icon-large">
-          <img src="/Logo.svg" [attr.alt]="'HOME.BRAND_ALT' | translate" width="80" height="80" />
-        </div>
-
-        <h1 class="home-title">{{ 'HOME.GUEST.TITLE' | translate }}</h1>
-
-        <p class="home-subtitle">
-          {{ 'HOME.GUEST.SUBTITLE' | translate }}
-        </p>
-
-        <a routerLink="/auth/login" class="hero-button">
-          {{ 'HOME.GUEST.LOGIN_CTA' | translate }}
-        </a>
-      </section>
-
-      <section class="feature-grid">
-        <article class="feature-card">
-          <div class="feature-icon blue">⌁</div>
-          <h3>{{ 'HOME.GUEST.FEATURES.REPORTS_TITLE' | translate }}</h3>
-          <p>{{ 'HOME.GUEST.FEATURES.REPORTS_TEXT' | translate }}</p>
-        </article>
-
-        <article class="feature-card">
-          <div class="feature-icon green">↗</div>
-          <h3>{{ 'HOME.GUEST.FEATURES.MANAGEMENT_TITLE' | translate }}</h3>
-          <p>{{ 'HOME.GUEST.FEATURES.MANAGEMENT_TEXT' | translate }}</p>
-        </article>
-
-        <article class="feature-card">
-          <div class="feature-icon purple">♢</div>
-          <h3>{{ 'HOME.GUEST.FEATURES.SECURITY_TITLE' | translate }}</h3>
-          <p>{{ 'HOME.GUEST.FEATURES.SECURITY_TEXT' | translate }}</p>
-        </article>
-      </section>
-
-      <footer class="home-footer">
-        {{ 'HOME.FOOTER' | translate }}
-      </footer>
-    }
-
-    @else {
+    @if (isAuthenticated) {
       <section class="logo-section user-home" [attr.aria-label]="'HOME.AUTH.SESSION_SUMMARY' | translate">
         <div class="logo-icon-large">
           <img src="/Logo.svg" [attr.alt]="'HOME.BRAND_ALT' | translate" width="80" height="80" />
@@ -97,35 +51,25 @@
         </div>
 
         <div class="action-buttons">
-
-          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToProductos()">
-            {{ 'HOME.AUTH.VIEW_PRODUCTS_CTA' | translate }}
-          </button>
-
-          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToRegistrarEntrada()">
-            {{ 'HOME.AUTH.REGISTER_ENTRY_CTA' | translate }}
-          </button>
-
-          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToRegistrarSalida()">
-            {{ 'HOME.AUTH.REGISTER_EXIT_CTA' | translate }}
-          </button>
-
-          @if (isAdmin) {
-            <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToMovimientos()">
-              {{ 'HOME.AUTH.MOVEMENTS' | translate }}
+          @for (button of navigationButtons; track button.route) {
+            <button
+              type="button"
+              class="nav-btn"
+              (click)="navigateTo(button.route)"
+              [title]="button.description | translate"
+            >
+              <span class="btn-icon">{{ button.icon }}</span>
+              <span class="btn-label">{{ button.label | translate }}</span>
             </button>
           }
 
-          <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="goToCrearProducto()">
-            {{ 'HOME.AUTH.ADD_PRODUCT_CTA' | translate }}
-          </button>
-
-          <a routerLink="/perfil" class="btn-primary app-btn app-btn-primary">
-            {{ 'HOME.AUTH.MY_PROFILE_CTA' | translate }}
+          <a routerLink="/perfil" class="btn-profile">
+            👤 {{ 'HOME.AUTH.MY_PROFILE_CTA' | translate }}
           </a>
         </div>
       </section>
+    } @else {
+      <p>{{ 'COMMON.LOADING' | translate }}</p>
     }
-
   </main>
 </div>

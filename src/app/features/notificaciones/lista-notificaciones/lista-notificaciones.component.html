@@ -1,0 +1,82 @@
+<section class="notifications-page">
+  <header class="notifications-header">
+    <a routerLink="/home" class="brand">
+      <img src="/Logo.svg" alt="Stoq" width="44" height="44" />
+      <div>
+        <strong>Stoq</strong>
+        <span>{{ 'COMMON.SYSTEM_NAME' | translate }}</span>
+      </div>
+    </a>
+
+    <div class="header-actions">
+      <select
+        class="language-select"
+        [value]="currentLanguage"
+        (change)="onLanguageChange(($any($event.target).value))"
+      >
+        <option value="es">{{ 'LANGUAGE.ES' | translate }}</option>
+        <option value="en">{{ 'LANGUAGE.EN' | translate }}</option>
+        <option value="pt">{{ 'LANGUAGE.PT' | translate }}</option>
+      </select>
+
+      <button type="button" class="logout-btn" (click)="logout()">
+        ↪ {{ 'COMMON.LOGOUT' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <main class="notifications-content">
+    <section class="notifications-card">
+      <div class="card-header">
+        <button type="button" class="back-btn" (click)="goBack()">
+          ← {{ 'COMMON.BACK' | translate }}
+        </button>
+        <h1>{{ 'COMMON.NOTIFICATIONS' | translate }}</h1>
+        <p>{{ 'NOTIFICATIONS.ALERTS_SUBTITLE' | translate }}</p>
+      </div>
+
+      @if (cargando) {
+        <div class="loading-state">
+          <p>{{ 'COMMON.LOADING' | translate }}</p>
+        </div>
+      } @else if (!notifications.length) {
+        <div class="empty-state">
+          <p>🔔 {{ 'NOTIFICATIONS.NO_ALERTS' | translate }}</p>
+        </div>
+      } @else {
+        <div class="notifications-list">
+          @for (notification of notifications; track notification.id) {
+            <article class="notification-item" [class]="'notification-' + notification.type">
+              <div class="notification-icon">
+                {{ notification.icon }}
+              </div>
+
+              <div class="notification-content">
+                <h3>{{ notification.title | translate }}</h3>
+                <p>{{ notification.description | translate }}</p>
+                @if (notification.product) {
+                  <p class="notification-detail">
+                    📦 {{ notification.product }} 
+                    @if (notification.quantity) {
+                      ({{ notification.quantity }} unidades)
+                    }
+                  </p>
+                }
+                <span class="notification-time">{{ notification.timestamp }}</span>
+              </div>
+
+              <button
+                type="button"
+                class="dismiss-btn"
+                (click)="dismissNotification(notification.id)"
+                [attr.aria-label]="'COMMON.DISMISS' | translate"
+              >
+                ✕
+              </button>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  </main>
+</section>
