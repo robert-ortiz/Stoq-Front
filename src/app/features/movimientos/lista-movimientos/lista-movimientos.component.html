@@ -19,175 +19,107 @@
     </div>
   </header>
 
-  @if (verificandoPermisos()) {
-    <section class="app-card state-card" aria-live="polite" aria-busy="true">
-      <p class="state-title">Validando permisos...</p>
-      <p class="state-description">Estamos revisando tu rol para habilitar este módulo.</p>
-    </section>
-  } @else if (!esAdmin()) {
-    <section class="app-card state-card denied" role="alert">
-      <h2>Acceso restringido</h2>
-      <p class="state-description">Tu usuario no tiene permisos ADMIN para consultar movimientos de inventario.</p>
-      <a routerLink="/productos" class="app-btn app-btn-secondary">Regresar al módulo de productos</a>
-    </section>
-  } @else {
-    <section class="app-card filters-card" aria-label="Filtros de movimientos">
-      <div class="filters-grid">
-        <div class="app-field">
-          <label for="buscar" class="app-field-label">{{ 'MOVEMENTS.SEARCH_LABEL' | translate }}</label>
-          <input
-            id="buscar"
-            type="text"
-            class="app-input"
-            [formControl]="buscarControl"
-            [placeholder]="'MOVEMENTS.SEARCH_PLACEHOLDER' | translate"
-          />
-        </div>
-
-        <div class="app-field">
-          <label for="tipo" class="app-field-label">{{ 'MOVEMENTS.MOVEMENT_TYPE_LABEL' | translate }}</label>
-          <select id="tipo" class="app-select" [formControl]="tipoControl">
-            @for (tipo of tiposDisponibles(); track tipo) {
-              <option [value]="tipo">{{ tipo === 'TODOS' ? ('MOVEMENTS.ALL_TYPES' | translate) : tipo }}</option>
+  <div class="movimientos-content">
+    @if (verificandoPermisos()) {
+      <section class="app-card state-card" aria-live="polite" aria-busy="true">
+        <p class="state-title">Validando permisos...</p>
+        <p class="state-description">Estamos revisando tu rol para habilitar este módulo.</p>
+      </section>
+    } @else if (!esAdmin()) {
+      <section class="app-card state-card denied" role="alert">
+        <h2>Acceso restringido</h2>
+        <p class="state-description">Tu usuario no tiene permisos ADMIN para consultar movimientos de inventario.</p>
+        <a routerLink="/productos" class="app-btn app-btn-secondary">Regresar al módulo de productos</a>
+      </section>
+    } @else {
+      <section class="app-card table-card" aria-label="Tabla de movimientos">
+        @if (cargando()) {
+          <div class="skeleton-group" aria-hidden="true">
+            @for (row of [1, 2, 3, 4, 5, 6]; track row) {
+              <div class="skeleton-row"></div>
             }
-          </select>
-        </div>
-
-        <div class="app-field">
-          <label for="fechaInicio" class="app-field-label">{{ 'MOVEMENTS.START_DATE_LABEL' | translate }}</label>
-          <input id="fechaInicio" type="datetime-local" class="app-input" [formControl]="fechaInicioControl" />
-        </div>
-
-        <div class="app-field">
-          <label for="fechaFin" class="app-field-label">{{ 'MOVEMENTS.END_DATE_LABEL' | translate }}</label>
-          <input id="fechaFin" type="datetime-local" class="app-input" [formControl]="fechaFinControl" />
-        </div>
-      </div>
-
-      <div class="filter-actions">
-        <button type="button" class="app-btn app-btn-primary" (click)="aplicarFiltros()">{{ 'MOVEMENTS.APPLY_FILTERS' | translate }}</button>
-        <button type="button" class="app-btn app-btn-secondary" (click)="limpiarFiltros()" [disabled]="!hayFiltrosActivos()">
-          {{ 'MOVEMENTS.CLEAR_FILTERS' | translate }}
-        </button>
-      </div>
-
-      @if (hayFiltrosActivos()) {
-        <p class="filters-feedback" role="status">{{ 'MOVEMENTS.ACTIVE_FILTERS' | translate }} {{ movimientosFiltrados().length }} {{ 'MOVEMENTS.MOVEMENTS_PLURAL' | translate }}</p>
-      }
-    </section>
-
-    <section class="app-card kpi-preview" aria-label="Resumen operativo rápido">
-      <div class="kpi-item">
-        <span class="kpi-label">{{ 'MOVEMENTS.TOTAL_ENTRIES' | translate }}</span>
-        <strong>{{ resumenOperativo().totales.entradas }}</strong>
-      </div>
-
-      <div class="kpi-item">
-        <span class="kpi-label">{{ 'MOVEMENTS.TOTAL_EXITS' | translate }}</span>
-        <strong>{{ resumenOperativo().totales.salidas }}</strong>
-      </div>
-
-      <div class="kpi-item top-products">
-        <span class="kpi-label">{{ 'MOVEMENTS.TOP_PRODUCTS' | translate }}</span>
-        <p>
-          @if (!resumenOperativo().productosTop.length) {
-            {{ 'MOVEMENTS.NO_RANKING_DATA' | translate }}
-          } @else {
-            @for (producto of resumenOperativo().productosTop; track producto.productoId; let i = $index) {
-              <span>{{ i + 1 }}. {{ producto.productoCodigo }} ({{ producto.totalMovimientos }})</span>
-            }
-          }
-        </p>
-      </div>
-    </section>
-
-    <section class="app-card table-card" aria-label="Tabla de movimientos">
-      @if (cargando()) {
-        <div class="skeleton-group" aria-hidden="true">
-          @for (row of [1, 2, 3, 4, 5, 6]; track row) {
-            <div class="skeleton-row"></div>
-          }
-        </div>
-      } @else if (error()) {
-        <div class="state-card inner" role="alert">
-          <h2>{{ 'MOVEMENTS.ERROR_LOADING' | translate }}</h2>
-          <p class="state-description">{{ error() }}</p>
-          <button type="button" class="app-btn app-btn-secondary" (click)="reintentar()">{{ 'MOVEMENTS.RETRY' | translate }}</button>
-        </div>
-      } @else if (!movimientosFiltrados().length) {
-        <div class="state-card inner" role="status">
-          <h2>{{ 'MOVEMENTS.NO_RESULTS' | translate }}</h2>
-          <p class="state-description">{{ 'MOVEMENTS.NO_RESULTS_DESCRIPTION' | translate }}</p>
-          <button type="button" class="app-btn app-btn-secondary" (click)="limpiarFiltros()" [disabled]="!hayFiltrosActivos()">
-            {{ 'MOVEMENTS.CLEAR_FILTERS' | translate }}
-          </button>
-        </div>
-      } @else {
-        <div class="table-wrapper">
-          <table>
-            <caption class="sr-only">{{ 'MOVEMENTS.TABLE_CAPTION' | translate }}</caption>
-            <thead>
-              <tr>
-                <th scope="col">{{ 'MOVEMENTS.TABLE_DATE' | translate }}</th>
-                <th scope="col">{{ 'MOVEMENTS.TABLE_TYPE' | translate }}</th>
-                <th scope="col">{{ 'MOVEMENTS.TABLE_PRODUCT' | translate }}</th>
-                <th scope="col">{{ 'MOVEMENTS.TABLE_CODE' | translate }}</th>
-                <th scope="col">{{ 'MOVEMENTS.TABLE_QUANTITY' | translate }}</th>
-                <th scope="col">{{ 'MOVEMENTS.TABLE_STOCK_BEFORE' | translate }}</th>
-                <th scope="col">{{ 'MOVEMENTS.TABLE_STOCK_AFTER' | translate }}</th>
-                <th scope="col">{{ 'MOVEMENTS.TABLE_USER' | translate }}</th>
-                <th scope="col">{{ 'MOVEMENTS.TABLE_REASON' | translate }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (movimiento of movimientosPaginados(); track trackByMovimiento($index, movimiento)) {
-                <tr>
-                  <td>{{ movimiento.fechaMovimiento | date: 'dd/MM/yyyy HH:mm' }}</td>
-                  <td>
-                    <span class="tipo-chip" [class.tipo-salida]="movimiento.tipoMovimiento.toUpperCase() === 'SALIDA'">
-                      {{ movimiento.tipoMovimiento }}
-                    </span>
-                  </td>
-                  <td>{{ movimiento.productoNombre }}</td>
-                  <td>{{ movimiento.productoCodigo }}</td>
-                  <td>{{ movimiento.cantidad }}</td>
-                  <td>{{ movimiento.stockAnterior }}</td>
-                  <td>{{ movimiento.stockResultante }}</td>
-                  <td>
-                    <strong>{{ movimiento.usuarioNombre }}</strong>
-                    <span class="user-mail">{{ movimiento.usuarioCorreo }}</span>
-                  </td>
-                  <td>{{ movimiento.motivo || ('MOVEMENTS.NO_DATA' | translate) }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-
-        <footer class="pagination-footer" aria-label="Paginación de movimientos">
-          <p>{{ 'MOVEMENTS.PAGINATION_SHOWING' | translate }}: {{ desdeRegistro() }}-{{ hastaRegistro() }} {{ 'MOVEMENTS.PAGINATION_OF_COUNT' | translate }} {{ movimientosFiltrados().length }}</p>
-
-          <div class="pagination-actions">
-            <button
-              type="button"
-              class="app-btn app-btn-secondary"
-              (click)="paginaAnterior()"
-              [disabled]="obtenerPaginaActual() <= 1"
-            >
-              {{ 'MOVEMENTS.PAGINATION_PREVIOUS' | translate }}
-            </button>
-            <span>{{ 'MOVEMENTS.PAGINATION_OF' | translate: { page: obtenerPaginaActual(), total: totalPaginas() } }}</span>
-            <button
-              type="button"
-              class="app-btn app-btn-secondary"
-              (click)="paginaSiguiente()"
-              [disabled]="obtenerPaginaActual() >= totalPaginas()"
-            >
-              {{ 'MOVEMENTS.PAGINATION_NEXT' | translate }}
+          </div>
+        } @else if (error()) {
+          <div class="state-card inner" role="alert">
+            <h2>{{ 'MOVEMENTS.ERROR_LOADING' | translate }}</h2>
+            <p class="state-description">{{ error() }}</p>
+            <button type="button" class="app-btn app-btn-secondary" (click)="reintentar()">{{ 'MOVEMENTS.RETRY' | translate }}</button>
+          </div>
+        } @else if (!movimientosFiltrados().length) {
+          <div class="state-card inner" role="status">
+            <h2>{{ 'MOVEMENTS.NO_RESULTS' | translate }}</h2>
+            <p class="state-description">{{ 'MOVEMENTS.NO_RESULTS_DESCRIPTION' | translate }}</p>
+            <button type="button" class="app-btn app-btn-secondary" (click)="limpiarFiltros()" [disabled]="!hayFiltrosActivos()">
+              {{ 'MOVEMENTS.CLEAR_FILTERS' | translate }}
             </button>
           </div>
-        </footer>
-      }
-    </section>
-  }
+        } @else {
+          <div class="table-wrapper">
+            <table>
+              <caption class="sr-only">{{ 'MOVEMENTS.TABLE_CAPTION' | translate }}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{{ 'MOVEMENTS.TABLE_DATE' | translate }}</th>
+                  <th scope="col">{{ 'MOVEMENTS.TABLE_TYPE' | translate }}</th>
+                  <th scope="col">{{ 'MOVEMENTS.TABLE_PRODUCT' | translate }}</th>
+                  <th scope="col">{{ 'MOVEMENTS.TABLE_CODE' | translate }}</th>
+                  <th scope="col">{{ 'MOVEMENTS.TABLE_QUANTITY' | translate }}</th>
+                  <th scope="col">{{ 'MOVEMENTS.TABLE_STOCK_BEFORE' | translate }}</th>
+                  <th scope="col">{{ 'MOVEMENTS.TABLE_STOCK_AFTER' | translate }}</th>
+                  <th scope="col">{{ 'MOVEMENTS.TABLE_USER' | translate }}</th>
+                  <th scope="col">{{ 'MOVEMENTS.TABLE_REASON' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (movimiento of movimientosPaginados(); track trackByMovimiento($index, movimiento)) {
+                  <tr>
+                    <td>{{ movimiento.fechaMovimiento | date: 'dd/MM/yyyy HH:mm' }}</td>
+                    <td>
+                      <span class="tipo-chip" [class.tipo-salida]="movimiento.tipoMovimiento.toUpperCase() === 'SALIDA'">
+                        {{ movimiento.tipoMovimiento }}
+                      </span>
+                    </td>
+                    <td>{{ movimiento.productoNombre }}</td>
+                    <td>{{ movimiento.productoCodigo }}</td>
+                    <td>{{ movimiento.cantidad }}</td>
+                    <td>{{ movimiento.stockAnterior }}</td>
+                    <td>{{ movimiento.stockResultante }}</td>
+                    <td>
+                      <strong>{{ movimiento.usuarioNombre }}</strong>
+                      <span class="user-mail">{{ movimiento.usuarioCorreo }}</span>
+                    </td>
+                    <td>{{ movimiento.motivo || ('MOVEMENTS.NO_DATA' | translate) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <footer class="pagination-footer">
+            <p>{{ 'MOVEMENTS.PAGINATION_SHOWING' | translate }}: {{ desdeRegistro() }}-{{ hastaRegistro() }} {{ 'MOVEMENTS.PAGINATION_OF_COUNT' | translate }} {{ movimientosFiltrados().length }}</p>
+
+            <div class="pagination-actions">
+              <button
+                type="button"
+                class="app-btn app-btn-secondary"
+                (click)="paginaAnterior()"
+                [disabled]="obtenerPaginaActual() <= 1"
+              >
+                {{ 'MOVEMENTS.PAGINATION_PREVIOUS' | translate }}
+              </button>
+              <span>{{ 'MOVEMENTS.PAGINATION_OF' | translate: { page: obtenerPaginaActual(), total: totalPaginas() } }}</span>
+              <button
+                type="button"
+                class="app-btn app-btn-secondary"
+                (click)="paginaSiguiente()"
+                [disabled]="obtenerPaginaActual() >= totalPaginas()"
+              >
+                {{ 'MOVEMENTS.PAGINATION_NEXT' | translate }}
+              </button>
+            </div>
+          </footer>
+        }
+      </section>
+    }
+  </div>
 </section>

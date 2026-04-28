@@ -7,11 +7,21 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
   gap: 12px;
 }
 
 .app-brand {
   display: inline-flex;
+    width: 100%;
+    min-height: 88px;
+    padding: 0 32px;
+    box-sizing: border-box;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
   align-items: center;
   gap: 10px;
   color: inherit;
@@ -22,6 +32,13 @@
 .app-brand img {
   flex: none;
   display: block;
+  .movimientos-content {
+    max-width: 1120px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 16px 32px;
+    box-sizing: border-box;
+  }
 }
 
 .app-brand-copy {
@@ -49,8 +66,19 @@
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+      padding: 16px;
+      grid-template-columns: 1fr;
+      justify-items: start;
+    }
   flex-wrap: wrap;
+    .movimientos-content {
+      padding: 0 12px 24px;
+    }
 }
+    .app-actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
 
 .filters-card,
 .table-card,
