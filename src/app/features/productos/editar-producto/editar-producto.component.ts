@@ -48,7 +48,8 @@ export class EditarProductoComponent implements OnInit {
     ubicacion: ['', [Validators.maxLength(this.maxLength.ubicacion)]],
     categoriaId: ['', [Validators.required]],
     unidadId: ['', [Validators.required]],
-    stock_minimo: [0, [Validators.required, Validators.min(0)]]
+    stock_minimo: [0, [Validators.required, Validators.min(0)]],
+    stock_maximo: [0, [Validators.required, Validators.min(0), Validators.max(1000000)]] // Nueva validación
   });
 
   ngOnInit(): void {
