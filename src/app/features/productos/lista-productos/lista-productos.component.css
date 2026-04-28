@@ -8,9 +8,10 @@
 }
 
 .lista-productos-page {
-  max-width: 1120px;
+  width: min(1440px, 100%);
+  max-width: none;
   margin: 0 auto;
-  padding: 24px 16px 32px;
+  padding: 24px 20px 32px;
 }
 
 .lista-header {
