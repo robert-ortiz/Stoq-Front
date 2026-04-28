@@ -9,20 +9,21 @@
 
 .movimientos-page {
   min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 .app-toolbar {
   width: 100%;
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: 12px;
-  padding: 16px 24px;
-  background: rgba(255, 255, 255, 0.88);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow-2);
-  backdrop-filter: blur(10px);
+  height: 72px;
+  padding: 0 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .app-brand {
@@ -59,6 +60,7 @@
 
 .app-title-block {
   min-width: 0;
+  justify-self: start;
 }
 
 .app-title-block h1 {
@@ -70,16 +72,14 @@
   color: var(--text-soft);
 }
 
-.app-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
 .movimientos-content {
   display: grid;
   gap: 12px;
+  padding: 24px 32px 32px;
+  max-width: 1120px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .table-card,

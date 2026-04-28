@@ -11,24 +11,24 @@
   width: 100%;
   max-width: none;
   margin: 0 auto;
-  padding: 24px 24px 32px;
+  padding: 0;
   display: grid;
-  gap: 14px;
+  gap: 0;
   box-sizing: border-box;
+  grid-template-rows: auto 1fr;
 }
 
 .lista-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 14px 18px;
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-l);
-  box-shadow: var(--shadow-2);
-  backdrop-filter: blur(10px);
+  height: 72px;
+  padding: 0 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-sizing: border-box;
 }
 
 .app-brand {
@@ -70,11 +70,17 @@
   gap: 8px;
   flex-wrap: wrap;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .lista-content {
   display: grid;
   gap: 14px;
+  padding: 24px 32px 32px;
+  max-width: 1120px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .content-heading h1 {
