@@ -1,5 +1,13 @@
 <section class="lista-productos-page app-page app-shell">
   <header class="lista-header app-toolbar">
+    <a routerLink="/home" class="app-brand" [attr.aria-label]="'HOME.BRAND_ARIA' | translate">
+      <img src="/Logo.svg" alt="Stoq" width="44" height="44" />
+      <div class="app-brand-copy">
+        <strong>Stoq</strong>
+        <span>{{ 'COMMON.SYSTEM_NAME' | translate }}</span>
+      </div>
+    </a>
+
     <div class="app-title-block">
       <h1>{{ 'PRODUCTS.LIST.TITLE' | translate }}</h1>
     </div>
@@ -15,7 +23,9 @@
       @if (puedeVerMovimientos) {
         <a routerLink="/movimientos" class="btn-secondary app-btn app-btn-secondary">Movimientos</a>
       }
-      <a routerLink="/perfil" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.MY_PROFILE' | translate }}</a>
+      @if (!esOperador) {
+        <a routerLink="/perfil" class="btn-secondary app-btn app-btn-secondary">{{ 'COMMON.MY_PROFILE' | translate }}</a>
+      }
       <button type="button" class="btn-secondary app-btn app-btn-secondary" (click)="logout()">{{ 'COMMON.LOGOUT' | translate }}</button>
     </div>
   </header>

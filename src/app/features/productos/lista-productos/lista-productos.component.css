@@ -272,19 +272,53 @@ th {
 
 .pagination-footer {
   margin-top: 12px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
   align-items: center;
-  flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
 .pagination-buttons {
   display: flex;
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+}
+
+.app-brand img {
+  flex: none;
+  display: block;
+  border-radius: 10px;
+}
+
+.app-brand-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.app-brand-copy strong {
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.app-brand-copy span {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  line-height: 1.1;
+}
+
   gap: 8px;
   align-items: center;
 }
 
+  justify-content: flex-end;
 @media (max-width: 760px) {
   .lista-header {
     flex-direction: column;

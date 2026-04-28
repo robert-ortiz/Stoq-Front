@@ -79,6 +79,7 @@ export class ListaProductosComponent implements OnInit {
   totalPaginas = 1;
   puedeVerMovimientos = false;
   puedeRegistrarMovimientos = false;
+  readonly esOperador = this.authService.getRole() === 'OPERADOR';
 
   ngOnInit(): void {
     this.cargarDatosIniciales();

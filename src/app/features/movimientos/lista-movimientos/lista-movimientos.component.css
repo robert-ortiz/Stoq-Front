@@ -3,6 +3,55 @@
   gap: 12px;
 }
 
+.app-toolbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+}
+
+.app-brand img {
+  flex: none;
+  display: block;
+}
+
+.app-brand-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.app-brand-copy strong {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.app-brand-copy span {
+  color: var(--text-soft);
+  font-size: 0.8rem;
+  line-height: 1.1;
+}
+
+.app-title-block {
+  min-width: 0;
+}
+
+.app-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .filters-card,
 .table-card,
 .kpi-preview,
@@ -167,6 +216,15 @@ th {
 }
 
 @media (max-width: 760px) {
+  .app-toolbar {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .app-actions {
+    justify-content: flex-start;
+  }
+
   .pagination-footer {
     align-items: flex-start;
     flex-direction: column;

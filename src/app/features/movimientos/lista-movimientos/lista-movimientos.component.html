@@ -1,5 +1,13 @@
 <section class="movimientos-page app-page app-shell">
   <header class="app-toolbar">
+    <a routerLink="/home" class="app-brand" [attr.aria-label]="'HOME.BRAND_ARIA' | translate">
+      <img src="/Logo.svg" alt="Stoq" width="40" height="40" />
+      <div class="app-brand-copy">
+        <strong>Stoq</strong>
+        <span>{{ 'COMMON.SYSTEM_NAME' | translate }}</span>
+      </div>
+    </a>
+
     <div class="app-title-block">
       <h1>{{ 'MOVEMENTS.TITLE' | translate }}</h1>
       <p>{{ 'MOVEMENTS.SUBTITLE' | translate }}</p>
@@ -7,7 +15,6 @@
 
     <div class="app-actions">
       <a routerLink="/productos" class="app-btn app-btn-secondary">{{ 'MOVEMENTS.BACK_TO_PRODUCTS' | translate }}</a>
-      <a routerLink="/perfil" class="app-btn app-btn-secondary">{{ 'MOVEMENTS.MY_PROFILE' | translate }}</a>
       <button type="button" class="app-btn app-btn-secondary" (click)="logout()">{{ 'MOVEMENTS.LOGOUT' | translate }}</button>
     </div>
   </header>
