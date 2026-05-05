@@ -223,6 +223,14 @@
     }
   },
   "PRODUCTS": {
+    "CATEGORIES": {
+      "ALIMENTOS": "Alimentos",
+      "BEBIDAS": "Bebidas",
+      "LIMPIEZA": "Limpeza",
+      "HIGIENE": "Higiene",
+      "PAPELERIA": "Papelaria",
+      "MATERIAL_ESCOLAR": "Material escolar"
+    },
     "LIST": {
       "TITLE": "Lista de Produtos",
       "NEW_PRODUCT": "Novo produto",

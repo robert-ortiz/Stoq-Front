@@ -27,6 +27,7 @@ function validadorCoincidenciaContrasena(group: FormGroup) {
 })
 export class SignupComponent {
   private static readonly NAME_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ0-9 ]+$/;
+  private static readonly EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   form: FormGroup;
   isLoading = false;
@@ -64,7 +65,7 @@ export class SignupComponent {
           Validators.maxLength(this.maxLength.apellido2),
           Validators.pattern(SignupComponent.NAME_PATTERN)
         ]],
-        correo: ['', [Validators.required, Validators.email, Validators.maxLength(this.maxLength.correo)]],
+        correo: ['', [Validators.required, Validators.pattern(SignupComponent.EMAIL_PATTERN), Validators.maxLength(this.maxLength.correo)]],
         empresa: ['', [Validators.maxLength(this.maxLength.empresa)]],
         rol: ['OPERADOR', [Validators.required]],
         contrasena: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(this.maxLength.contrasena)]],

@@ -77,7 +77,7 @@
           <select id="categoriaId" class="app-select" formControlName="categoriaId">
             <option value="">{{ 'PRODUCTS.LIST.SELECT_CATEGORY' | translate }}</option>
             @for (categoria of categorias; track categoria.id) {
-              <option [value]="categoria.id">{{ categoria.nombre }}</option>
+              <option [value]="categoria.id">{{ productoService.getCategoryTranslationKey(categoria.nombre) | translate }}</option>
             }
           </select>
           @if (categoriaId?.invalid && categoriaId?.touched) {
@@ -175,7 +175,7 @@
                   <td>{{ producto.codigo }}</td>
                   <td>{{ producto.nombre }}</td>
                   <td>{{ producto.ubicacion || ('PRODUCTS.LIST.NOT_DEFINED' | translate) }}</td>
-                  <td>{{ producto.categoria }}</td>
+                  <td>{{ productoService.getCategoryTranslationKey(producto.categoria) | translate }}</td>
                   <td>{{ producto.unidad }}</td>
                   <td>{{ producto.stockActual }}</td>
                   <td>{{ producto.stockMinimo }}</td>

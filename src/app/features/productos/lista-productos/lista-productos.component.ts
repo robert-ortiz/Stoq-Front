@@ -36,7 +36,7 @@ interface ProductoRow {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListaProductosComponent implements OnInit {
-  private productoService = inject(ProductoService);
+  readonly productoService = inject(ProductoService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);

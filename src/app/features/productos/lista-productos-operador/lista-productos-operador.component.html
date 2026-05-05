@@ -92,7 +92,7 @@
                 <tr>
                   <td>{{ producto.codigo }}</td>
                   <td>{{ producto.nombre }}</td>
-                  <td>{{ producto.categoria?.nombre || 'Sin categoría' }}</td>
+                  <td>{{ productoService.getCategoryTranslationKey(producto.categoria?.nombre) | translate }}</td>
                   <td>{{ producto.unidad?.abreviatura || producto.unidad?.nombre || 'Sin unidad' }}</td>
                   <td>{{ producto.stockActual }}</td>
                   <td>{{ producto.stockMinimo }}</td>
@@ -280,12 +280,11 @@
             <label>{{ 'COMMON.CATEGORY' | translate }}</label>
             <select formControlName="categoriaId">
               <option value="">{{ 'PRODUCTS.LIST.SELECT_CATEGORY' | translate }}</option>
-
-               @for (categoria of categorias; track categoria.id) {
-                 <option [value]="categoria.id">
-                   {{ categoria.nombre }}
-                 </option>
-                }
+              @for (categoria of categorias; track categoria.id) {
+                <option [value]="categoria.id">
+                  {{ productoService.getCategoryTranslationKey(categoria.nombre) | translate }}
+                </option>
+              }
             </select>
           </div>
 

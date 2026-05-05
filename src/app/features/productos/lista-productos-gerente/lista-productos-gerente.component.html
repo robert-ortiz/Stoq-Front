@@ -92,7 +92,7 @@
                 <tr>
                   <td>{{ producto.codigo }}</td>
                   <td>{{ producto.nombre }}</td>
-                  <td>{{ producto.categoria?.nombre }}</td>
+                  <td>{{ productoService.getCategoryTranslationKey(producto.categoria?.nombre) | translate }}</td>
                   <td>{{ producto.unidad?.abreviatura }}</td>
                   <td>{{ producto.stockActual }}</td>
                   <td>{{ producto.stockMinimo }}</td>
@@ -347,7 +347,7 @@
         <select formControlName="categoriaId">
           <option value="">{{ 'PRODUCTS.LIST.SELECT_CATEGORY' | translate }}</option>
           <option *ngFor="let categoria of categorias" [value]="categoria.id">
-            {{ categoria.nombre }}
+            {{ productoService.getCategoryTranslationKey(categoria.nombre) | translate }}
           </option>
         </select>
       </div>
@@ -432,7 +432,7 @@
         <label>Categoría</label>
         <select formControlName="categoriaId">
           <option *ngFor="let categoria of categorias" [value]="categoria.id">
-            {{ categoria.nombre }}
+            {{ productoService.getCategoryTranslationKey(categoria.nombre) | translate }}
           </option>
         </select>
       </div>

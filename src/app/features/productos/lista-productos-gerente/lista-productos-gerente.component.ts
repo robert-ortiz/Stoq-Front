@@ -26,7 +26,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './lista-productos-gerente.component.css'
 })
 export class ListaProductosGerenteComponent implements OnInit {
-  private productoService = inject(ProductoService);
+  readonly productoService = inject(ProductoService);
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);

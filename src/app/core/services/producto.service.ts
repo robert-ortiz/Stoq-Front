@@ -89,6 +89,15 @@ export class ProductoService {
     { nombre: 'Paquete', abreviatura: 'PQ' }
   ];
 
+  private readonly categoryTranslationKeys: Record<string, string> = {
+    alimentos: 'PRODUCTS.CATEGORIES.ALIMENTOS',
+    bebidas: 'PRODUCTS.CATEGORIES.BEBIDAS',
+    limpieza: 'PRODUCTS.CATEGORIES.LIMPIEZA',
+    higiene: 'PRODUCTS.CATEGORIES.HIGIENE',
+    papeleria: 'PRODUCTS.CATEGORIES.PAPELERIA',
+    'material escolar': 'PRODUCTS.CATEGORIES.MATERIAL_ESCOLAR'
+  };
+
   getProductos(): Observable<ProductoApi[]> {
     return this.http.get<ProductoApi[]>(this.apiUrl);
   }
@@ -111,6 +120,11 @@ export class ProductoService {
 
   getUnidades(): Observable<UnidadApi[]> {
     return this.http.get<UnidadApi[]>(this.unidadesUrl);
+  }
+
+  getCategoryTranslationKey(categoryName: string | null | undefined): string {
+    const normalized = this.normalize(categoryName);
+    return this.categoryTranslationKeys[normalized] ?? (categoryName?.trim() || 'PRODUCTS.LIST.NO_CATEGORY');
   }
 
   ensureCatalogosPreestablecidos(): Observable<{ categorias: CategoriaApi[]; unidades: UnidadApi[] }> {
@@ -157,6 +171,10 @@ export class ProductoService {
   }
 
   private normalize(value: string | undefined | null): string {
-    return (value ?? '').trim().toLowerCase();
+    return (value ?? '')
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
   }
 }

@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserService } from '../../../core/services/user.service';
+import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 
 interface NavigationButton {
   icon: string;
@@ -28,19 +29,16 @@ export class HomePageComponent implements OnInit {
   private userService = inject(UserService);
   private router = inject(Router);
   private translateService = inject(TranslateService);
+  private readonly languageService = inject(LanguageService);
 
-  currentLanguage = 'es';
+  currentLanguage = this.languageService.getCurrentLanguage();
 
   private backendDisplayName: string | null = null;
   private backendCompany: string | null = null;
   private backendRole: string | null = null;
 
   ngOnInit(): void {
-    this.currentLanguage =
-      this.translateService.currentLang ||
-      this.translateService.defaultLang ||
-      localStorage.getItem('language') ||
-      'es';
+    this.currentLanguage = this.languageService.getCurrentLanguage();
 
     if (!this.isAuthenticated) {
       return;
@@ -195,9 +193,8 @@ export class HomePageComponent implements OnInit {
   ];
 
   onLanguageChange(language: string): void {
-    this.currentLanguage = language;
-    this.translateService.use(language);
-    localStorage.setItem('language', language);
+    this.languageService.setLanguage(language as LanguageCode);
+    this.currentLanguage = this.languageService.getCurrentLanguage();
   }
 
   navigateTo(route: string): void {

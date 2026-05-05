@@ -60,7 +60,7 @@
             <select id="categoriaId" class="app-select" formControlName="categoriaId">
               <option value="">{{ 'PRODUCTS.EDIT.SELECT_CATEGORY' | translate }}</option>
               @for (categoria of categorias; track categoria.id) {
-                <option [value]="categoria.id">{{ categoria.nombre }}</option>
+                <option [value]="categoria.id">{{ productoService.getCategoryTranslationKey(categoria.nombre) | translate }}</option>
               }
             </select>
             @if (categoriaId?.invalid && categoriaId?.touched) {

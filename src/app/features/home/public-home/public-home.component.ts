@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-public-home',
@@ -15,9 +16,9 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   }
 })
 export class PublicHomeComponent {
-  private readonly translateService = inject(TranslateService);
+  private readonly languageService = inject(LanguageService);
 
-  currentLanguage = this.translateService.currentLang || this.translateService.defaultLang || localStorage.getItem('language') || 'es';
+  currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
 
   readonly availableLanguages = [
     { code: 'es', flag: '🇪🇸', labelKey: 'LANGUAGE.ES' },
@@ -26,9 +27,8 @@ export class PublicHomeComponent {
   ];
 
   onLanguageChange(language: string): void {
-    this.currentLanguage = language;
-    this.translateService.use(language);
-    localStorage.setItem('language', language);
+    this.languageService.setLanguage(language as LanguageCode);
+    this.currentLanguage = this.languageService.getCurrentLanguage();
   }
 
   get nextLanguageLabel(): string {

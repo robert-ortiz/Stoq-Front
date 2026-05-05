@@ -27,7 +27,7 @@ export class LanguageService {
 
   initLanguage(): void {
     const availableCodes = this.supportedLanguages.map((language) => language.code);
-    const savedLanguage = this.normalizeLanguage(localStorage.getItem(LanguageService.STORAGE_KEY));
+    const savedLanguage = this.normalizeLanguage(sessionStorage.getItem(LanguageService.STORAGE_KEY));
     const browserLanguage = this.normalizeLanguage(this.translateService.getBrowserLang());
 
     this.translateService.addLangs(availableCodes);
@@ -56,7 +56,7 @@ export class LanguageService {
     const normalizedLanguage = this.normalizeLanguage(language) ?? 'es';
     this.currentLanguage = normalizedLanguage;
     this.translateService.use(normalizedLanguage);
-    localStorage.setItem(LanguageService.STORAGE_KEY, normalizedLanguage);
+    sessionStorage.setItem(LanguageService.STORAGE_KEY, normalizedLanguage);
   }
 
   private normalizeLanguage(language: string | null | undefined): LanguageCode | null {

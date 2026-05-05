@@ -223,6 +223,14 @@
     }
   },
   "PRODUCTS": {
+    "CATEGORIES": {
+      "ALIMENTOS": "Food",
+      "BEBIDAS": "Beverages",
+      "LIMPIEZA": "Cleaning",
+      "HIGIENE": "Personal hygiene",
+      "PAPELERIA": "Stationery",
+      "MATERIAL_ESCOLAR": "School supplies"
+    },
     "LIST": {
       "TITLE": "Product List",
       "NEW_PRODUCT": "New product",

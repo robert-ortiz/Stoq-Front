@@ -25,7 +25,7 @@ export class EditarProductoComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
-  private productoService = inject(ProductoService);
+  readonly productoService = inject(ProductoService);
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject(ToastService);
   private translateService = inject(TranslateService);
