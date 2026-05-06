@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { UserService } from '../../../core/services/user.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 
@@ -26,12 +27,14 @@ interface NavigationButton {
 })
 export class HomePageComponent implements OnInit {
   private authService = inject(AuthService);
+  private notificationService = inject(NotificationService);
   private userService = inject(UserService);
   private router = inject(Router);
   private translateService = inject(TranslateService);
   private readonly languageService = inject(LanguageService);
 
   currentLanguage = this.languageService.getCurrentLanguage();
+  notificationCount$ = this.notificationService.notificationCount$;
 
   private backendDisplayName: string | null = null;
   private backendCompany: string | null = null;

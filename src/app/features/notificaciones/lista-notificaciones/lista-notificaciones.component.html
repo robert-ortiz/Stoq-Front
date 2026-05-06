@@ -39,13 +39,13 @@
         <div class="loading-state">
           <p>{{ 'COMMON.LOADING' | translate }}</p>
         </div>
-      } @else if (!notifications.length) {
+      } @else if (!(notifications$ | async)?.length) {
         <div class="empty-state">
           <p>🔔 {{ 'NOTIFICATIONS.NO_ALERTS' | translate }}</p>
         </div>
       } @else {
         <div class="notifications-list">
-          @for (notification of notifications; track notification.id) {
+          @for (notification of (notifications$ | async) ?? []; track notification.id) {
             <article class="notification-item" [class]="'notification-' + notification.type">
               <div class="notification-icon">
                 {{ notification.icon }}

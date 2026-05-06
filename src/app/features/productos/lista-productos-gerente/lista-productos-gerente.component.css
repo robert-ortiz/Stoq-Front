@@ -559,3 +559,8 @@ tbody td {
   background: #0f172a;
   border-color: #0f172a;
 }
+
+.notification-btn {
+  position: relative;
+  overflow: visible;
+}

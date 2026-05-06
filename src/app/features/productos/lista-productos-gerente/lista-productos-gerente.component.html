@@ -22,8 +22,11 @@
         <option value="pt">{{ 'LANGUAGE.PT' | translate }}</option>
       </select>
 
-      <button type="button" class="report-btn" (click)="verNotificaciones()">
+      <button type="button" class="report-btn notification-btn" (click)="verNotificaciones()">
         🔔 {{ 'COMMON.NOTIFICATIONS' | translate }}
+        @if (notificationCount$ | async; as notificationCount) {
+          <span class="notification-badge">{{ notificationCount }}</span>
+        }
       </button>
 
       <button type="button" class="logout-btn" (click)="logout()">

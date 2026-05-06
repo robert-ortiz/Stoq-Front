@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 import {
   ProductoService,
@@ -33,6 +34,7 @@ export class ListaProductosGerenteComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private languageService = inject(LanguageService);
   private movimientoService = inject(MovimientoService);
+  private notificationService = inject(NotificationService);
 
   productos: ProductoApi[] = [];
   productosFiltrados: ProductoApi[] = [];
@@ -57,6 +59,7 @@ export class ListaProductosGerenteComponent implements OnInit {
   productoEditando: ProductoApi | null = null;
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
+  notificationCount$ = this.notificationService.notificationCount$;
 
   entradaForm = this.fb.group({
     productoId: ['', Validators.required],
