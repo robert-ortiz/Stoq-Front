@@ -402,7 +402,7 @@ export class ListaProductosGerenteComponent implements OnInit {
   }
 
   verNotificaciones(): void {
-    console.log('Ver notificaciones');
+    this.router.navigateByUrl('/notificaciones');
   }
 
   logout(): void {

@@ -1,6 +1,6 @@
 <section class="notifications-page">
   <header class="notifications-header">
-    <a routerLink="/home" class="brand">
+    <a routerLink="/" class="brand">
       <img src="/Logo.svg" alt="Stoq" width="44" height="44" />
       <div>
         <strong>Stoq</strong>
@@ -9,15 +9,16 @@
     </a>
 
     <div class="header-actions">
-      <select
-        class="language-select"
-        [value]="currentLanguage"
-        (change)="onLanguageChange(($any($event.target).value))"
-      >
-        <option value="es">{{ 'LANGUAGE.ES' | translate }}</option>
-        <option value="en">{{ 'LANGUAGE.EN' | translate }}</option>
-        <option value="pt">{{ 'LANGUAGE.PT' | translate }}</option>
-      </select>
+      <button type="button" class="header-btn" (click)="irAReportes()">
+        📄 {{ 'COMMON.REPORTS' | translate }}
+      </button>
+
+      <button type="button" class="header-btn notification-btn">
+        🔔 {{ 'COMMON.NOTIFICATIONS' | translate }}
+        <span *ngIf="resumen.notificacionesSinLeer > 0" class="notification-badge">
+          {{ resumen.notificacionesSinLeer }}
+        </span>
+      </button>
 
       <button type="button" class="logout-btn" (click)="logout()">
         ↪ {{ 'COMMON.LOGOUT' | translate }}
@@ -26,57 +27,141 @@
   </header>
 
   <main class="notifications-content">
-    <section class="notifications-card">
-      <div class="card-header">
-        <button type="button" class="back-btn" (click)="goBack()">
-          ← {{ 'COMMON.BACK' | translate }}
-        </button>
-        <h1>{{ 'COMMON.NOTIFICATIONS' | translate }}</h1>
-        <p>{{ 'NOTIFICATIONS.ALERTS_SUBTITLE' | translate }}</p>
-      </div>
+    <div class="page-title-row">
+      <h1>🔔 {{ 'ALERTS.PAGE_TITLE' | translate }}</h1>
 
-      @if (cargando) {
-        <div class="loading-state">
-          <p>{{ 'COMMON.LOADING' | translate }}</p>
+      <button type="button" class="back-btn" (click)="volverAProductos()">
+        ← {{ 'ALERTS.BACK_TO_PRODUCTS' | translate }}
+      </button>
+    </div>
+
+    <section class="summary-grid">
+      <article class="summary-card danger">
+        <div>
+          <p>{{ 'ALERTS.CRITICAL_PRODUCTS' | translate }}</p>
+          <strong>{{ resumen.productosCriticos }}</strong>
+          <span>{{ 'ALERTS.CRITICAL_PRODUCTS_HELPER' | translate }}</span>
         </div>
-      } @else if (!(notifications$ | async)?.length) {
-        <div class="empty-state">
-          <p>🔔 {{ 'NOTIFICATIONS.NO_ALERTS' | translate }}</p>
+        <div class="summary-icon danger">⚠</div>
+      </article>
+
+      <article class="summary-card">
+        <div>
+          <p>{{ 'ALERTS.UNREAD_NOTIFICATIONS' | translate }}</p>
+          <strong>{{ resumen.notificacionesSinLeer }}</strong>
+          <span>{{ 'ALERTS.UNREAD_NOTIFICATIONS_HELPER' | translate }}</span>
         </div>
-      } @else {
-        <div class="notifications-list">
-          @for (notification of (notifications$ | async) ?? []; track notification.id) {
-            <article class="notification-item" [class]="'notification-' + notification.type">
-              <div class="notification-icon">
-                {{ notification.icon }}
+        <div class="summary-icon blue">🔔</div>
+      </article>
+
+      <article class="summary-card">
+        <div>
+          <p>{{ 'ALERTS.TOTAL_ALERTS' | translate }}</p>
+          <strong>{{ resumen.totalAlertas }}</strong>
+          <span>{{ 'ALERTS.TOTAL_ALERTS_HELPER' | translate }}</span>
+        </div>
+        <div class="summary-icon gray">📦</div>
+      </article>
+    </section>
+
+    <section class="alerts-layout">
+      <article class="panel critical-panel">
+        <div class="panel-header">
+          <h2>⚠ {{ 'ALERTS.CRITICAL_PRODUCTS_SECTION' | translate }}</h2>
+        </div>
+
+        <div class="panel-body">
+          <p *ngIf="!productosCriticos.length" class="empty-message">
+            {{ 'ALERTS.NO_CRITICAL_PRODUCTS' | translate }}
+          </p>
+
+          <div *ngFor="let producto of productosCriticos" class="critical-product-card">
+            <div class="critical-card-header">
+              <div>
+                <strong>{{ producto.productoCodigo }}</strong>
+                <span class="critical-badge">
+                  {{ 'ALERTS.CRITICAL' | translate }}
+                </span>
+              </div>
+              <span class="warning-icon">⚠</span>
+            </div>
+
+            <h3>{{ producto.productoNombre }}</h3>
+            <p>{{ producto.categoriaNombre || ('COMMON.NO_CATEGORY' | translate) }}</p>
+
+            <div class="stock-grid">
+              <div>
+                <span>{{ 'PRODUCTS.LIST.CURRENT_STOCK' | translate }}</span>
+                <strong>{{ producto.stockActual }}</strong>
               </div>
 
-              <div class="notification-content">
-                <h3>{{ notification.title | translate }}</h3>
-                <p>{{ notification.description | translate }}</p>
-                @if (notification.product) {
-                  <p class="notification-detail">
-                    📦 {{ notification.product }} 
-                    @if (notification.quantity) {
-                      ({{ notification.quantity }} unidades)
-                    }
-                  </p>
-                }
-                <span class="notification-time">{{ notification.timestamp }}</span>
+              <div>
+                <span>{{ 'PRODUCTS.LIST.MIN_STOCK' | translate }}</span>
+                <strong>{{ producto.stockMinimo }}</strong>
               </div>
 
-              <button
-                type="button"
-                class="dismiss-btn"
-                (click)="dismissNotification(notification.id)"
-                [attr.aria-label]="'COMMON.DISMISS' | translate"
-              >
-                ✕
-              </button>
-            </article>
-          }
+              <div>
+                <span>{{ 'ALERTS.DIFFERENCE' | translate }}</span>
+                <strong class="negative">
+                  {{ producto.diferencia }}
+                </strong>
+              </div>
+            </div>
+
+            <div class="stock-bar">
+              <div
+                class="stock-fill"
+                [style.width.%]="calcularPorcentajeStock(producto)"
+              ></div>
+            </div>
+          </div>
         </div>
-      }
+      </article>
+
+      <article class="panel notifications-panel">
+        <div class="panel-header">
+          <h2>
+            {{ 'COMMON.NOTIFICATIONS' | translate }}
+            <span *ngIf="resumen.notificacionesSinLeer > 0" class="new-badge">
+              {{ resumen.notificacionesSinLeer }} {{ 'ALERTS.NEW' | translate }}
+            </span>
+          </h2>
+
+          <button type="button" class="mark-all-btn" (click)="marcarTodasComoLeidas()">
+            {{ 'ALERTS.MARK_ALL_READ' | translate }}
+          </button>
+        </div>
+
+        <div class="panel-body">
+          <p *ngIf="!alertas.length" class="empty-message">
+            {{ 'ALERTS.NO_NOTIFICATIONS' | translate }}
+          </p>
+
+          <div
+            *ngFor="let alerta of alertas"
+            class="notification-card"
+            [class.read]="alerta.leida"
+          >
+            <div class="notification-icon">
+              {{ alerta.leida ? '✓' : '×' }}
+            </div>
+
+            <div class="notification-info">
+              <strong>{{ alerta.mensaje }}</strong>
+              <span>{{ alerta.fecha | date:'yyyy-MM-dd HH:mm' }}</span>
+            </div>
+
+            <button
+              *ngIf="!alerta.leida"
+              type="button"
+              class="mark-read-btn"
+              (click)="marcarComoLeida(alerta.id)"
+            >
+              • {{ 'ALERTS.MARK_READ' | translate }}
+            </button>
+          </div>
+        </div>
+      </article>
     </section>
   </main>
 </section>
