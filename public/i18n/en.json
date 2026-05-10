@@ -61,6 +61,37 @@
     "PT": "Portuguese"
   },
 
+  "ALERTS": {
+    "PAGE_TITLE": "Alerts and Monitoring",
+    "BACK_TO_PRODUCTS": "Back to Products",
+
+    "CRITICAL_PRODUCTS": "Critical Products",
+    "CRITICAL_PRODUCTS_HELPER": "Stock below minimum",
+
+    "UNREAD_NOTIFICATIONS": "Unread Notifications",
+    "UNREAD_NOTIFICATIONS_HELPER": "Pending alerts to review",
+
+    "TOTAL_ALERTS": "Total Alerts",
+    "TOTAL_ALERTS_HELPER": "Products require attention",
+
+    "CRITICAL_PRODUCTS_SECTION": "Products in Critical State",
+
+    "MARK_ALL_READ": "Mark all as read",
+
+    "NO_CRITICAL_PRODUCTS": "There are no critical products",
+    "NO_NOTIFICATIONS": "There are no notifications",
+
+    "NEW": "NEW",
+    "MARK_READ": "Mark as read",
+
+    "CURRENT_STOCK": "Current Stock",
+    "MINIMUM_STOCK": "Minimum Stock",
+    "DIFFERENCE": "Difference",
+
+    "CRITICAL": "CRITICAL",
+    "WARNING": "WARNING"
+  },
+
   "ADMIN": {
     "TABS": {
       "USERS": "Users",

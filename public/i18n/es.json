@@ -62,6 +62,37 @@
     "PT": "Portugués"
   },
 
+  "ALERTS": {
+    "PAGE_TITLE": "Alertas y Monitoreo",
+    "BACK_TO_PRODUCTS": "Volver a Productos",
+
+    "CRITICAL_PRODUCTS": "Productos Críticos",
+    "CRITICAL_PRODUCTS_HELPER": "Stock por debajo del mínimo",
+
+    "UNREAD_NOTIFICATIONS": "Notificaciones Sin Leer",
+    "UNREAD_NOTIFICATIONS_HELPER": "Alertas pendientes de revisión",
+
+    "TOTAL_ALERTS": "Total de Alertas",
+    "TOTAL_ALERTS_HELPER": "Productos requieren atención",
+
+    "CRITICAL_PRODUCTS_SECTION": "Productos en Estado Crítico",
+
+    "MARK_ALL_READ": "Marcar todas leídas",
+
+    "NO_CRITICAL_PRODUCTS": "No existen productos críticos",
+    "NO_NOTIFICATIONS": "No existen notificaciones",
+
+    "NEW": "NUEVAS",
+    "MARK_READ": "Marcar leída",
+
+    "CURRENT_STOCK": "Stock Actual",
+    "MINIMUM_STOCK": "Stock Mínimo",
+    "DIFFERENCE": "Diferencia",
+
+    "CRITICAL": "CRÍTICO",
+    "WARNING": "ADVERTENCIA"
+  },
+
   "ADMIN": {
     "TABS": {
       "USERS": "Usuarios",
