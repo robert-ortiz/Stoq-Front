@@ -35,6 +35,8 @@ export class HomePageComponent implements OnInit {
 
   currentLanguage = this.languageService.getCurrentLanguage();
   notificationCount$ = this.notificationService.notificationCount$;
+  notificationLoading$ = this.notificationService.loading$;
+  notificationError$ = this.notificationService.error$;
 
   private backendDisplayName: string | null = null;
   private backendCompany: string | null = null;

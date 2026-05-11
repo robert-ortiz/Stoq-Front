@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, map, Observable, catchError, of } from 'rxjs';
+import { BehaviorSubject, map, Observable, catchError, of, tap, finalize } from 'rxjs';
 import { ProductosService, ProductoCritico } from './productos.service';
 
 export interface NotificationItem {
@@ -51,6 +51,12 @@ export class NotificationService {
   private readonly notificationsSubject = new BehaviorSubject<NotificationItem[]>(INITIAL_NOTIFICATIONS);
   private productosService = inject(ProductosService);
 
+  private readonly loadingSubject = new BehaviorSubject<boolean>(false);
+  private readonly errorSubject = new BehaviorSubject<string | null>(null);
+
+  readonly loading$ = this.loadingSubject.asObservable();
+  readonly error$ = this.errorSubject.asObservable();
+
   readonly notifications$: Observable<NotificationItem[]> = this.notificationsSubject.asObservable();
 
   readonly notificationCount$ = this.notifications$.pipe(map((notifications) => notifications.length));
@@ -69,8 +75,11 @@ export class NotificationService {
   }
 
   refreshCriticalAlerts(): Observable<void> {
+    this.loadingSubject.next(true);
+    this.errorSubject.next(null);
+
     return this.productosService.getProductosCriticos().pipe(
-      map((items: ProductoCritico[]) => {
+      tap((items: ProductoCritico[]) => {
         if (!items || items.length === 0) {
           this.notificationsSubject.next([]);
           return;
@@ -89,10 +98,12 @@ export class NotificationService {
 
         this.notificationsSubject.next(mapped);
       }),
-      catchError(() => {
-        // On error, keep existing notifications but do not break app
-        return of(void 0);
-      })
+      catchError((err) => {
+        this.errorSubject.next('No se pudo cargar alertas críticas.');
+        return of([] as ProductoCritico[]);
+      }),
+      finalize(() => this.loadingSubject.next(false)),
+      map(() => void 0)
     );
   }
 }

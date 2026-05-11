@@ -34,6 +34,12 @@
           @if (notificationCount$ | async; as notificationCount) {
             <span class="notification-badge">{{ notificationCount }}</span>
           }
+          @if (notificationLoading$ | async) {
+            <span class="notification-loading">⏳</span>
+          }
+          @if (notificationError$ | async; as err) {
+            <span class="notification-error" title="{{ err }}">⚠</span>
+          }
         </button>
 
         @if (notificationPanelOpen) {
