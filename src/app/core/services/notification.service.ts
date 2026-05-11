@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, map, Observable, catchError, of, tap, finalize } from 'rxjs';
 import { ProductosService, ProductoCritico } from './productos.service';
+import { AlertaService } from './alerta.service';
 
 export interface NotificationItem {
   id: number;
@@ -50,12 +51,18 @@ const INITIAL_NOTIFICATIONS: NotificationItem[] = [
 export class NotificationService {
   private readonly notificationsSubject = new BehaviorSubject<NotificationItem[]>(INITIAL_NOTIFICATIONS);
   private productosService = inject(ProductosService);
+  private alertaService = inject(AlertaService);
 
   private readonly loadingSubject = new BehaviorSubject<boolean>(false);
   private readonly errorSubject = new BehaviorSubject<string | null>(null);
 
   readonly loading$ = this.loadingSubject.asObservable();
   readonly error$ = this.errorSubject.asObservable();
+  private readonly unreadCountSubject = new BehaviorSubject<number>(0);
+  private readonly criticalCountSubject = new BehaviorSubject<number>(0);
+
+  readonly unreadCount$ = this.unreadCountSubject.asObservable();
+  readonly criticalCount$ = this.criticalCountSubject.asObservable();
 
   readonly notifications$: Observable<NotificationItem[]> = this.notificationsSubject.asObservable();
 
@@ -72,6 +79,27 @@ export class NotificationService {
 
   getNotificationCount(): number {
     return this.notificationsSubject.value.length;
+  }
+
+  /**
+   * Refresh summary counts: unread notifications and critical products.
+   * Unread count is read from AlertaService.getResumen().notificacionesSinLeer
+   * Critical count is derived from ProductosService.getProductosCriticos().length
+   */
+  refreshAllCounts(): void {
+    // refresh unread notifications
+    this.alertaService.getResumen().pipe(
+      catchError(() => of({ productosCriticos: 0, notificacionesSinLeer: 0, totalAlertas: 0 }))
+    ).subscribe((res) => {
+      this.unreadCountSubject.next(res.notificacionesSinLeer ?? 0);
+    });
+
+    // refresh critical products count
+    this.productosService.getProductosCriticos().pipe(
+      catchError(() => of([] as ProductoCritico[]))
+    ).subscribe((items) => {
+      this.criticalCountSubject.next(items?.length ?? 0);
+    });
   }
 
   refreshCriticalAlerts(): Observable<void> {

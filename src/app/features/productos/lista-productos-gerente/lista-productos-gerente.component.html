@@ -31,14 +31,19 @@
           aria-haspopup="dialog"
         >
           🔔 {{ 'COMMON.NOTIFICATIONS' | translate }}
-          @if (notificationCount$ | async; as notificationCount) {
-            <span class="notification-badge">{{ notificationCount }}</span>
+          @if (unreadCount$ | async; as unread) {
+            <span class="notification-badge">{{ unread }}</span>
           }
           @if (notificationLoading$ | async) {
             <span class="notification-loading">⏳</span>
           }
           @if (notificationError$ | async; as err) {
             <span class="notification-error" title="{{ err }}">⚠</span>
+          }
+          @if (criticalCount$ | async; as critical) {
+            @if (isGerente || isAdmin) {
+              <span class="critical-badge" title="Productos críticos">{{ critical }}</span>
+            }
           }
         </button>
 

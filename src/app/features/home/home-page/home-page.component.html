@@ -60,14 +60,22 @@
             >
               <span class="btn-icon">{{ button.icon }}</span>
               <span class="btn-label">{{ button.label | translate }}</span>
-              @if (button.route === '/notificaciones' && (notificationCount$ | async); as notificationCount) {
-                <span class="notification-badge">{{ notificationCount }}</span>
-                  @if (button.route === '/notificaciones' && (notificationLoading$ | async)) {
-                    <span class="notification-loading">⏳</span>
-                  }
-                  @if (button.route === '/notificaciones' && (notificationError$ | async); as err) {
-                    <span class="notification-error" title="{{ err }}">⚠</span>
-                  }
+              @if (button.route === '/notificaciones' && (unreadCount$ | async); as unread) {
+                <span class="notification-badge">{{ unread }}</span>
+              }
+
+              @if (button.route === '/notificaciones' && (notificationLoading$ | async)) {
+                <span class="notification-loading">⏳</span>
+              }
+
+              @if (button.route === '/notificaciones' && (notificationError$ | async); as err) {
+                <span class="notification-error" title="{{ err }}">⚠</span>
+              }
+
+              @if (button.route === '/notificaciones' && (criticalCount$ | async); as critical) {
+                @if (isManager || isAdmin) {
+                  <span class="critical-badge" title="Productos críticos">{{ critical }}</span>
+                }
               }
             </button>
           }

@@ -37,6 +37,8 @@ export class HomePageComponent implements OnInit {
   notificationCount$ = this.notificationService.notificationCount$;
   notificationLoading$ = this.notificationService.loading$;
   notificationError$ = this.notificationService.error$;
+  unreadCount$ = this.notificationService.unreadCount$;
+  criticalCount$ = this.notificationService.criticalCount$;
 
   private backendDisplayName: string | null = null;
   private backendCompany: string | null = null;
@@ -69,11 +71,12 @@ export class HomePageComponent implements OnInit {
     });
 
     // Refresh critical alerts for admins/managers on landing
+    // Refresh counts (unread + critical) for header badges
+    this.notificationService.refreshAllCounts();
+
+    // Also fetch critical details for managers/admins (populate notifications list)
     if (this.authService.hasAnyRole(['ADMIN', 'GERENTE'])) {
-      this.notificationService.refreshCriticalAlerts().subscribe({
-        next: () => {},
-        error: () => {}
-      });
+      this.notificationService.refreshCriticalAlerts().subscribe({ next: () => {}, error: () => {} });
     }
   }
 
