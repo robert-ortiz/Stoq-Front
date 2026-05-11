@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, HostListener, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -54,11 +54,13 @@ export class ListaProductosGerenteComponent implements OnInit {
   mostrarModalCrear = false;
   mostrarModalEditar = false;
   mostrarModalEliminar = false;
+  notificationPanelOpen = false;
 
   productoAEliminar: ProductoApi | null = null;
   productoEditando: ProductoApi | null = null;
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
+  notifications$ = this.notificationService.notifications$;
   notificationCount$ = this.notificationService.notificationCount$;
 
   entradaForm = this.fb.group({
@@ -106,6 +108,41 @@ export class ListaProductosGerenteComponent implements OnInit {
   onLanguageChange(language: string): void {
     this.languageService.setLanguage(language as LanguageCode);
     this.currentLanguage = this.languageService.getCurrentLanguage();
+  }
+
+  toggleNotificationPanel(): void {
+    this.notificationPanelOpen = !this.notificationPanelOpen;
+  }
+
+  closeNotificationPanel(): void {
+    this.notificationPanelOpen = false;
+  }
+
+  openNotificationsPage(): void {
+    this.closeNotificationPanel();
+    this.router.navigateByUrl('/notificaciones');
+  }
+
+  dismissNotification(id: number): void {
+    this.notificationService.dismissNotification(id);
+  }
+
+  clearNotifications(): void {
+    this.notificationService.clearNotifications();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null;
+
+    if (!target?.closest('.notification-dropdown')) {
+      this.closeNotificationPanel();
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.closeNotificationPanel();
   }
 
   cargarDatos(): void {
@@ -402,7 +439,7 @@ export class ListaProductosGerenteComponent implements OnInit {
   }
 
   verNotificaciones(): void {
-    this.router.navigateByUrl('/notificaciones');
+    this.toggleNotificationPanel();
   }
 
   logout(): void {

@@ -53,6 +53,10 @@ export class NotificationService {
 
   readonly notificationCount$ = this.notifications$.pipe(map((notifications) => notifications.length));
 
+  clearNotifications(): void {
+    this.notificationsSubject.next([]);
+  }
+
   dismissNotification(id: number): void {
     const updatedNotifications = this.notificationsSubject.value.filter((notification) => notification.id !== id);
     this.notificationsSubject.next(updatedNotifications);

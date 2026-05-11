@@ -116,6 +116,19 @@ export class HomePageComponent implements OnInit {
     return this.role === 'GERENTE';
   }
 
+  get homeRoute(): string {
+    switch (this.role) {
+      case 'ADMIN':
+        return '/admin';
+      case 'GERENTE':
+        return '/gerente';
+      case 'OPERADOR':
+        return '/operador';
+      default:
+        return '/home';
+    }
+  }
+
   get navigationButtons(): NavigationButton[] {
     if (this.isAdmin) {
       return [

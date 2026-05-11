@@ -399,3 +399,211 @@ button:disabled {
     flex-direction: column;
   }
 }
+
+/* Gerente navbar notifications */
+.operator-products-page .notification-dropdown {
+  position: relative;
+}
+
+.operator-products-page .notification-btn {
+  position: relative;
+  min-width: 164px;
+}
+
+.operator-products-page .notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #e11d48;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.operator-products-page .notification-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: min(380px, calc(100vw - 32px));
+  background: #ffffff;
+  border: 1px solid #dbe3ee;
+  border-radius: 18px;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+  overflow: hidden;
+  z-index: 30;
+}
+
+.operator-products-page .notification-panel-header {
+  padding: 16px 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.operator-products-page .notification-panel-header strong {
+  display: block;
+  font-size: 15px;
+  color: #111827;
+}
+
+.operator-products-page .notification-panel-header span {
+  display: block;
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.operator-products-page .notification-panel-close {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: #111827;
+}
+
+.operator-products-page .notification-panel-body {
+  max-height: 320px;
+  overflow: auto;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.operator-products-page .notification-item {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 12px;
+  align-items: start;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 12px;
+  background: #f8fafc;
+}
+
+.operator-products-page .notification-item-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  background: #e2e8f0;
+}
+
+.operator-products-page .notification-type-warning .notification-item-icon {
+  background: #fff1f2;
+}
+
+.operator-products-page .notification-type-success .notification-item-icon {
+  background: #dcfce7;
+}
+
+.operator-products-page .notification-type-info .notification-item-icon {
+  background: #dbeafe;
+}
+
+.operator-products-page .notification-item-content {
+  min-width: 0;
+}
+
+.operator-products-page .notification-item-content strong {
+  display: block;
+  color: #111827;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.operator-products-page .notification-item-content p {
+  margin: 0;
+  color: #4b5563;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.operator-products-page .notification-item-content span {
+  display: block;
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 11px;
+}
+
+.operator-products-page .notification-item-action {
+  border: none;
+  background: #eef2ff;
+  color: #1d4ed8;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.operator-products-page .notification-empty {
+  margin: 0;
+  padding: 18px 12px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.operator-products-page .notification-panel-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 14px 18px 18px;
+  border-top: 1px solid #eef2f7;
+}
+
+.operator-products-page .panel-link-btn {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.operator-products-page .panel-link-btn.secondary {
+  background: #f8fafc;
+}
+
+@media (max-width: 1100px) {
+  .operator-products-page .notification-panel {
+    right: auto;
+    left: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .operator-products-page .notification-panel {
+    width: min(100%, calc(100vw - 40px));
+  }
+
+  .operator-products-page .notification-item {
+    grid-template-columns: 40px 1fr;
+  }
+
+  .operator-products-page .notification-item-action {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .operator-products-page .notification-panel-footer {
+    flex-direction: column;
+  }
+
+  .operator-products-page .panel-link-btn {
+    width: 100%;
+  }
+}
