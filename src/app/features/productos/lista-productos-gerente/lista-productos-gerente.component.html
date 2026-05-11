@@ -160,12 +160,18 @@
 
             <tbody>
               @for (producto of productosPaginados; track producto.id) {
-                <tr>
+                <tr [class.low-stock]="(producto.stockActual || 0) <= (producto.stockMinimo || 0) && (producto.stockActual || 0) > 0" [class.zero-stock]="(producto.stockActual || 0) === 0">
                   <td>{{ producto.codigo }}</td>
                   <td>{{ producto.nombre }}</td>
                   <td>{{ productoService.getCategoryTranslationKey(producto.categoria?.nombre) | translate }}</td>
                   <td>{{ producto.unidad?.abreviatura }}</td>
-                  <td>{{ producto.stockActual }}</td>
+                  <td>
+                    <div class="stock-cell">
+                      <span class="stock-value">{{ producto.stockActual }}</span>
+                      <span *ngIf="(producto.stockActual || 0) === 0" class="stock-badge zero" aria-label="Stock cero">&#9888;</span>
+                      <span *ngIf="(producto.stockActual || 0) > 0 && (producto.stockActual || 0) <= (producto.stockMinimo || 0)" class="stock-badge low" aria-label="Stock bajo">&#9888;</span>
+                    </div>
+                  </td>
                   <td>{{ producto.stockMinimo }}</td>
                   <td>
                     <span class="status-badge" [class.inactive]="!producto.estado">

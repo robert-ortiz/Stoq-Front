@@ -399,6 +399,14 @@ tbody td {
   gap: 12px;
 }
 
+/* Stock highlighting */
+tr.low-stock { background: rgba(255, 243, 205, 0.6); }
+tr.zero-stock { background: rgba(255, 230, 230, 0.9); }
+.stock-cell { display: flex; align-items: center; gap: 8px; }
+.stock-badge { width: 22px; height: 22px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }
+.stock-badge.low { background: rgba(255,179,0,0.12); color: #b06a00; }
+.stock-badge.zero { background: rgba(220,38,38,0.12); color: #991b1b; }
+
 .language-select {
   height: 42px;
   border: 1px solid #d1d5db;
