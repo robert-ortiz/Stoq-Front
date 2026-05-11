@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, map, Observable, catchError, of } from 'rxjs';
+import { ProductosService, ProductoCritico } from './productos.service';
 
 export interface NotificationItem {
   id: number;
@@ -48,6 +49,7 @@ const INITIAL_NOTIFICATIONS: NotificationItem[] = [
 })
 export class NotificationService {
   private readonly notificationsSubject = new BehaviorSubject<NotificationItem[]>(INITIAL_NOTIFICATIONS);
+  private productosService = inject(ProductosService);
 
   readonly notifications$: Observable<NotificationItem[]> = this.notificationsSubject.asObservable();
 
@@ -64,5 +66,33 @@ export class NotificationService {
 
   getNotificationCount(): number {
     return this.notificationsSubject.value.length;
+  }
+
+  refreshCriticalAlerts(): Observable<void> {
+    return this.productosService.getProductosCriticos().pipe(
+      map((items: ProductoCritico[]) => {
+        if (!items || items.length === 0) {
+          this.notificationsSubject.next([]);
+          return;
+        }
+
+        const mapped = items.map((p, idx) => ({
+          id: idx + 1,
+          icon: '⚠️',
+          title: 'NOTIFICATIONS.LOW_STOCK',
+          description: `${p.nombre} (${p.codigo}) - ${p.stockActual} / Mín ${p.stockMinimo}`,
+          type: 'warning' as const,
+          timestamp: new Date().toLocaleTimeString(),
+          quantity: p.stockActual,
+          product: p.nombre
+        }));
+
+        this.notificationsSubject.next(mapped);
+      }),
+      catchError(() => {
+        // On error, keep existing notifications but do not break app
+        return of(void 0);
+      })
+    );
   }
 }

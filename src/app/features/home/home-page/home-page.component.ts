@@ -65,6 +65,14 @@ export class HomePageComponent implements OnInit {
         this.backendRole = this.authService.getRole();
       }
     });
+
+    // Refresh critical alerts for admins/managers on landing
+    if (this.authService.hasAnyRole(['ADMIN', 'GERENTE'])) {
+      this.notificationService.refreshCriticalAlerts().subscribe({
+        next: () => {},
+        error: () => {}
+      });
+    }
   }
 
   get isAuthenticated(): boolean {
