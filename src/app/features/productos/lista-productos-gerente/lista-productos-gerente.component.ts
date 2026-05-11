@@ -62,6 +62,10 @@ export class ListaProductosGerenteComponent implements OnInit {
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
   notifications$ = this.notificationService.notifications$;
   notificationCount$ = this.notificationService.notificationCount$;
+  notificationLoading$ = this.notificationService.loading$;
+  notificationError$ = this.notificationService.error$;
+  unreadCount$ = this.notificationService.unreadCount$;
+  criticalCount$ = this.notificationService.criticalCount$;
 
   entradaForm = this.fb.group({
     productoId: ['', Validators.required],
@@ -99,6 +103,9 @@ export class ListaProductosGerenteComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarDatos();
+
+    // refresh global counts for header badges
+    this.notificationService.refreshAllCounts();
 
     this.searchControl.valueChanges.subscribe(() => {
       this.filtrarProductos();
@@ -440,10 +447,26 @@ export class ListaProductosGerenteComponent implements OnInit {
 
   verNotificaciones(): void {
     this.toggleNotificationPanel();
+
+    // If opening panel, refresh critical alerts
+    if (this.notificationPanelOpen) {
+      this.notificationService.refreshCriticalAlerts().subscribe({
+        next: () => {},
+        error: () => {}
+      });
+    }
   }
 
   logout(): void {
     this.authService.logout();
     this.router.navigateByUrl('/auth/login');
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.getRole() === 'ADMIN';
+  }
+
+  get isGerente(): boolean {
+    return this.authService.getRole() === 'GERENTE';
   }
 }
