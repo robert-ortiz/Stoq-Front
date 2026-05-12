@@ -35,7 +35,7 @@ export class SignupComponent {
   readonly maxLength = {
     nombre: 30,
     apellido1: 30,
-    apellido2: 30,
+    apellido2: 25,
     correo: 30,
     empresa: 20,
     contrasena: 30,
