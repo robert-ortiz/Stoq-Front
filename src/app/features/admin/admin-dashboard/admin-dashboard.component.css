@@ -3,11 +3,11 @@
   background: #eef3f8;
 }
 
-.admin-header {
-  height: 88px;
+.topbar {
+  height: 72px;
   background: #fff;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 0 32px;
+  border-bottom: 1px solid #eef0f4;
+  padding: 0 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;

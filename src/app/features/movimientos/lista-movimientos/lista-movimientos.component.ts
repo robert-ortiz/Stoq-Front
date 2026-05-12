@@ -12,10 +12,11 @@ import {
   obtenerProductosConMasMovimiento
 } from '../movimientos.selectors';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 @Component({
   selector: 'app-lista-movimientos',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, BrandComponent],
   templateUrl: './lista-movimientos.component.html',
   styleUrl: './lista-movimientos.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

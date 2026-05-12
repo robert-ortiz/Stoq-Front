@@ -6,6 +6,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { UserService } from '../../../core/services/user.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
+import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 interface NavigationButton {
   icon: string;
@@ -17,7 +18,7 @@ interface NavigationButton {
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, BrandComponent],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

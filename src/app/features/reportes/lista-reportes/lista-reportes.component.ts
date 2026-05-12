@@ -4,11 +4,12 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
+import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 @Component({
   selector: 'app-lista-reportes',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, BrandComponent],
   templateUrl: './lista-reportes.component.html',
   styleUrl: './lista-reportes.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

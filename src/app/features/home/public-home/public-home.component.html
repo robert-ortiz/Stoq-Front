@@ -1,11 +1,6 @@
 <div class="home-wrapper">
   <header class="topbar">
-    <a routerLink="/" class="logo-link" [attr.aria-label]="'HOME.BRAND_ARIA' | translate">
-      <div class="logo-icon">
-        <img src="/Logo.svg" [attr.alt]="'HOME.BRAND_ALT' | translate" width="40" height="40" />
-      </div>
-      <span class="brand">Stoq</span>
-    </a>
+    <app-brand [cssClass]="'brand'" [target]="'/'" [size]="40" [ariaLabel]="('HOME.BRAND_ARIA' | translate)"></app-brand>
 
     <nav class="nav-actions">
       <select

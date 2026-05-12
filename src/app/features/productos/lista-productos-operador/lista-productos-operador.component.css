@@ -4,14 +4,14 @@
   font-family: Inter, sans-serif;
 }
 
-.operator-header {
+.topbar {
   height: 72px;
   background: #fff;
-  padding: 0 32px;
+  padding: 0 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #eef0f4;
 }
 
 .brand {

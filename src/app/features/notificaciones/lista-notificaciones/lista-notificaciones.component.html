@@ -1,25 +1,8 @@
 <section class="notifications-page">
-  <header class="notifications-header">
-    <a routerLink="/gerente" class="brand">
-      <img src="/Logo.svg" alt="Stoq" width="44" height="44" />
-      <div>
-        <strong>Stoq</strong>
-        <span>{{ 'COMMON.SYSTEM_NAME' | translate }}</span>
-      </div>
-    </a>
+  <header class="topbar">
+    <app-brand [cssClass]="'brand'" [target]="'/home'" [size]="44" [ariaLabel]="('HOME.BRAND_ARIA' | translate)"></app-brand>
 
     <div class="header-actions">
-      <button type="button" class="header-btn" (click)="irAReportes()">
-        📄 {{ 'COMMON.REPORTS' | translate }}
-      </button>
-
-      <button type="button" class="header-btn notification-btn">
-        🔔 {{ 'COMMON.NOTIFICATIONS' | translate }}
-        <span *ngIf="resumen.notificacionesSinLeer > 0" class="notification-badge">
-          {{ resumen.notificacionesSinLeer }}
-        </span>
-      </button>
-
       <button type="button" class="logout-btn" (click)="logout()">
         ↪ {{ 'COMMON.LOGOUT' | translate }}
       </button>

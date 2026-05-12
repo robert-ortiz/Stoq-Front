@@ -13,17 +13,16 @@
   grid-template-rows: auto 1fr;
 }
 
-.app-toolbar {
+.topbar {
   width: 100%;
   box-sizing: border-box;
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
   height: 72px;
-  padding: 0 32px;
+  padding: 0 28px;
   background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #eef0f4;
 }
 
 .app-brand {

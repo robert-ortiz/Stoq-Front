@@ -5,11 +5,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { AlertaService, AlertaApi, AlertasResumenApi } from '../../../core/services/alerta.service';
+import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 @Component({
   selector: 'app-lista-notificaciones',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe],
+  imports: [CommonModule, RouterModule, TranslatePipe, BrandComponent],
   templateUrl: './lista-notificaciones.component.html',
   styleUrl: './lista-notificaciones.component.css'
 })

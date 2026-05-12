@@ -5,6 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, forkJoin, startWith } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { BrandComponent } from '../../../shared/components/brand/brand.component';
 import {
   CategoriaApi,
   CreateProductoRequest,
@@ -30,7 +31,7 @@ interface ProductoRow {
 @Component({
   selector: 'app-lista-productos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, BrandComponent],
   templateUrl: './lista-productos.component.html',
   styleUrl: './lista-productos.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

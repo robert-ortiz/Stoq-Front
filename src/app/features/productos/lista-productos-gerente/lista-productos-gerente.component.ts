@@ -18,11 +18,12 @@ import {
 } from '../../../core/services/producto.service';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 @Component({
   selector: 'app-lista-productos-gerente',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, BrandComponent],
   templateUrl: './lista-productos-gerente.component.html',
   styleUrl: './lista-productos-gerente.component.css'
 })

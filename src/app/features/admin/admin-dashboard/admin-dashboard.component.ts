@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angu
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { EditableUser, UserService } from '../../../core/services/user.service';
@@ -14,7 +15,7 @@ import { ToastService } from '../../../core/services/toast.service';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslateModule, BrandComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css'
 })

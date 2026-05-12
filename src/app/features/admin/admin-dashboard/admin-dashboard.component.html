@@ -1,12 +1,6 @@
 <section class="admin-page">
-  <header class="admin-header">
-    <a routerLink="/home" class="brand">
-      <img src="/Logo.svg" alt="Stoq" width="44" height="44" />
-      <div>
-        <strong>Stoq</strong>
-        <span>{{ 'COMMON.SYSTEM_NAME' | translate }}</span>
-      </div>
-    </a>
+  <header class="topbar">
+    <app-brand [cssClass]="'brand'" [target]="'/home'" [size]="44" [ariaLabel]="('HOME.BRAND_ARIA' | translate)"></app-brand>
 
     <div class="header-actions">
       <select

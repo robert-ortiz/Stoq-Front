@@ -15,11 +15,12 @@ import {
   CreateProductoRequest
 } from '../../../core/services/producto.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 @Component({
   selector: 'app-lista-productos-operador',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, BrandComponent],
   templateUrl: './lista-productos-operador.component.html',
   styleUrl: './lista-productos-operador.component.css'
 })

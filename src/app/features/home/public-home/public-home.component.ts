@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
+import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 @Component({
   selector: 'app-public-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, BrandComponent],
   templateUrl: './public-home.component.html',
   styleUrl: './public-home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
