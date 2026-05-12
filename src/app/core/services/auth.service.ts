@@ -16,7 +16,7 @@ export interface SignupRequest {
   rol: string;
 }
 
-export interface LoginResponse {
+export interface AuthSessionResponse {
   token?: string;
   rol?: string;
   role?: string;
@@ -67,21 +67,23 @@ export class AuthService {
     company: 'company_name'
   };
   
-  login(credentials: LoginRequest): Observable<string> {
-    return this.http.post(`${this.apiUrl}/login`, credentials, {
-      responseType: 'text'
-    });
+  login(credentials: LoginRequest): Observable<AuthSessionResponse> {
+    return this.http.post<AuthSessionResponse>(`${this.apiUrl}/login`, credentials);
   }
 
-  signup(data: SignupRequest): Observable<string> {
-    return this.http.post(`${this.apiUrl}/register`, data, {
-      responseType: 'text'
-    });
+  signup(data: SignupRequest): Observable<AuthSessionResponse> {
+    return this.http.post<AuthSessionResponse>(`${this.apiUrl}/register`, data);
   }
 
-  saveSession(session: LoginResponse | string): void {
+  saveSession(session: AuthSessionResponse | string): void {
     const normalizedSession = this.normalizeSession(session);
     const token = normalizedSession.token ?? '';
+
+    if (!token) {
+      this.logout();
+      return;
+    }
+
     const roleFromToken = this.extractRoleFromToken(token);
     const role = roleFromToken ?? normalizedSession.rol ?? normalizedSession.role ?? normalizedSession.user?.rol ?? normalizedSession.user?.role ?? '';
     const name = normalizedSession.nombre ?? normalizedSession.name ?? normalizedSession.user?.nombre ?? normalizedSession.user?.name ?? '';
@@ -95,7 +97,7 @@ export class AuthService {
     localStorage.setItem(this.storageKeys.company, company);
   }
 
-  private normalizeSession(session: LoginResponse | string): LoginResponse {
+  private normalizeSession(session: AuthSessionResponse | string): AuthSessionResponse {
     if (typeof session === 'string') {
       const token = this.extractTokenFromText(session);
 
@@ -144,11 +146,22 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem(this.storageKeys.token);
+    return this.hasValidToken();
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.storageKeys.token);
+    const token = localStorage.getItem(this.storageKeys.token);
+
+    if (!token) {
+      return null;
+    }
+
+    if (this.isTokenExpired(token)) {
+      this.logout();
+      return null;
+    }
+
+    return token;
   }
 
   getRole(): string | null {
@@ -223,6 +236,10 @@ export class AuthService {
     }
 
     return allowedRoles.map((item) => this.normalizeRole(item)).includes(role);
+  }
+
+  hasValidToken(): boolean {
+    return this.getToken() !== null;
   }
 
   private extractRoleFromToken(token: string | null): string | null {
@@ -308,6 +325,16 @@ export class AuthService {
     } catch {
       return null;
     }
+  }
+
+  private isTokenExpired(token: string): boolean {
+    const payload = this.decodeJwtPayload(token);
+
+    if (!payload || typeof payload['exp'] !== 'number') {
+      return false;
+    }
+
+    return Date.now() >= payload['exp'] * 1000;
   }
 
   private normalizeRole(role: string | null): string | null {

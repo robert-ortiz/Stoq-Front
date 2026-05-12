@@ -442,7 +442,7 @@ export class ListaProductosGerenteComponent implements OnInit {
   }
 
   irAReportes(): void {
-    console.log('Ir a reportes');
+    this.router.navigateByUrl('/reportes');
   }
 
   verNotificaciones(): void {

@@ -142,6 +142,10 @@ export class HomePageComponent implements OnInit {
     }
   }
 
+  get isManagerHomeRoute(): boolean {
+    return this.router.url.startsWith('/gerente');
+  }
+
   get navigationButtons(): NavigationButton[] {
     if (this.isAdmin) {
       return [

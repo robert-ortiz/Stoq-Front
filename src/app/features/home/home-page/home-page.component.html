@@ -1,6 +1,11 @@
 <div class="home-wrapper">
   <header class="topbar">
-    <a [routerLink]="homeRoute" class="logo-link" [attr.aria-label]="'HOME.BRAND_ARIA' | translate">
+    <a
+      [routerLink]="isManagerHomeRoute ? null : homeRoute"
+      class="logo-link"
+      [attr.aria-label]="'HOME.BRAND_ARIA' | translate"
+      [attr.aria-disabled]="isManagerHomeRoute"
+    >
       <div class="logo-icon">
         <img src="/Logo.svg" [attr.alt]="'HOME.BRAND_ALT' | translate" width="40" height="40" />
       </div>
