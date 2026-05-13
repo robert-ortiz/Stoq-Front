@@ -61,6 +61,7 @@ export class ListaProductosGerenteComponent implements OnInit {
   productoEditando: ProductoApi | null = null;
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
+  readonly companyName = this.authService.getCompany() || '';
   notifications$ = this.notificationService.notifications$;
   notificationCount$ = this.notificationService.notificationCount$;
   notificationLoading$ = this.notificationService.loading$;
@@ -103,6 +104,11 @@ export class ListaProductosGerenteComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    if (!this.companyName) {
+      this.error = 'No se pudo identificar la empresa activa.';
+      return;
+    }
+
     this.cargarDatos();
 
     // refresh global counts for header badges

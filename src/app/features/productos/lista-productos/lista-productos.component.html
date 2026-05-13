@@ -23,6 +23,9 @@
   <main class="lista-content app-shell">
     <div class="content-heading">
       <h1>{{ 'PRODUCTS.LIST.TITLE' | translate }}</h1>
+      @if (companyName) {
+        <p class="helper-note">Empresa activa: <strong>{{ companyName }}</strong></p>
+      }
     </div>
 
     @if (success) {

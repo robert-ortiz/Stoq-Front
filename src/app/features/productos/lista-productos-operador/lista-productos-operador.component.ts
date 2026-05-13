@@ -78,6 +78,7 @@ export class ListaProductosOperadorComponent implements OnInit {
   });
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
+  readonly companyName = this.authService.getCompany() || '';
 
   onLanguageChange(language: string): void {
     this.languageService.setLanguage(language as LanguageCode);
@@ -85,6 +86,11 @@ export class ListaProductosOperadorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!this.companyName) {
+      this.error = 'No se pudo identificar la empresa activa.';
+      return;
+    }
+
     this.cargarDatos();
 
     this.searchControl.valueChanges.subscribe(() => {

@@ -44,7 +44,9 @@
       <div class="card-header">
         <div>
           <h1>{{ 'PRODUCTS.LIST.TITLE' | translate }}</h1>
-         
+          @if (companyName) {
+            <p class="helper-note">Empresa activa: <strong>{{ companyName }}</strong></p>
+          }
         </div>
       </div>
 

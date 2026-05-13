@@ -46,6 +46,7 @@ export class ListaProductosComponent implements OnInit {
   private toastService = inject(ToastService);
   private userService = inject(UserService);
   private translateService = inject(TranslateService);
+  readonly companyName = this.authService.getCompany() || '';
 
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly createForm = this.fb.group({
@@ -83,6 +84,11 @@ export class ListaProductosComponent implements OnInit {
   readonly esOperador = this.authService.getRole() === 'OPERADOR';
 
   ngOnInit(): void {
+    if (!this.companyName) {
+      this.error = 'No se pudo identificar la empresa activa.';
+      return;
+    }
+
     this.cargarDatosIniciales();
     this.cargarAccesoMovimientos();
 
