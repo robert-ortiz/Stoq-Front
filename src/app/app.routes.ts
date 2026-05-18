@@ -118,6 +118,15 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'reportes/dashboard',
+    canActivate: [roleGuard],
+    data: { roles: ['GERENTE'] },
+    loadComponent: () =>
+      import('./features/reportes/dashboard/dashboard.component').then(
+        (m) => m.DashboardComponent
+      )
+  },
+  {
     path: 'notificaciones',
     canActivate: [roleGuard],
     data: { roles: ['GERENTE'] },

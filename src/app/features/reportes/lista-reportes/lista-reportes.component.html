@@ -1,4 +1,7 @@
 <section class="reports-page">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+
   <header class="topbar">
     <app-brand [cssClass]="'brand'" [target]="'/home'" [size]="44" [ariaLabel]="('HOME.BRAND_ARIA' | translate)"></app-brand>
 
@@ -20,56 +23,168 @@
   </header>
 
   <main class="reports-content">
-    <section class="reports-card">
-      <div class="card-header">
-        <div>
-          <button type="button" class="back-btn" (click)="goBack()">
-            ← {{ 'COMMON.BACK' | translate }}
-          </button>
-          <h1>{{ 'COMMON.REPORTS' | translate }}</h1>
-          <p>{{ 'REPORTS.SUBTITLE' | translate }}</p>
-        </div>
+    <section class="hero-card">
+      <div class="hero-copy">
+        <span class="eyebrow">{{ 'COMMON.REPORTS' | translate }}</span>
+        <h1>{{ 'REPORTS.PAGE_TITLE' | translate }}</h1>
+        <p>{{ 'REPORTS.SUBTITLE' | translate }}</p>
       </div>
 
-      @if (cargando) {
-        <div class="loading-state">
-          <p>{{ 'COMMON.LOADING' | translate }}</p>
+      <div class="hero-badges">
+        <div class="badge-item">
+          <span>{{ 'COMMON.COMPANY' | translate }}</span>
+          <strong>{{ companyContext || ('REPORTS.NO_COMPANY' | translate) }}</strong>
         </div>
-      } @else {
-        <div class="reports-grid">
-          <article class="report-card">
-            <h3>📊 {{ 'REPORTS.INVENTORY_SUMMARY' | translate }}</h3>
-            <p>{{ 'REPORTS.INVENTORY_SUMMARY_DESC' | translate }}</p>
-            <button type="button" class="report-btn">
-              {{ 'COMMON.VIEW' | translate }}
-            </button>
-          </article>
-
-          <article class="report-card">
-            <h3>📈 {{ 'REPORTS.MOVEMENT_TRENDS' | translate }}</h3>
-            <p>{{ 'REPORTS.MOVEMENT_TRENDS_DESC' | translate }}</p>
-            <button type="button" class="report-btn">
-              {{ 'COMMON.VIEW' | translate }}
-            </button>
-          </article>
-
-          <article class="report-card">
-            <h3>⚠️ {{ 'REPORTS.CRITICAL_STOCK' | translate }}</h3>
-            <p>{{ 'REPORTS.CRITICAL_STOCK_DESC' | translate }}</p>
-            <button type="button" class="report-btn">
-              {{ 'COMMON.VIEW' | translate }}
-            </button>
-          </article>
-
-          <article class="report-card">
-            <h3>📋 {{ 'REPORTS.DETAILED_MOVEMENTS' | translate }}</h3>
-            <p>{{ 'REPORTS.DETAILED_MOVEMENTS_DESC' | translate }}</p>
-            <button type="button" class="report-btn">
-              {{ 'COMMON.VIEW' | translate }}
-            </button>
-          </article>
+        <div class="badge-item">
+          <span>{{ 'REPORTS.RANGE' | translate }}</span>
+          <strong>{{ filtros.getRawValue().inicio }} → {{ filtros.getRawValue().fin }}</strong>
         </div>
+      </div>
+    </section>
+
+    <section class="filters-card">
+      <form [formGroup]="filtros" (ngSubmit)="aplicarFiltros()" class="filters-form">
+        <div class="field-group">
+          <label for="inicio">{{ 'REPORTS.START_DATE' | translate }}</label>
+          <input id="inicio" type="date" formControlName="inicio" />
+        </div>
+
+        <div class="field-group">
+          <label for="fin">{{ 'REPORTS.END_DATE' | translate }}</label>
+          <input id="fin" type="date" formControlName="fin" />
+        </div>
+
+        <div class="filters-actions">
+          <button type="submit" class="primary-action" [disabled]="cargando">
+            {{ cargando ? ('COMMON.LOADING' | translate) : ('REPORTS.APPLY_FILTERS' | translate) }}
+          </button>
+          <button type="button" class="secondary-action" (click)="resetFilters()" [disabled]="cargando">
+            {{ 'REPORTS.RESET_FILTERS' | translate }}
+          </button>
+        </div>
+      </form>
+
+      @if (isRangeInvalid()) {
+        <p class="validation-message">{{ 'REPORTS.INVALID_RANGE' | translate }}</p>
       }
     </section>
+
+    @if (cargando) {
+      <section class="state-card">
+        <p>{{ 'COMMON.LOADING' | translate }}</p>
+      </section>
+    } @else if (errorMessage) {
+      <section class="state-card error-state">
+        <p>{{ errorMessage }}</p>
+      </section>
+    } @else if (reporte) {
+      <section class="kpi-grid">
+        <article class="kpi-card accent-blue">
+          <span>{{ 'REPORTS.KPI_CATEGORIES' | translate }}</span>
+          <strong>{{ formatNumber(reporte.totalCategorias) }}</strong>
+          <small>{{ 'REPORTS.KPI_CATEGORIES_DESC' | translate }}</small>
+        </article>
+        <article class="kpi-card accent-teal">
+          <span>{{ 'REPORTS.KPI_PRODUCTS' | translate }}</span>
+          <strong>{{ formatNumber(reporte.productosActivos) }}</strong>
+          <small>{{ 'REPORTS.KPI_PRODUCTS_DESC' | translate }}</small>
+        </article>
+        <article class="kpi-card accent-amber">
+          <span>{{ 'REPORTS.KPI_STOCK' | translate }}</span>
+          <strong>{{ formatNumber(reporte.stockActualTotal) }}</strong>
+          <small>{{ 'REPORTS.KPI_STOCK_DESC' | translate }}</small>
+        </article>
+        <article class="kpi-card accent-coral">
+          <span>{{ 'REPORTS.KPI_MOVEMENTS' | translate }}</span>
+          <strong>{{ formatNumber(reporte.movimientosTotales) }}</strong>
+          <small>{{ 'REPORTS.KPI_MOVEMENTS_DESC' | translate }}</small>
+        </article>
+      </section>
+
+      <section class="chart-card">
+        <div class="section-heading">
+          <div>
+            <h2>{{ 'REPORTS.CHART_TITLE' | translate }}</h2>
+            <p>{{ 'REPORTS.CHART_SUBTITLE' | translate }}</p>
+          </div>
+        </div>
+
+        @if (categorias.length > 0) {
+          <div class="chart-list">
+            @for (categoria of categorias; track trackByCategoria($index, categoria)) {
+              <article class="chart-row">
+                <div class="chart-meta">
+                  <div>
+                    <h3>{{ categoria.categoriaNombre }}</h3>
+                    <p>{{ formatNumber(categoria.productosActivos) }} {{ 'REPORTS.KPI_PRODUCTS' | translate | lowercase }}</p>
+                  </div>
+                  <strong>{{ formatNumber(categoria.movimientosTotales) }}</strong>
+                </div>
+
+                <div class="bars-stack">
+                  <div class="bar-line">
+                    <span>{{ 'REPORTS.KPI_PRODUCTS' | translate }}</span>
+                    <div class="track"><div class="fill products" [style.width.%]="barWidth(categoria.productosActivos)"></div></div>
+                    <strong>{{ formatNumber(categoria.productosActivos) }}</strong>
+                  </div>
+                  <div class="bar-line">
+                    <span>{{ 'REPORTS.KPI_MOVEMENTS' | translate }}</span>
+                    <div class="track"><div class="fill movements" [style.width.%]="barWidth(categoria.movimientosTotales)"></div></div>
+                    <strong>{{ formatNumber(categoria.movimientosTotales) }}</strong>
+                  </div>
+                  <div class="bar-line">
+                    <span>{{ 'REPORTS.KPI_QTY_MOVED' | translate }}</span>
+                    <div class="track"><div class="fill quantity" [style.width.%]="barWidth(categoria.cantidadMovidaTotal)"></div></div>
+                    <strong>{{ formatNumber(categoria.cantidadMovidaTotal) }}</strong>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <p>{{ 'REPORTS.NO_DATA' | translate }}</p>
+          </div>
+        }
+      </section>
+
+      <section class="table-card">
+        <div class="section-heading">
+          <div>
+            <h2>{{ 'REPORTS.TABLE_TITLE' | translate }}</h2>
+            <p>{{ 'REPORTS.TABLE_SUBTITLE' | translate }}</p>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>{{ 'COMMON.CATEGORY' | translate }}</th>
+                <th>{{ 'REPORTS.KPI_PRODUCTS' | translate }}</th>
+                <th>{{ 'REPORTS.STOCK_TOTAL' | translate }}</th>
+                <th>{{ 'REPORTS.MIN_TOTAL' | translate }}</th>
+                <th>{{ 'REPORTS.KPI_MOVEMENTS' | translate }}</th>
+                <th>{{ 'REPORTS.ENTRADA_SAIDA' | translate }}</th>
+                <th>{{ 'REPORTS.KPI_QTY_MOVED' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (categoria of categorias; track trackByCategoria($index, categoria)) {
+                <tr>
+                  <td>{{ categoria.categoriaNombre }}</td>
+                  <td>{{ formatNumber(categoria.productosActivos) }}</td>
+                  <td>{{ formatNumber(categoria.stockActualTotal) }}</td>
+                  <td>{{ formatNumber(categoria.stockMinimoTotal) }}</td>
+                  <td>{{ formatNumber(categoria.movimientosTotales) }}</td>
+                  <td>{{ formatNumber(categoria.entradasMovimientos) }} / {{ formatNumber(categoria.salidasMovimientos) }}</td>
+                  <td>{{ formatNumber(categoria.cantidadMovidaTotal) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
   </main>
 </section>

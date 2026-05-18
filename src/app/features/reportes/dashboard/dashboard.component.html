@@ -1,0 +1,76 @@
+<div class="report-dashboard">
+  <header class="topbar">
+    <div>
+      <div class="page-title">Reportes</div>
+      <div class="page-subtitle">Indicadores, categorías y exportación ejecutiva</div>
+    </div>
+    <div class="top-actions">
+      <button class="button-secondary" (click)="aplicarExportacionExcel()">Excel</button>
+      <button class="button-primary" (click)="aplicarExportacionPdf()">PDF</button>
+    </div>
+  </header>
+
+  <div *ngIf="loading" class="status-banner">Cargando estadísticas...</div>
+  <div *ngIf="errorMessage" class="status-banner error">{{errorMessage}}</div>
+
+  <section class="kpi-grid">
+    <ng-container *ngFor="let k of kpis">
+      <div class="card kpi">
+        <div>
+          <div class="kpi-title">{{k.title}}</div>
+          <div class="kpi-value">{{getKpiValue(k.key) | number}}</div>
+        </div>
+        <div class="kpi-chart">▁▂▃▅▇</div>
+        <div class="kpi-delta positive">Gerencial</div>
+      </div>
+    </ng-container>
+  </section>
+
+  <section class="main-grid">
+    <div class="card products">
+      <div class="card-header">
+        <h3>Productos más vendidos</h3>
+        <div class="header-actions"><button class="button-secondary">Ver todo</button></div>
+      </div>
+      <table class="table">
+        <thead>
+          <tr><th>#</th><th>Producto</th><th>Ventas</th><th>Stock</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of topProducts">
+            <td>{{p.rank}}</td>
+            <td>{{p.name}}</td>
+            <td>{{p.sales}}</td>
+            <td>{{p.stock}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card reports">
+      <div class="card-header">
+        <h3>Reportes de ventas</h3>
+        <div class="header-actions"><button class="button-secondary">Rango 30 días</button></div>
+      </div>
+      <div class="chart-placeholder">
+        <canvas #salesCanvas></canvas>
+      </div>
+    </div>
+
+    <div class="card financial">
+      <h3>Resumen financiero</h3>
+      <div class="financial-grid">
+        <div class="small-card">Total categorías<br/><strong>{{reportData?.totalCategorias || 0}}</strong></div>
+        <div class="small-card">Cantidad movida<br/><strong>{{reportData?.cantidadMovidaTotal || 0}}</strong></div>
+        <div class="small-card">Movimientos<br/><strong>{{reportData?.movimientosTotales || 0}}</strong></div>
+      </div>
+    </div>
+
+    <div class="card activity">
+      <h3>Actividad reciente</h3>
+      <ul class="activity-list">
+        <li *ngFor="let a of recentActivity"><span class="who">{{a.who}}</span> — <span class="what">{{a.what}}</span> <span class="when">{{a.when}}</span></li>
+      </ul>
+    </div>
+  </section>
+</div>
