@@ -9,6 +9,8 @@ import { LanguageCode, LanguageService } from '../../../core/services/language.s
 import { ReporteCategoriaResumen, ReporteCategoriasResponse, ReporteService } from '../../../core/services/reporte.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
+type ExportFormat = 'pdf' | 'excel';
+
 @Component({
   selector: 'app-lista-reportes',
   standalone: true,
@@ -27,6 +29,7 @@ export class ListaReportesComponent implements OnInit {
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
   cargando = false;
+  exportandoFormato: ExportFormat | null = null;
   errorMessage = '';
   companyContext: string | null = this.authService.getCompany();
   reporte: ReporteCategoriasResponse | null = null;
@@ -77,8 +80,10 @@ export class ListaReportesComponent implements OnInit {
   }
 
   get chartMaxValue(): number {
-    const values = this.categorias.flatMap((item) => [item.productosActivos, item.movimientosTotales, item.cantidadMovidaTotal]);
-    return Math.max(...values, 1);
+    return this.categorias.reduce((maxValue, item) => {
+      const itemMax = Math.max(item.productosActivos, item.movimientosTotales, item.cantidadMovidaTotal);
+      return Math.max(maxValue, itemMax);
+    }, 1);
   }
 
   formatNumber(value: number | null | undefined): string {
@@ -94,9 +99,18 @@ export class ListaReportesComponent implements OnInit {
     return item.categoriaId ?? item.categoriaNombre;
   }
 
+  exportarPdf(): void {
+    this.exportarArchivo('pdf');
+  }
+
+  exportarExcel(): void {
+    this.exportarArchivo('excel');
+  }
+
   private cargarReporte(): void {
-    const inicio = this.filtros.getRawValue().inicio ?? this.formatDate(this.shiftDays(new Date(), -29));
-    const fin = this.filtros.getRawValue().fin ?? this.formatDate(new Date());
+    const filtros = this.filtros.getRawValue();
+    const inicio = filtros.inicio ?? this.formatDate(this.shiftDays(new Date(), -29));
+    const fin = filtros.fin ?? this.formatDate(new Date());
 
     this.cargando = true;
     this.errorMessage = '';
@@ -122,6 +136,37 @@ export class ListaReportesComponent implements OnInit {
           this.categorias = [];
         }
       });
+  }
+
+  private exportarArchivo(formato: ExportFormat): void {
+    const filtros = this.filtros.getRawValue();
+    const inicio = filtros.inicio ?? this.formatDate(this.shiftDays(new Date(), -29));
+    const fin = filtros.fin ?? this.formatDate(new Date());
+
+    this.exportandoFormato = formato;
+
+    const solicitud = formato === 'pdf'
+      ? this.reportService.exportarPdf(inicio, fin)
+      : this.reportService.exportarExcel(inicio, fin);
+
+    solicitud.pipe(finalize(() => (this.exportandoFormato = null))).subscribe({
+      next: (blob) => {
+        const extension = formato === 'pdf' ? 'pdf' : 'xlsx';
+        this.descargarArchivo(blob, `reporte-categorias.${extension}`);
+      },
+      error: () => {
+        this.errorMessage = this.translateService.instant('REPORTS.ERROR_EXPORT');
+      }
+    });
+  }
+
+  private descargarArchivo(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    window.URL.revokeObjectURL(url);
   }
 
   private dateRangeValidator(): ValidatorFn {

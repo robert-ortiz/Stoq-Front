@@ -40,6 +40,15 @@
           <strong>{{ filtros.getRawValue().inicio }} → {{ filtros.getRawValue().fin }}</strong>
         </div>
       </div>
+
+      <div class="hero-actions">
+        <button type="button" class="secondary-action" (click)="exportarPdf()" [disabled]="cargando || exportandoFormato !== null">
+          {{ exportandoFormato === 'pdf' ? ('REPORTS.EXPORTING' | translate) : ('REPORTS.EXPORT_PDF' | translate) }}
+        </button>
+        <button type="button" class="secondary-action" (click)="exportarExcel()" [disabled]="cargando || exportandoFormato !== null">
+          {{ exportandoFormato === 'excel' ? ('REPORTS.EXPORTING' | translate) : ('REPORTS.EXPORT_EXCEL' | translate) }}
+        </button>
+      </div>
     </section>
 
     <section class="filters-card">

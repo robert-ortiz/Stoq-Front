@@ -117,6 +117,13 @@ input[type='date'] {
   align-items: flex-end;
 }
 
+.hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .eyebrow {
   display: inline-flex;
   align-items: center;
@@ -234,6 +241,7 @@ input[type='date']:focus,
 .filters-actions {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .primary-action,
@@ -254,6 +262,14 @@ input[type='date']:focus,
 .secondary-action {
   background: #ffffff;
   color: #0f172a;
+}
+
+.secondary-action:disabled,
+.primary-action:disabled,
+.logout-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
 }
 
 .primary-action:hover,
@@ -452,6 +468,10 @@ td {
   .hero-badges {
     min-width: 100%;
   }
+
+  .hero-actions {
+    justify-content: flex-start;
+  }
 }
 
 @media (max-width: 768px) {
@@ -481,6 +501,11 @@ td {
 
   .filters-actions {
     flex-direction: column;
+  }
+
+  .filters-actions .primary-action,
+  .filters-actions .secondary-action {
+    width: 100%;
   }
 
   .bar-line {

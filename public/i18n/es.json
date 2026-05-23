@@ -496,6 +496,7 @@
     "INVALID_RANGE": "La fecha de inicio no puede ser mayor que la fecha fin.",
     "NO_DATA": "No hay datos para el rango seleccionado.",
     "ERROR_LOAD": "No fue posible cargar el reporte.",
+    "ERROR_EXPORT": "No fue posible exportar el reporte.",
     "KPI_CATEGORIES": "Categorías",
     "KPI_CATEGORIES_DESC": "Categorías activas dentro del inventario.",
     "KPI_PRODUCTS": "Productos",
@@ -511,7 +512,10 @@
     "TABLE_SUBTITLE": "Cantidad, stock y movimientos consolidados.",
     "STOCK_TOTAL": "Stock actual",
     "MIN_TOTAL": "Stock mínimo",
-    "ENTRADA_SAIDA": "Entradas / salidas"
+    "ENTRADA_SAIDA": "Entradas / salidas",
+    "EXPORT_PDF": "Exportar PDF",
+    "EXPORT_EXCEL": "Exportar Excel",
+    "EXPORTING": "Exportando..."
   },
   "NOTIFICATIONS": {
     "ALERTS_SUBTITLE": "Alertas recientes para revisar el inventario sin complicaciones.",
