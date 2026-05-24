@@ -58,6 +58,7 @@
   margin-bottom: 20px;
   padding: 24px 28px;
   border-radius: 24px;
+  z-index: 50;
 }
 
 .topbar-copy {

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Chart, ChartConfiguration, ChartType } from 'chart.js';
+import type { Chart, ChartConfiguration, ChartType } from 'chart.js';
 import { finalize } from 'rxjs';
 import { ReporteDashboardResponse, ReporteService } from '../../../core/services/reporte.service';
 
@@ -170,10 +170,16 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.chart?.destroy();
-    this.chart = new Chart(canvas, {
-      type: this.salesChartType,
-      data: this.salesChartData,
-      options: this.salesChartOptions
+    // Load chart.js dynamically to avoid bundling it into the initial bundle
+    // This keeps the initial payload smaller and only loads the chart library when needed
+    void import('chart.js').then(({ Chart }) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - Chart type is provided at runtime from chart.js
+      this.chart = new Chart(canvas, {
+        type: this.salesChartType,
+        data: this.salesChartData,
+        options: this.salesChartOptions
+      });
     });
   }
 }

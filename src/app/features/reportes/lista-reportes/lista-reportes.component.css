@@ -39,7 +39,7 @@
 
 .topbar {
   position: relative;
-  z-index: 1;
+  z-index: 50;
   height: 72px;
   padding: 0 28px;
   background: rgba(255, 255, 255, 0.88);
