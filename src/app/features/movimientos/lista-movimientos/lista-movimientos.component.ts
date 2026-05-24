@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, startWith } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../core/services/auth.service';
 import { MovimientoInventario, MovimientoService } from '../../../core/services/movimiento.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -28,6 +29,7 @@ export class ListaMovimientosComponent implements OnInit {
   private toastService = inject(ToastService);
   private router = inject(Router);
   private translateService = inject(TranslateService);
+  private destroyRef = inject(DestroyRef);
 
   readonly buscarControl = new FormControl('', { nonNullable: true });
   readonly tipoControl = new FormControl('TODOS', { nonNullable: true });
@@ -161,6 +163,14 @@ export class ListaMovimientosComponent implements OnInit {
       this.fechaFinSeleccionada.set(this.fechaFinControl.value);
       this.paginaActual.set(1);
     });
+
+    this.movimientosService.movimientosActualizados$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        if (this.esAdmin()) {
+          this.cargarMovimientos();
+        }
+      });
 
     this.verificarPermisosYcargar();
   }

@@ -496,6 +496,7 @@
     "INVALID_RANGE": "The start date cannot be later than the end date.",
     "NO_DATA": "There is no data for the selected range.",
     "ERROR_LOAD": "Could not load the report.",
+    "ERROR_EXPORT": "Could not export the report.",
     "KPI_CATEGORIES": "Categories",
     "KPI_CATEGORIES_DESC": "Active categories in the inventory.",
     "KPI_PRODUCTS": "Products",
@@ -511,7 +512,10 @@
     "TABLE_SUBTITLE": "Consolidated quantity, stock, and movements.",
     "STOCK_TOTAL": "Current stock",
     "MIN_TOTAL": "Minimum stock",
-    "ENTRADA_SAIDA": "Entries / exits"
+    "ENTRADA_SAIDA": "Entries / exits",
+    "EXPORT_PDF": "Export PDF",
+    "EXPORT_EXCEL": "Export Excel",
+    "EXPORTING": "Exporting..."
   },
   "NOTIFICATIONS": {
     "ALERTS_SUBTITLE": "Recent alerts to review inventory without hassle.",

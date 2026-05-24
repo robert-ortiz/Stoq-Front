@@ -40,6 +40,15 @@
           <strong>{{ filtros.getRawValue().inicio }} → {{ filtros.getRawValue().fin }}</strong>
         </div>
       </div>
+
+      <div class="hero-actions">
+        <button type="button" class="secondary-action" (click)="exportarPdf()" [disabled]="cargando || exportandoFormato !== null">
+          {{ exportandoFormato === 'pdf' ? ('REPORTS.EXPORTING' | translate) : ('REPORTS.EXPORT_PDF' | translate) }}
+        </button>
+        <button type="button" class="secondary-action" (click)="exportarExcel()" [disabled]="cargando || exportandoFormato !== null">
+          {{ exportandoFormato === 'excel' ? ('REPORTS.EXPORTING' | translate) : ('REPORTS.EXPORT_EXCEL' | translate) }}
+        </button>
+      </div>
     </section>
 
     <section class="filters-card">
@@ -64,20 +73,18 @@
         </div>
       </form>
 
-      @if (isRangeInvalid()) {
-        <p class="validation-message">{{ 'REPORTS.INVALID_RANGE' | translate }}</p>
-      }
+      <p *ngIf="isRangeInvalid()" class="validation-message">{{ 'REPORTS.INVALID_RANGE' | translate }}</p>
     </section>
 
-    @if (cargando) {
-      <section class="state-card">
-        <p>{{ 'COMMON.LOADING' | translate }}</p>
-      </section>
-    } @else if (errorMessage) {
-      <section class="state-card error-state">
-        <p>{{ errorMessage }}</p>
-      </section>
-    } @else if (reporte) {
+    <section *ngIf="cargando" class="state-card">
+      <p>{{ 'COMMON.LOADING' | translate }}</p>
+    </section>
+
+    <section *ngIf="!cargando && errorMessage" class="state-card error-state">
+      <p>{{ errorMessage }}</p>
+    </section>
+
+    <ng-container *ngIf="!cargando && !errorMessage && reporte">
       <section class="kpi-grid">
         <article class="kpi-card accent-blue">
           <span>{{ 'REPORTS.KPI_CATEGORIES' | translate }}</span>
@@ -109,43 +116,42 @@
           </div>
         </div>
 
-        @if (categorias.length > 0) {
+        <ng-container *ngIf="categorias.length > 0; else emptyState">
           <div class="chart-list">
-            @for (categoria of categorias; track trackByCategoria($index, categoria)) {
-              <article class="chart-row">
-                <div class="chart-meta">
-                  <div>
-                    <h3>{{ categoria.categoriaNombre }}</h3>
-                    <p>{{ formatNumber(categoria.productosActivos) }} {{ 'REPORTS.KPI_PRODUCTS' | translate | lowercase }}</p>
-                  </div>
+            <article class="chart-row" *ngFor="let categoria of categorias; trackBy: trackByCategoria">
+              <div class="chart-meta">
+                <div>
+                  <h3>{{ categoria.categoriaNombre }}</h3>
+                  <p>{{ formatNumber(categoria.productosActivos) }} {{ 'REPORTS.KPI_PRODUCTS' | translate | lowercase }}</p>
+                </div>
+                <strong>{{ formatNumber(categoria.movimientosTotales) }}</strong>
+              </div>
+
+              <div class="bars-stack">
+                <div class="bar-line">
+                  <span>{{ 'REPORTS.KPI_PRODUCTS' | translate }}</span>
+                  <div class="track"><div class="fill products" [style.width.%]="barWidth(categoria.productosActivos)"></div></div>
+                  <strong>{{ formatNumber(categoria.productosActivos) }}</strong>
+                </div>
+                <div class="bar-line">
+                  <span>{{ 'REPORTS.KPI_MOVEMENTS' | translate }}</span>
+                  <div class="track"><div class="fill movements" [style.width.%]="barWidth(categoria.movimientosTotales)"></div></div>
                   <strong>{{ formatNumber(categoria.movimientosTotales) }}</strong>
                 </div>
-
-                <div class="bars-stack">
-                  <div class="bar-line">
-                    <span>{{ 'REPORTS.KPI_PRODUCTS' | translate }}</span>
-                    <div class="track"><div class="fill products" [style.width.%]="barWidth(categoria.productosActivos)"></div></div>
-                    <strong>{{ formatNumber(categoria.productosActivos) }}</strong>
-                  </div>
-                  <div class="bar-line">
-                    <span>{{ 'REPORTS.KPI_MOVEMENTS' | translate }}</span>
-                    <div class="track"><div class="fill movements" [style.width.%]="barWidth(categoria.movimientosTotales)"></div></div>
-                    <strong>{{ formatNumber(categoria.movimientosTotales) }}</strong>
-                  </div>
-                  <div class="bar-line">
-                    <span>{{ 'REPORTS.KPI_QTY_MOVED' | translate }}</span>
-                    <div class="track"><div class="fill quantity" [style.width.%]="barWidth(categoria.cantidadMovidaTotal)"></div></div>
-                    <strong>{{ formatNumber(categoria.cantidadMovidaTotal) }}</strong>
-                  </div>
+                <div class="bar-line">
+                  <span>{{ 'REPORTS.KPI_QTY_MOVED' | translate }}</span>
+                  <div class="track"><div class="fill quantity" [style.width.%]="barWidth(categoria.cantidadMovidaTotal)"></div></div>
+                  <strong>{{ formatNumber(categoria.cantidadMovidaTotal) }}</strong>
                 </div>
-              </article>
-            }
+              </div>
+            </article>
           </div>
-        } @else {
+        </ng-container>
+        <ng-template #emptyState>
           <div class="empty-state">
             <p>{{ 'REPORTS.NO_DATA' | translate }}</p>
           </div>
-        }
+        </ng-template>
       </section>
 
       <section class="table-card">
@@ -170,8 +176,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (categoria of categorias; track trackByCategoria($index, categoria)) {
-                <tr>
+                <tr *ngFor="let categoria of categorias; trackBy: trackByCategoria">
                   <td>{{ categoria.categoriaNombre }}</td>
                   <td>{{ formatNumber(categoria.productosActivos) }}</td>
                   <td>{{ formatNumber(categoria.stockActualTotal) }}</td>
@@ -180,11 +185,10 @@
                   <td>{{ formatNumber(categoria.entradasMovimientos) }} / {{ formatNumber(categoria.salidasMovimientos) }}</td>
                   <td>{{ formatNumber(categoria.cantidadMovidaTotal) }}</td>
                 </tr>
-              }
             </tbody>
           </table>
         </div>
       </section>
-    }
+    </ng-container>
   </main>
 </section>

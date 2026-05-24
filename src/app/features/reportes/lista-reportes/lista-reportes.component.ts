@@ -1,13 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 import { ReporteCategoriaResumen, ReporteCategoriasResponse, ReporteService } from '../../../core/services/reporte.service';
+import { MovimientoService } from '../../../core/services/movimiento.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
+
+type ExportFormat = 'pdf' | 'excel';
 
 @Component({
   selector: 'app-lista-reportes',
@@ -23,10 +27,14 @@ export class ListaReportesComponent implements OnInit {
   private translateService = inject(TranslateService);
   private languageService = inject(LanguageService);
   private reportService = inject(ReporteService);
+  private movimientoService = inject(MovimientoService);
+  private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
   private fb = inject(FormBuilder);
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
   cargando = false;
+  exportandoFormato: ExportFormat | null = null;
   errorMessage = '';
   companyContext: string | null = this.authService.getCompany();
   reporte: ReporteCategoriasResponse | null = null;
@@ -43,6 +51,7 @@ export class ListaReportesComponent implements OnInit {
   ngOnInit(): void {
     this.currentLanguage = this.languageService.getCurrentLanguage();
     this.cargarReporte();
+    this.escucharActualizacionesMovimientos();
   }
 
   onLanguageChange(language: string): void {
@@ -77,8 +86,10 @@ export class ListaReportesComponent implements OnInit {
   }
 
   get chartMaxValue(): number {
-    const values = this.categorias.flatMap((item) => [item.productosActivos, item.movimientosTotales, item.cantidadMovidaTotal]);
-    return Math.max(...values, 1);
+    return this.categorias.reduce((maxValue, item) => {
+      const itemMax = Math.max(item.productosActivos, item.movimientosTotales, item.cantidadMovidaTotal);
+      return Math.max(maxValue, itemMax);
+    }, 1);
   }
 
   formatNumber(value: number | null | undefined): string {
@@ -94,9 +105,18 @@ export class ListaReportesComponent implements OnInit {
     return item.categoriaId ?? item.categoriaNombre;
   }
 
+  exportarPdf(): void {
+    this.exportarArchivo('pdf');
+  }
+
+  exportarExcel(): void {
+    this.exportarArchivo('excel');
+  }
+
   private cargarReporte(): void {
-    const inicio = this.filtros.getRawValue().inicio ?? this.formatDate(this.shiftDays(new Date(), -29));
-    const fin = this.filtros.getRawValue().fin ?? this.formatDate(new Date());
+    const filtros = this.filtros.getRawValue();
+    const inicio = filtros.inicio ?? this.formatDate(this.shiftDays(new Date(), -29));
+    const fin = filtros.fin ?? this.formatDate(new Date());
 
     this.cargando = true;
     this.errorMessage = '';
@@ -115,13 +135,46 @@ export class ListaReportesComponent implements OnInit {
 
             return left.categoriaNombre.localeCompare(right.categoriaNombre);
           });
+          this.cdr.markForCheck();
         },
         error: () => {
           this.errorMessage = this.translateService.instant('REPORTS.ERROR_LOAD');
           this.reporte = null;
           this.categorias = [];
+          this.cdr.markForCheck();
         }
       });
+  }
+
+  private exportarArchivo(formato: ExportFormat): void {
+    const filtros = this.filtros.getRawValue();
+    const inicio = filtros.inicio ?? this.formatDate(this.shiftDays(new Date(), -29));
+    const fin = filtros.fin ?? this.formatDate(new Date());
+
+    this.exportandoFormato = formato;
+
+    const solicitud = formato === 'pdf'
+      ? this.reportService.exportarPdf(inicio, fin)
+      : this.reportService.exportarExcel(inicio, fin);
+
+    solicitud.pipe(finalize(() => (this.exportandoFormato = null))).subscribe({
+      next: (blob) => {
+        const extension = formato === 'pdf' ? 'pdf' : 'xlsx';
+        this.descargarArchivo(blob, `reporte-categorias.${extension}`);
+      },
+      error: () => {
+        this.errorMessage = this.translateService.instant('REPORTS.ERROR_EXPORT');
+      }
+    });
+  }
+
+  private descargarArchivo(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    window.URL.revokeObjectURL(url);
   }
 
   private dateRangeValidator(): ValidatorFn {
@@ -164,5 +217,13 @@ export class ListaReportesComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigateByUrl('/auth/login');
+  }
+
+  private escucharActualizacionesMovimientos(): void {
+    this.movimientoService.movimientosActualizados$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.cargarReporte();
+      });
   }
 }

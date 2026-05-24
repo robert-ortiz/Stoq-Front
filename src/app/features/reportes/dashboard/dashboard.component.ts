@@ -1,7 +1,9 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Chart, ChartConfiguration, ChartType } from 'chart.js';
+import type { Chart, ChartConfiguration, ChartType } from 'chart.js';
 import { finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MovimientoService } from '../../../core/services/movimiento.service';
 import { ReporteDashboardResponse, ReporteService } from '../../../core/services/reporte.service';
 
 @Component({
@@ -13,6 +15,9 @@ import { ReporteDashboardResponse, ReporteService } from '../../../core/services
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   private reportService = inject(ReporteService);
+  private changeDetector = inject(ChangeDetectorRef);
+  private movimientoService = inject(MovimientoService);
+  private destroyRef = inject(DestroyRef);
 
   @ViewChild('salesCanvas') salesCanvas?: ElementRef<HTMLCanvasElement>;
 
@@ -29,7 +34,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     { title: 'Salidas recientes', key: 'salidasMovimientos' }
   ];
 
-  topProducts: Array<{ rank: number; name: string; sales: number; stock: number }> = [];
+  topCategories: Array<{ rank: number; name: string; movimientos: number; stock: number }> = [];
 
   recentActivity: Array<{ who: string; what: string; when: string }> = [];
 
@@ -63,10 +68,11 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     const start = new Date();
     start.setDate(today.getDate() - 29);
     this.cargarDashboard(this.formatDate(start), this.formatDate(today));
+    this.escucharActualizacionesMovimientos();
   }
 
   ngAfterViewInit(): void {
-    this.renderChart();
+    this.scheduleChartRender();
   }
 
   ngOnDestroy(): void {
@@ -93,13 +99,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  get topCategories(): Array<{ name: string; value: number }> {
-    return (this.reportData?.categorias ?? []).slice(0, 5).map((item) => ({
-      name: item.categoriaNombre,
-      value: item.movimientosTotales
-    }));
-  }
-
   getKpiValue(key: KpiKey): number {
     return this.reportData?.[key] ?? 0;
   }
@@ -114,12 +113,12 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.reportData = response;
-          this.topProducts = (response.categorias ?? [])
+          this.topCategories = (response.categorias ?? [])
             .slice(0, 6)
             .map((item, index) => ({
               rank: index + 1,
               name: item.categoriaNombre,
-              sales: item.movimientosTotales,
+              movimientos: item.movimientosTotales,
               stock: item.stockActualTotal
             }));
 
@@ -143,12 +142,12 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             ]
           };
 
-          this.renderChart();
+          this.scheduleChartRender();
         },
         error: () => {
           this.errorMessage = 'No fue posible cargar las estadísticas.';
           this.reportData = null;
-          this.topProducts = [];
+          this.topCategories = [];
           this.recentActivity = [];
         }
       });
@@ -177,11 +176,32 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.chart?.destroy();
-    this.chart = new Chart(canvas, {
-      type: this.salesChartType,
-      data: this.salesChartData,
-      options: this.salesChartOptions
+    // Load chart.js dynamically to avoid bundling it into the initial bundle
+    // This keeps the initial payload smaller and only loads the chart library when needed
+    void import('chart.js').then(({ Chart }) => {
+      this.chart = new Chart(canvas, {
+        type: this.salesChartType,
+        data: this.salesChartData,
+        options: this.salesChartOptions
+      });
     });
+  }
+
+  private scheduleChartRender(): void {
+    this.changeDetector.detectChanges();
+    queueMicrotask(() => this.renderChart());
+  }
+
+  private escucharActualizacionesMovimientos(): void {
+    this.movimientoService.movimientosActualizados$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        if (!this.reportData) {
+          return;
+        }
+
+        this.cargarDashboard(this.reportData.inicio, this.reportData.fin);
+      });
   }
 }
 
