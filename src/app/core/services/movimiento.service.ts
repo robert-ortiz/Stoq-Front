@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, Subject, tap } from 'rxjs';
 import { API_BASE_URL } from '../config/api.config';
 
 export interface MovimientoInventario {
@@ -59,6 +59,9 @@ export class MovimientoService {
   private http = inject(HttpClient);
   private translateService = inject(TranslateService);
   private apiUrl = `${API_BASE_URL}/api/movimientos`;
+  private readonly refreshSubject = new Subject<void>();
+
+  readonly movimientosActualizados$ = this.refreshSubject.asObservable();
 
   getMovimientos(): Observable<MovimientoInventario[]> {
     return this.http.get<MovimientoInventario[]>(this.apiUrl).pipe(
@@ -81,7 +84,9 @@ export class MovimientoService {
   }
 
   createMovimiento(payload: CreateMovimientoRequest): Observable<MovimientoInventario> {
-    return this.http.post<MovimientoInventario>(this.apiUrl, payload);
+    return this.http.post<MovimientoInventario>(this.apiUrl, payload).pipe(
+      tap(() => this.refreshSubject.next())
+    );
   }
 
   createSalida(payload: CreateSalidaRequest): Observable<MovimientoInventario> {

@@ -391,6 +391,7 @@ export class ListaProductosGerenteComponent implements OnInit {
     this.movimientoService.createEntrada(payload).subscribe({
       next: () => {
         this.cerrarModalEntrada();
+        this.notificationService.refreshCriticalAlerts().subscribe();
         this.cargarDatos();
       },
       error: () => {
@@ -416,6 +417,7 @@ export class ListaProductosGerenteComponent implements OnInit {
     this.movimientoService.createSalida(payload).subscribe({
       next: () => {
         this.cerrarModalSalida();
+        this.notificationService.refreshCriticalAlerts().subscribe();
         this.cargarDatos();
       },
       error: () => {

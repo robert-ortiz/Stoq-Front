@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router, RouterModule } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductoApi, ProductoService } from '../../../core/services/producto.service';
 import { MovimientoService, ValidacionSalida } from '../../../core/services/movimiento.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -22,6 +23,7 @@ export class RegistroSalidaComponent implements OnInit {
   private productoService = inject(ProductoService);
   private movimientoService = inject(MovimientoService);
   private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
   private toastService = inject(ToastService);
   private translateService = inject(TranslateService);
   private router = inject(Router);
@@ -43,6 +45,7 @@ export class RegistroSalidaComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarProductos();
+    this.escucharActualizaciones();
   }
 
   cargarProductos(): void {
@@ -146,5 +149,13 @@ export class RegistroSalidaComponent implements OnInit {
 
   onCancel(): void {
     this.router.navigate(['/movimientos']);
+  }
+
+  private escucharActualizaciones(): void {
+    this.movimientoService.movimientosActualizados$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.cargarProductos();
+      });
   }
 }

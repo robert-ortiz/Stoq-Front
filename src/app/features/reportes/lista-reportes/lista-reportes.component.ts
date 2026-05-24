@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 import { ReporteCategoriaResumen, ReporteCategoriasResponse, ReporteService } from '../../../core/services/reporte.service';
+import { MovimientoService } from '../../../core/services/movimiento.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 type ExportFormat = 'pdf' | 'excel';
@@ -25,6 +27,9 @@ export class ListaReportesComponent implements OnInit {
   private translateService = inject(TranslateService);
   private languageService = inject(LanguageService);
   private reportService = inject(ReporteService);
+  private movimientoService = inject(MovimientoService);
+  private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
   private fb = inject(FormBuilder);
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
@@ -46,6 +51,7 @@ export class ListaReportesComponent implements OnInit {
   ngOnInit(): void {
     this.currentLanguage = this.languageService.getCurrentLanguage();
     this.cargarReporte();
+    this.escucharActualizacionesMovimientos();
   }
 
   onLanguageChange(language: string): void {
@@ -129,11 +135,13 @@ export class ListaReportesComponent implements OnInit {
 
             return left.categoriaNombre.localeCompare(right.categoriaNombre);
           });
+          this.cdr.markForCheck();
         },
         error: () => {
           this.errorMessage = this.translateService.instant('REPORTS.ERROR_LOAD');
           this.reporte = null;
           this.categorias = [];
+          this.cdr.markForCheck();
         }
       });
   }
@@ -209,5 +217,13 @@ export class ListaReportesComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigateByUrl('/auth/login');
+  }
+
+  private escucharActualizacionesMovimientos(): void {
+    this.movimientoService.movimientosActualizados$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.cargarReporte();
+      });
   }
 }
