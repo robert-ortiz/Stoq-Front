@@ -1,27 +1,46 @@
-import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import type { Chart, ChartConfiguration, ChartType } from 'chart.js';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '../../../core/services/auth.service';
+import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { ReporteDashboardResponse, ReporteService } from '../../../core/services/reporte.service';
+import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 @Component({
   selector: 'app-reportes-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule, BrandComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+  private authService = inject(AuthService);
+  private router = inject(Router);
   private reportService = inject(ReporteService);
   private changeDetector = inject(ChangeDetectorRef);
   private movimientoService = inject(MovimientoService);
+  private languageService = inject(LanguageService);
+  private notificationService = inject(NotificationService);
   private destroyRef = inject(DestroyRef);
 
   @ViewChild('salesCanvas') salesCanvas?: ElementRef<HTMLCanvasElement>;
 
   private chart?: Chart;
+
+  currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
+  notificationPanelOpen = false;
+  notifications$ = this.notificationService.notifications$;
+  notificationCount$ = this.notificationService.notificationCount$;
+  notificationLoading$ = this.notificationService.loading$;
+  notificationError$ = this.notificationService.error$;
+  unreadCount$ = this.notificationService.unreadCount$;
+  criticalCount$ = this.notificationService.criticalCount$;
 
   loading = false;
   errorMessage = '';
@@ -69,6 +88,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     start.setDate(today.getDate() - 29);
     this.cargarDashboard(this.formatDate(start), this.formatDate(today));
     this.escucharActualizacionesMovimientos();
+    this.notificationService.refreshAllCounts();
   }
 
   ngAfterViewInit(): void {
@@ -101,6 +121,66 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getKpiValue(key: KpiKey): number {
     return this.reportData?.[key] ?? 0;
+  }
+
+  onLanguageChange(language: string): void {
+    this.languageService.setLanguage(language as LanguageCode);
+    this.currentLanguage = this.languageService.getCurrentLanguage();
+  }
+
+  irAProductos(): void {
+    this.router.navigateByUrl('/gerente');
+  }
+
+  toggleNotificationPanel(): void {
+    this.notificationPanelOpen = !this.notificationPanelOpen;
+  }
+
+  closeNotificationPanel(): void {
+    this.notificationPanelOpen = false;
+  }
+
+  verNotificaciones(): void {
+    this.toggleNotificationPanel();
+
+    if (this.notificationPanelOpen) {
+      this.notificationService.refreshCriticalAlerts().subscribe({
+        next: () => {},
+        error: () => {}
+      });
+    }
+  }
+
+  openNotificationsPage(): void {
+    this.closeNotificationPanel();
+    this.router.navigateByUrl('/notificaciones');
+  }
+
+  dismissNotification(id: number): void {
+    this.notificationService.dismissNotification(id);
+  }
+
+  clearNotifications(): void {
+    this.notificationService.clearNotifications();
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigateByUrl('/auth/login');
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null;
+
+    if (!target?.closest('.notification-dropdown')) {
+      this.closeNotificationPanel();
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.closeNotificationPanel();
   }
 
   private cargarDashboard(inicio: string, fin: string): void {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, HostListener, OnInit, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -9,6 +9,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 import { ReporteCategoriaResumen, ReporteCategoriasResponse, ReporteService } from '../../../core/services/reporte.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 type ExportFormat = 'pdf' | 'excel';
@@ -28,11 +29,19 @@ export class ListaReportesComponent implements OnInit {
   private languageService = inject(LanguageService);
   private reportService = inject(ReporteService);
   private movimientoService = inject(MovimientoService);
+  private notificationService = inject(NotificationService);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
   private fb = inject(FormBuilder);
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
+  notificationPanelOpen = false;
+  notifications$ = this.notificationService.notifications$;
+  notificationCount$ = this.notificationService.notificationCount$;
+  notificationLoading$ = this.notificationService.loading$;
+  notificationError$ = this.notificationService.error$;
+  unreadCount$ = this.notificationService.unreadCount$;
+  criticalCount$ = this.notificationService.criticalCount$;
   cargando = false;
   exportandoFormato: ExportFormat | null = null;
   errorMessage = '';
@@ -52,11 +61,48 @@ export class ListaReportesComponent implements OnInit {
     this.currentLanguage = this.languageService.getCurrentLanguage();
     this.cargarReporte();
     this.escucharActualizacionesMovimientos();
+    this.notificationService.refreshAllCounts();
   }
 
   onLanguageChange(language: string): void {
     this.languageService.setLanguage(language as LanguageCode);
     this.currentLanguage = this.languageService.getCurrentLanguage();
+  }
+
+  irAProductos(): void {
+    this.router.navigateByUrl('/gerente');
+  }
+
+  toggleNotificationPanel(): void {
+    this.notificationPanelOpen = !this.notificationPanelOpen;
+  }
+
+  closeNotificationPanel(): void {
+    this.notificationPanelOpen = false;
+  }
+
+  verNotificaciones(): void {
+    this.toggleNotificationPanel();
+
+    if (this.notificationPanelOpen) {
+      this.notificationService.refreshCriticalAlerts().subscribe({
+        next: () => {},
+        error: () => {}
+      });
+    }
+  }
+
+  openNotificationsPage(): void {
+    this.closeNotificationPanel();
+    this.router.navigateByUrl('/notificaciones');
+  }
+
+  dismissNotification(id: number): void {
+    this.notificationService.dismissNotification(id);
+  }
+
+  clearNotifications(): void {
+    this.notificationService.clearNotifications();
   }
 
   goBack(): void {
@@ -217,6 +263,20 @@ export class ListaReportesComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigateByUrl('/auth/login');
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null;
+
+    if (!target?.closest('.notification-dropdown')) {
+      this.closeNotificationPanel();
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.closeNotificationPanel();
   }
 
   private escucharActualizacionesMovimientos(): void {

@@ -3,22 +3,132 @@
   <div class="ambient ambient-right"></div>
 
   <header class="topbar">
-    <div class="topbar-copy">
-      <div class="eyebrow">Reportes</div>
-      <div class="page-title">Indicadores, categorías y exportación ejecutiva</div>
-      <div class="page-subtitle">Vista operativa del rendimiento del inventario por rango de fechas.</div>
+    <app-brand [cssClass]="'brand'" [target]="'/home'" [size]="44" [ariaLabel]="('HOME.BRAND_ARIA' | translate)"></app-brand>
+
+    <div class="header-actions">
+      <button type="button" class="report-btn" (click)="irAProductos()">
+        📄 {{ 'COMMON.PRODUCTS' | translate }}
+      </button>
+
+      <select
+        class="language-select"
+        [value]="currentLanguage"
+        (change)="onLanguageChange(($any($event.target).value))"
+      >
+        <option value="es">{{ 'LANGUAGE.ES' | translate }}</option>
+        <option value="en">{{ 'LANGUAGE.EN' | translate }}</option>
+        <option value="pt">{{ 'LANGUAGE.PT' | translate }}</option>
+      </select>
+
+      <div class="notification-dropdown" [class.open]="notificationPanelOpen">
+        <button
+          type="button"
+          class="report-btn notification-btn"
+          (click)="verNotificaciones()"
+          [attr.aria-expanded]="notificationPanelOpen"
+          aria-haspopup="dialog"
+        >
+          🔔 {{ 'COMMON.NOTIFICATIONS' | translate }}
+          @if (unreadCount$ | async; as unread) {
+            <span class="notification-badge">{{ unread }}</span>
+          }
+          @if (notificationLoading$ | async) {
+            <span class="notification-loading">⏳</span>
+          }
+          @if (notificationError$ | async; as err) {
+            <span class="notification-error" title="{{ err }}">⚠</span>
+          }
+          @if (criticalCount$ | async; as critical) {
+            @if (critical > 0) {
+              <span class="critical-badge" title="Productos críticos">{{ critical }}</span>
+            }
+          }
+        </button>
+
+        @if (notificationPanelOpen) {
+          <section class="notification-panel" role="dialog" aria-label="Últimas notificaciones">
+            <header class="notification-panel-header">
+              <div>
+                <strong>Últimas notificaciones</strong>
+                @if (notificationCount$ | async; as notificationCount) {
+                  <span>{{ notificationCount }} pendientes</span>
+                }
+              </div>
+
+              <button type="button" class="notification-panel-close" (click)="closeNotificationPanel()">
+                ×
+              </button>
+            </header>
+
+            <div class="notification-panel-body">
+              @if (notifications$ | async; as notifications) {
+                @if (!notifications.length) {
+                  <p class="notification-empty">No hay notificaciones nuevas.</p>
+                } @else {
+                  @for (notification of notifications.slice(0, 4); track notification.id) {
+                    <article class="notification-item notification-type-{{ notification.type }}">
+                      <div class="notification-item-icon">{{ notification.icon }}</div>
+
+                      <div class="notification-item-content">
+                        <strong>{{ notification.title | translate }}</strong>
+                        <p>{{ notification.description | translate }}</p>
+                        <span>
+                          {{ notification.timestamp }}
+                          @if (notification.product) {
+                            · {{ notification.product }}
+                          }
+                        </span>
+                      </div>
+
+                      <button
+                        type="button"
+                        class="notification-item-action"
+                        (click)="dismissNotification(notification.id)"
+                      >
+                        Leída
+                      </button>
+                    </article>
+                  }
+                }
+              }
+            </div>
+
+            <footer class="notification-panel-footer">
+              <button type="button" class="panel-link-btn" (click)="openNotificationsPage()">
+                Ver todas
+              </button>
+
+              <button type="button" class="panel-link-btn secondary" (click)="clearNotifications()">
+                Vaciar
+              </button>
+            </footer>
+          </section>
+        }
+      </div>
+
+      <button type="button" class="logout-btn" (click)="logout()">
+        ↪ {{ 'COMMON.LOGOUT' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <section class="hero-card" *ngIf="reportData && !loading && !errorMessage">
+    <div class="hero-copy">
+      <div class="hero-label">Reportes</div>
+      <h1>Indicadores, categorías y exportación ejecutiva</h1>
+      <p>Vista operativa del rendimiento del inventario por rango de fechas.</p>
     </div>
 
-    <div class="top-actions">
+    <div class="hero-actions">
       <button type="button" class="button-secondary" (click)="aplicarExportacionExcel()">Excel</button>
       <button type="button" class="button-primary" (click)="aplicarExportacionPdf()">PDF</button>
     </div>
-  </header>
+  </section>
 
   <div *ngIf="loading" class="status-banner">Cargando estadísticas...</div>
   <div *ngIf="errorMessage" class="status-banner error">{{ errorMessage }}</div>
 
-  <section class="hero-card" *ngIf="reportData && !loading && !errorMessage">
+  <section class="hero-card summary-card" *ngIf="reportData && !loading && !errorMessage">
     <div class="hero-copy">
       <div class="hero-label">Resumen actual</div>
       <h1>{{ reportData.empresa || 'Sin empresa' }}</h1>
