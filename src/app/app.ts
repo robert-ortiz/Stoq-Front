@@ -1,4 +1,6 @@
-import { Component, ChangeDetectionStrategy, OnDestroy, OnInit, inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, ChangeDetectionStrategy, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { ToastContainerComponent } from './shared/components/toast-container/toast-container.component';
@@ -17,7 +19,11 @@ export class App implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly languageService = inject(LanguageService);
-  private readonly body = document.body;
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly document = inject(DOCUMENT);
+  private get body(): HTMLElement | null {
+    return isPlatformBrowser(this.platformId) ? this.document.body : null;
+  }
   private routerSubscription?: Subscription;
 
   themeClass = 'theme-default';
@@ -54,11 +60,19 @@ export class App implements OnInit, OnDestroy {
       this.themeClass = nextThemeClass;
     }
 
+    if (!this.body) {
+      return;
+    }
+
     this.removeThemeClasses();
     this.body.classList.add(this.themeClass);
   }
 
   private removeThemeClasses(): void {
+    if (!this.body) {
+      return;
+    }
+
     this.body.classList.remove('theme-admin', 'theme-operador', 'theme-gerente', 'theme-default');
   }
 

@@ -186,7 +186,7 @@ export class ListaReportesComponent implements OnInit {
         next: (response) => {
           this.reporte = response;
           this.companyContext = response.empresa ?? this.authService.getCompany();
-          this.categorias = [...response.categorias].sort((left, right) => {
+          this.categorias = [...(response.categorias ?? [])].sort((left, right) => {
             if (right.movimientosTotales !== left.movimientosTotales) {
               return right.movimientosTotales - left.movimientosTotales;
             }
