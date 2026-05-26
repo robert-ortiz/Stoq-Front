@@ -12,8 +12,7 @@ import { MovimientoService } from '../../../core/services/movimiento.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { combineLatest, map } from 'rxjs';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
-
-type ExportFormat = 'pdf' | 'excel';
+import { ReportePdfService } from '../../../core/services/reporte-pdf.service';
 
 @Component({
   selector: 'app-lista-reportes',
@@ -29,6 +28,7 @@ export class ListaReportesComponent implements OnInit {
   private translateService = inject(TranslateService);
   private languageService = inject(LanguageService);
   private reportService = inject(ReporteService);
+  private reportePdfService = inject(ReportePdfService);
   private movimientoService = inject(MovimientoService);
   private notificationService = inject(NotificationService);
   private cdr = inject(ChangeDetectorRef);
@@ -48,7 +48,6 @@ export class ListaReportesComponent implements OnInit {
     map(([unread, critical]) => (critical && critical > 0 ? 0 : unread))
   );
   cargando = false;
-  exportandoFormato: ExportFormat | null = null;
   errorMessage = '';
   companyContext: string | null = this.authService.getCompany();
   reporte: ReporteCategoriasResponse | null = null;
@@ -157,11 +156,19 @@ export class ListaReportesComponent implements OnInit {
   }
 
   exportarPdf(): void {
-    this.exportarArchivo('pdf');
+    if (!this.reporte) {
+      return;
+    }
+
+    this.reportePdfService.generarCategoriasPdf(this.reporte);
   }
 
   exportarExcel(): void {
-    this.exportarArchivo('excel');
+    if (!this.reporte) {
+      return;
+    }
+
+    this.reportePdfService.generarCategoriasExcel(this.reporte);
   }
 
   private cargarReporte(): void {
@@ -195,37 +202,6 @@ export class ListaReportesComponent implements OnInit {
           this.cdr.markForCheck();
         }
       });
-  }
-
-  private exportarArchivo(formato: ExportFormat): void {
-    const filtros = this.filtros.getRawValue();
-    const inicio = filtros.inicio ?? this.formatDate(this.shiftDays(new Date(), -29));
-    const fin = filtros.fin ?? this.formatDate(new Date());
-
-    this.exportandoFormato = formato;
-
-    const solicitud = formato === 'pdf'
-      ? this.reportService.exportarPdf(inicio, fin)
-      : this.reportService.exportarExcel(inicio, fin);
-
-    solicitud.pipe(finalize(() => (this.exportandoFormato = null))).subscribe({
-      next: (blob) => {
-        const extension = formato === 'pdf' ? 'pdf' : 'xlsx';
-        this.descargarArchivo(blob, `reporte-categorias.${extension}`);
-      },
-      error: () => {
-        this.errorMessage = this.translateService.instant('REPORTS.ERROR_EXPORT');
-      }
-    });
-  }
-
-  private descargarArchivo(blob: Blob, filename: string): void {
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    window.URL.revokeObjectURL(url);
   }
 
   private dateRangeValidator(): ValidatorFn {

@@ -11,6 +11,7 @@ import { MovimientoService } from '../../../core/services/movimiento.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { combineLatest, map } from 'rxjs';
 import { ReporteDashboardResponse, ReporteService } from '../../../core/services/reporte.service';
+import { ReportePdfService } from '../../../core/services/reporte-pdf.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 @Component({
@@ -24,6 +25,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   private reportService = inject(ReporteService);
+    private reportePdfService = inject(ReportePdfService);
   private changeDetector = inject(ChangeDetectorRef);
   private movimientoService = inject(MovimientoService);
   private languageService = inject(LanguageService);
@@ -108,9 +110,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.reportService.exportarPdf(this.reportData.inicio, this.reportData.fin).subscribe((blob) => {
-      this.descargarBlob(blob, 'reporte-estadisticas.pdf');
-    });
+    this.reportePdfService.generarDashboardPdf(this.reportData);
   }
 
   aplicarExportacionExcel(): void {
@@ -118,9 +118,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.reportService.exportarExcel(this.reportData.inicio, this.reportData.fin).subscribe((blob) => {
-      this.descargarBlob(blob, 'reporte-estadisticas.xlsx');
-    });
+    this.reportePdfService.generarDashboardExcel(this.reportData);
   }
 
   getKpiValue(key: KpiKey): number {

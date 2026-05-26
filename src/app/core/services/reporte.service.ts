@@ -84,17 +84,4 @@ export class ReporteService {
     });
   }
 
-  exportarPdf(inicio: string, fin: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/export/pdf`, {
-      params: this.createRangeParams(inicio, fin),
-      responseType: 'blob'
-    });
-  }
-
-  exportarExcel(inicio: string, fin: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/export/excel`, {
-      params: this.createRangeParams(inicio, fin),
-      responseType: 'blob'
-    });
-  }
 }
