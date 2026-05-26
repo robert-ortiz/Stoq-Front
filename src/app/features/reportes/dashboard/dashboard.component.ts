@@ -9,6 +9,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { combineLatest, map } from 'rxjs';
 import { ReporteDashboardResponse, ReporteService } from '../../../core/services/reporte.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
@@ -41,6 +42,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   notificationError$ = this.notificationService.error$;
   unreadCount$ = this.notificationService.unreadCount$;
   criticalCount$ = this.notificationService.criticalCount$;
+  displayUnread$ = combineLatest([this.unreadCount$, this.criticalCount$]).pipe(
+    map(([unread, critical]) => (critical && critical > 0 ? 0 : unread))
+  );
 
   loading = false;
   errorMessage = '';

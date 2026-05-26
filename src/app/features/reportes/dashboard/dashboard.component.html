@@ -29,8 +29,10 @@
           aria-haspopup="dialog"
         >
           🔔 {{ 'COMMON.NOTIFICATIONS' | translate }}
-          @if (unreadCount$ | async; as unread) {
-            <span class="notification-badge">{{ unread }}</span>
+          @if (displayUnread$ | async; as unread) {
+            @if (unread > 0) {
+              <span class="notification-badge">{{ unread }}</span>
+            }
           }
           @if (notificationLoading$ | async) {
             <span class="notification-loading">⏳</span>

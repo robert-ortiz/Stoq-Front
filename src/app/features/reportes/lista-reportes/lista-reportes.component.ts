@@ -10,6 +10,7 @@ import { LanguageCode, LanguageService } from '../../../core/services/language.s
 import { ReporteCategoriaResumen, ReporteCategoriasResponse, ReporteService } from '../../../core/services/reporte.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { combineLatest, map } from 'rxjs';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 type ExportFormat = 'pdf' | 'excel';
@@ -42,6 +43,10 @@ export class ListaReportesComponent implements OnInit {
   notificationError$ = this.notificationService.error$;
   unreadCount$ = this.notificationService.unreadCount$;
   criticalCount$ = this.notificationService.criticalCount$;
+  // show unread badge only when there are no critical alerts to avoid duplicated bubbles
+  displayUnread$ = combineLatest([this.unreadCount$, this.criticalCount$]).pipe(
+    map(([unread, critical]) => (critical && critical > 0 ? 0 : unread))
+  );
   cargando = false;
   exportandoFormato: ExportFormat | null = null;
   errorMessage = '';
