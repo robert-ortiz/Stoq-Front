@@ -15,6 +15,7 @@ import {
   CreateProductoRequest
 } from '../../../core/services/producto.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { TenantService } from '../../../core/services/tenant.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 @Component({
@@ -27,6 +28,7 @@ import { BrandComponent } from '../../../shared/components/brand/brand.component
 export class ListaProductosOperadorComponent implements OnInit {
   readonly productoService = inject(ProductoService);
   private authService = inject(AuthService);
+  private tenantService = inject(TenantService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
@@ -78,7 +80,7 @@ export class ListaProductosOperadorComponent implements OnInit {
   });
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
-  readonly companyName = this.authService.getCompany() || '';
+  readonly companyName = this.tenantService.getEmpresa() || '';
 
   onLanguageChange(language: string): void {
     this.languageService.setLanguage(language as LanguageCode);

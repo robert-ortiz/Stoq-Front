@@ -68,19 +68,25 @@ export class ReporteService {
   private http = inject(HttpClient);
   private apiUrl = `${API_BASE_URL}/api/reportes`;
 
-  private createRangeParams(inicio: string, fin: string): HttpParams {
-    return new HttpParams().set('inicio', inicio).set('fin', fin);
+  private createRangeParams(inicio: string, fin: string, empresa?: string | null): HttpParams {
+    let params = new HttpParams().set('inicio', inicio).set('fin', fin);
+
+    if (empresa) {
+      params = params.set('empresa', empresa);
+    }
+
+    return params;
   }
 
-  getReporteCategorias(inicio: string, fin: string): Observable<ReporteCategoriasResponse> {
+  getReporteCategorias(inicio: string, fin: string, empresa?: string | null): Observable<ReporteCategoriasResponse> {
     return this.http.get<ReporteCategoriasResponse>(`${this.apiUrl}/categorias`, {
-      params: this.createRangeParams(inicio, fin)
+      params: this.createRangeParams(inicio, fin, empresa)
     });
   }
 
-  getReporteDashboard(inicio: string, fin: string): Observable<ReporteDashboardResponse> {
+  getReporteDashboard(inicio: string, fin: string, empresa?: string | null): Observable<ReporteDashboardResponse> {
     return this.http.get<ReporteDashboardResponse>(`${this.apiUrl}/estadisticas`, {
-      params: this.createRangeParams(inicio, fin)
+      params: this.createRangeParams(inicio, fin, empresa)
     });
   }
 

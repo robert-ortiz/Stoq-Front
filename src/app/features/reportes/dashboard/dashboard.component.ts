@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
+import { TenantService } from '../../../core/services/tenant.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -23,6 +24,7 @@ import { BrandComponent } from '../../../shared/components/brand/brand.component
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   private authService = inject(AuthService);
+  private tenantService = inject(TenantService);
   private router = inject(Router);
   private reportService = inject(ReporteService);
     private reportePdfService = inject(ReportePdfService);
@@ -189,8 +191,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loading = true;
     this.errorMessage = '';
 
+    const empresa = this.tenantService.getEmpresa();
+
     this.reportService
-      .getReporteDashboard(inicio, fin)
+      .getReporteDashboard(inicio, fin, empresa)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: (response) => {

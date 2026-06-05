@@ -6,6 +6,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../core/services/auth.service';
+import { TenantService } from '../../../core/services/tenant.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 import { ReporteCategoriaResumen, ReporteCategoriasResponse, ReporteService } from '../../../core/services/reporte.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
@@ -24,6 +25,7 @@ import { ReportePdfService } from '../../../core/services/reporte-pdf.service';
 })
 export class ListaReportesComponent implements OnInit {
   private authService = inject(AuthService);
+  private tenantService = inject(TenantService);
   private router = inject(Router);
   private translateService = inject(TranslateService);
   private languageService = inject(LanguageService);
@@ -49,7 +51,7 @@ export class ListaReportesComponent implements OnInit {
   );
   cargando = false;
   errorMessage = '';
-  companyContext: string | null = this.authService.getCompany();
+  companyContext: string | null = this.tenantService.getEmpresa();
   reporte: ReporteCategoriasResponse | null = null;
   categorias: ReporteCategoriaResumen[] = [];
 
@@ -180,12 +182,12 @@ export class ListaReportesComponent implements OnInit {
     this.errorMessage = '';
 
     this.reportService
-      .getReporteCategorias(inicio, fin)
+      .getReporteCategorias(inicio, fin, this.companyContext ?? this.tenantService.getEmpresa())
       .pipe(finalize(() => (this.cargando = false)))
       .subscribe({
         next: (response) => {
           this.reporte = response;
-          this.companyContext = response.empresa ?? this.authService.getCompany();
+          this.companyContext = response.empresa ?? this.tenantService.getEmpresa();
           this.categorias = [...(response.categorias ?? [])].sort((left, right) => {
             if (right.movimientosTotales !== left.movimientosTotales) {
               return right.movimientosTotales - left.movimientosTotales;

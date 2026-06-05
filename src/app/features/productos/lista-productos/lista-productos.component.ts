@@ -5,6 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, forkJoin, startWith } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { TenantService } from '../../../core/services/tenant.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 import {
   CategoriaApi,
@@ -43,10 +44,11 @@ export class ListaProductosComponent implements OnInit {
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
   private authService = inject(AuthService);
+  private tenantService = inject(TenantService);
   private toastService = inject(ToastService);
   private userService = inject(UserService);
   private translateService = inject(TranslateService);
-  readonly companyName = this.authService.getCompany() || '';
+  readonly companyName = this.tenantService.getEmpresa() || '';
 
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly createForm = this.fb.group({
