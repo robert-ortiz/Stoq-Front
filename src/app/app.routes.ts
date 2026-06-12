@@ -127,6 +127,15 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'reportes/dashboard-predictivo',
+    canActivate: [roleGuard],
+    data: { roles: ['GERENTE'] },
+    loadComponent: () =>
+      import('./features/reportes/dashboard-predictivo/dashboard-predictivo.component').then(
+        (m) => m.DashboardPredictivoComponent
+      )
+  },
+  {
     path: 'notificaciones',
     canActivate: [roleGuard],
     data: { roles: ['GERENTE'] },

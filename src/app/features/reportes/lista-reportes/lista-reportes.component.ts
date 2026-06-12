@@ -79,6 +79,10 @@ export class ListaReportesComponent implements OnInit {
     this.router.navigateByUrl('/gerente');
   }
 
+  irADashboardPredictivo(): void {
+    this.router.navigateByUrl('/reportes/dashboard-predictivo');
+  }
+
   toggleNotificationPanel(): void {
     this.notificationPanelOpen = !this.notificationPanelOpen;
   }
