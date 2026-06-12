@@ -67,7 +67,21 @@ export class NotificationService {
   readonly notificationCount$ = this.notifications$.pipe(map((notifications) => notifications.length));
 
   clearNotifications(): void {
+    const currentNotifications = this.notificationsSubject.value;
+
+    if (!currentNotifications.length) {
+      return;
+    }
+
     this.notificationsSubject.next([]);
+
+    this.alertaService.marcarTodasComoLeidas().subscribe({
+      next: () => this.refreshAllCounts(),
+      error: () => {
+        this.errorSubject.next('No se pudieron marcar las alertas como leídas.');
+        this.notificationsSubject.next(currentNotifications);
+      }
+    });
   }
 
   dismissNotification(id: number): void {
