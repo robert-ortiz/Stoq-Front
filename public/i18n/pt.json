@@ -554,6 +554,8 @@
     "DEPLETION_DAYS": "Dias até esgotamento",
     "RECOMMENDED_QTY": "Quantidade Recomendada",
     "TREND_BALANCE": "Saldo líquido"
+    ,
+    "ERROR_LOAD": "Não foi possível carregar o dashboard preditivo."
   },
   "NOTIFICATIONS": {
     "ALERTS_SUBTITLE": "Alertas recentes para revisar o inventário sem complicação.",

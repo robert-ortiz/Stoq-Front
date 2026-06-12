@@ -549,6 +549,8 @@
     "DEPLETION_DAYS": "Días hasta agotarse",
     "RECOMMENDED_QTY": "Cantidad Recomendada",
     "TREND_BALANCE": "Saldo neto"
+    ,
+    "ERROR_LOAD": "No fue posible cargar el dashboard predictivo."
   },
   "NOTIFICATIONS": {
     "ALERTS_SUBTITLE": "Alertas recientes para revisar el inventario sin complicaciones.",

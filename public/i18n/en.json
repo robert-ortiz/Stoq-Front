@@ -549,6 +549,8 @@
     "DEPLETION_DAYS": "Days until depleted",
     "RECOMMENDED_QTY": "Recommended Quantity",
     "TREND_BALANCE": "Net balance"
+    ,
+    "ERROR_LOAD": "Could not load predictive dashboard."
   },
     "EXPORTING": "Exporting..."
   },
