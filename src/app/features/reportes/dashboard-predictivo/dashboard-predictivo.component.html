@@ -142,7 +142,7 @@
             <div class="kpi-title">{{ k.title | translate }}</div>
             <div class="kpi-value">{{ k.value }}</div>
             @if (k.unit) {
-              <div class="kpi-unit">{{ k.unit }}</div>
+              <div class="kpi-unit">{{ k.unit | translate }}</div>
             }
           </div>
         </article>
@@ -228,7 +228,7 @@
                 <div class="request-header">
                   <strong>{{ solicitud.productoNombre }}</strong>
                   <span class="badge badge-{{ solicitud.estado.toLowerCase() }}">
-                    {{ solicitud.estado }}
+                    {{ getSolicitudEstadoLabel(solicitud.estado) | translate }}
                   </span>
                 </div>
                 <div class="request-details">

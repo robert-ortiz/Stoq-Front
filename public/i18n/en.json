@@ -65,6 +65,7 @@
     "VIEW_ALL": "View all",
     "CLEAR": "Clear",
     "STOCK": "Stock",
+    "NO_DATA": "No data",
     "NO_PENDING_REQUESTS": "No pending requests"
   },
   "LANGUAGE": {
@@ -552,11 +553,13 @@
     "UNIT_DAYS": "days",
     "UNIT_DAYS_SHORT": "d",
     "CRITICAL_PRODUCTS_BADGE": "Critical products",
-    "TREND_BALANCE": "Net balance"
-    ,
+    "TREND_BALANCE": "Net balance",
+    "REQUEST_STATUS_PENDIENTE": "Pending",
+    "REQUEST_STATUS_APROBADA": "Approved",
+    "REQUEST_STATUS_EN_PROCESO": "In progress",
+    "REQUEST_STATUS_COMPLETADA": "Completed",
+    "REQUEST_STATUS_RECHAZADA": "Rejected",
     "ERROR_LOAD": "Could not load predictive dashboard."
-  },
-    "EXPORTING": "Exporting..."
   },
   "NOTIFICATIONS": {
     "ALERTS_SUBTITLE": "Recent alerts to review inventory without hassle.",

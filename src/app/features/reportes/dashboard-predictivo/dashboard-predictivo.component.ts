@@ -4,7 +4,7 @@ import Chart from 'chart.js/auto';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { TenantService } from '../../../core/services/tenant.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
@@ -46,6 +46,7 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   private reportService = inject(ReporteService);
   private changeDetector = inject(ChangeDetectorRef);
   private languageService = inject(LanguageService);
+  private translateService = inject(TranslateService);
   private notificationService = inject(NotificationService);
   private destroyRef = inject(DestroyRef);
 
@@ -91,7 +92,7 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
     datasets: [
       {
         data: [] as number[],
-        label: 'Saldo neto',
+        label: 'PREDICTIVE_DASHBOARD.TREND_BALANCE',
         tension: 0.3,
         borderColor: '#0F1724',
         backgroundColor: 'rgba(15,23,36,0.06)',
@@ -111,7 +112,7 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   };
 
   public riskChartData = {
-    labels: ['Crítico', 'Alto', 'Medio', 'Bajo'],
+    labels: [] as string[],
     datasets: [
       {
         data: [0, 0, 0, 0],
@@ -129,6 +130,7 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   };
 
   ngOnInit(): void {
+    this.actualizarTextosGraficos();
     this.cargarDashboardPredictivo();
     this.notificationService.refreshAllCounts();
   }
@@ -145,6 +147,8 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   onLanguageChange(language: string): void {
     this.languageService.setLanguage(language as LanguageCode);
     this.currentLanguage = this.languageService.getCurrentLanguage();
+    this.actualizarTextosGraficos();
+    this.scheduleChartRender();
   }
 
   irAProductos(): void {
@@ -181,6 +185,10 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
 
   clearNotifications(): void {
     this.notificationService.clearNotifications();
+  }
+
+  getSolicitudEstadoLabel(estado: string): string {
+    return `PREDICTIVE_DASHBOARD.REQUEST_STATUS_${this.normalizeKey(estado)}`;
   }
 
   logout(): void {
@@ -262,8 +270,11 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
 
   private construirKpis(): void {
     // Calcular KPIs basados en recomendaciones
-    const criticos = this.recomendaciones.filter((r) => r.prioridad === 'CRÍTICA').length;
-    const altos = this.recomendaciones.filter((r) => r.prioridad === 'ALTA').length;
+    const riesgos = this.recomendaciones.map((r) =>
+      this.calcularNivelRiesgo(r.tiempoAgotamiento, r.stockActual, r.stockMinimo)
+    );
+    const criticos = riesgos.filter((riesgo) => riesgo === 'CRITICAL').length;
+    const altos = riesgos.filter((riesgo) => riesgo === 'HIGH').length;
     const solicitudesPendientes = this.solicitudes.filter((s) => s.estado === 'PENDIENTE').length;
     const tiempoPromedio =
       this.recomendaciones.length > 0
@@ -297,6 +308,16 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
     this.scheduleChartRender();
   }
 
+  private actualizarTextosGraficos(): void {
+    this.trendChartData.datasets[0].label = this.translateService.instant('PREDICTIVE_DASHBOARD.TREND_BALANCE');
+    this.riskChartData.labels = [
+      this.translateService.instant('COMMON.CRITICAL'),
+      this.translateService.instant('COMMON.HIGH'),
+      this.translateService.instant('COMMON.MEDIUM'),
+      this.translateService.instant('COMMON.LOW')
+    ];
+  }
+
   private calcularNivelRiesgo(tiempoAgotamiento: number, stockActual: number, stockMinimo: number): RiskLevel {
     if (stockActual === 0 || stockActual <= stockMinimo || tiempoAgotamiento <= 3) {
       return 'CRITICAL';
@@ -320,6 +341,13 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   private formatDateShort(dateStr: string): string {
     const [year, month, day] = dateStr.split('-');
     return `${day}/${month}`;
+  }
+
+  private normalizeKey(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase();
   }
 
   private scheduleChartRender(): void {

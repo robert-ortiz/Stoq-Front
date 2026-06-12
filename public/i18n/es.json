@@ -66,6 +66,7 @@
     "VIEW_ALL": "Ver todos",
     "CLEAR": "Limpiar",
     "STOCK": "Stock",
+    "NO_DATA": "Sin datos",
     "NO_PENDING_REQUESTS": "No hay solicitudes pendientes"
   },
   "LANGUAGE": {
@@ -552,8 +553,12 @@
     "UNIT_DAYS": "días",
     "UNIT_DAYS_SHORT": "d",
     "CRITICAL_PRODUCTS_BADGE": "Productos críticos",
-    "TREND_BALANCE": "Saldo neto"
-    ,
+    "TREND_BALANCE": "Saldo neto",
+    "REQUEST_STATUS_PENDIENTE": "Pendiente",
+    "REQUEST_STATUS_APROBADA": "Aprobada",
+    "REQUEST_STATUS_EN_PROCESO": "En proceso",
+    "REQUEST_STATUS_COMPLETADA": "Completada",
+    "REQUEST_STATUS_RECHAZADA": "Rechazada",
     "ERROR_LOAD": "No fue posible cargar el dashboard predictivo."
   },
   "NOTIFICATIONS": {
