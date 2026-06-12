@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { API_BASE_URL } from '../config/api.config';
 
 export interface ReporteCategoriaResumen {
@@ -133,6 +133,14 @@ export class ReporteService {
   getReporteDashboard(inicio: string, fin: string, empresa?: string | null): Observable<ReporteDashboardResponse> {
     return this.http.get<ReporteDashboardResponse>(`${this.apiUrl}/estadisticas`, {
       params: this.createRangeParams(inicio, fin, empresa)
+    });
+  }
+
+  getReportePredictivo(inicio: string, fin: string, empresa?: string | null): Observable<DashboardPredictivoResponse> {
+    return forkJoin({
+      dashboard: this.getReporteDashboard(inicio, fin, empresa),
+      recomendaciones: this.getRecomendaciones(),
+      solicitudes: this.getSolicitudesReposicion()
     });
   }
 

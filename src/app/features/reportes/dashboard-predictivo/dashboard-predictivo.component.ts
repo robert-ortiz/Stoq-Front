@@ -214,24 +214,19 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
     const fin = this.formatDate(today);
     const empresa = this.tenantService.getEmpresa();
 
-    // Cargar datos en paralelo
-    combineLatest([
-      this.reportService.getReporteDashboard(inicio, fin, empresa),
-      this.reportService.getRecomendaciones(),
-      this.reportService.getSolicitudesReposicion()
-    ])
+    this.reportService.getReportePredictivo(inicio, fin, empresa)
       .pipe(
         finalize(() => (this.loading = false)),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
-        next: ([dashboard, recomendaciones, solicitudes]) => {
+        next: ({ dashboard, recomendaciones, solicitudes }) => {
           this.dashboardData = dashboard;
           this.recomendaciones = recomendaciones;
           this.solicitudes = solicitudes;
           this.tendencias = dashboard.tendencias ?? [];
 
-          this.procesarDatosPredicti();
+          this.procesarDatosPredictivos();
           this.construirKpis();
           this.construirGraficos();
           this.changeDetector.markForCheck();
@@ -247,7 +242,7 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
       });
   }
 
-  private procesarDatosPredicti(): void {
+  private procesarDatosPredictivos(): void {
     // Mapear recomendaciones a riesgos
     this.riesgosProductos = (this.recomendaciones ?? [])
       .map((rec) => ({
