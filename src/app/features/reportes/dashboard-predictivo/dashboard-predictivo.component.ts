@@ -81,8 +81,8 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   kpisPredictivos: KpiPredictivo[] = [
     { title: 'PREDICTIVE_DASHBOARD.KPI_CRITICAL_RISK', value: 0, icon: '🚨', riskLevel: 'CRITICAL' },
     { title: 'PREDICTIVE_DASHBOARD.KPI_HIGH_RISK', value: 0, icon: '⚠️', riskLevel: 'HIGH' },
-    { title: 'PREDICTIVE_DASHBOARD.KPI_PENDING_REQUESTS', value: 0, icon: '📋', unit: 'solicitudes' },
-    { title: 'PREDICTIVE_DASHBOARD.KPI_AVG_DEPLETION', value: 0, icon: '⏱️', unit: 'días' }
+    { title: 'PREDICTIVE_DASHBOARD.KPI_PENDING_REQUESTS', value: 0, icon: '📋', unit: 'PREDICTIVE_DASHBOARD.UNIT_REQUESTS' },
+    { title: 'PREDICTIVE_DASHBOARD.KPI_AVG_DEPLETION', value: 0, icon: '⏱️', unit: 'PREDICTIVE_DASHBOARD.UNIT_DAYS' }
   ];
 
   // Gráficos

@@ -548,6 +548,10 @@
     "PENDING_REQUESTS_SUBTITLE": "Reposiciones recomendadas en proceso",
     "DEPLETION_DAYS": "Días hasta agotarse",
     "RECOMMENDED_QTY": "Cantidad Recomendada",
+    "UNIT_REQUESTS": "solicitudes",
+    "UNIT_DAYS": "días",
+    "UNIT_DAYS_SHORT": "d",
+    "CRITICAL_PRODUCTS_BADGE": "Productos críticos",
     "TREND_BALANCE": "Saldo neto"
     ,
     "ERROR_LOAD": "No fue posible cargar el dashboard predictivo."

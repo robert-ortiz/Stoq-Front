@@ -548,6 +548,10 @@
     "PENDING_REQUESTS_SUBTITLE": "Recommended replenishments in progress",
     "DEPLETION_DAYS": "Days until depleted",
     "RECOMMENDED_QTY": "Recommended Quantity",
+    "UNIT_REQUESTS": "requests",
+    "UNIT_DAYS": "days",
+    "UNIT_DAYS_SHORT": "d",
+    "CRITICAL_PRODUCTS_BADGE": "Critical products",
     "TREND_BALANCE": "Net balance"
     ,
     "ERROR_LOAD": "Could not load predictive dashboard."

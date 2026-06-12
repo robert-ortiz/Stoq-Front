@@ -553,6 +553,10 @@
     "PENDING_REQUESTS_SUBTITLE": "Reabastecimentos recomendados em andamento",
     "DEPLETION_DAYS": "Dias até esgotamento",
     "RECOMMENDED_QTY": "Quantidade Recomendada",
+    "UNIT_REQUESTS": "solicitações",
+    "UNIT_DAYS": "dias",
+    "UNIT_DAYS_SHORT": "d",
+    "CRITICAL_PRODUCTS_BADGE": "Produtos críticos",
     "TREND_BALANCE": "Saldo líquido"
     ,
     "ERROR_LOAD": "Não foi possível carregar o dashboard preditivo."

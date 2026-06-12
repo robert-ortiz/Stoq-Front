@@ -13,6 +13,7 @@
       <select
         class="language-select"
         [value]="currentLanguage"
+        [attr.aria-label]="'LANGUAGE.LABEL' | translate"
         (change)="onLanguageChange(($any($event.target).value))"
       >
         <option value="es">{{ 'LANGUAGE.ES' | translate }}</option>
@@ -42,13 +43,13 @@
           }
           @if (criticalCount$ | async; as critical) {
             @if (critical > 0) {
-              <span class="critical-badge" title="Productos críticos">{{ critical }}</span>
+              <span class="critical-badge" [title]="'PREDICTIVE_DASHBOARD.CRITICAL_PRODUCTS_BADGE' | translate">{{ critical }}</span>
             }
           }
         </button>
 
         @if (notificationPanelOpen) {
-          <section class="notification-panel" role="dialog" aria-label="Últimas notificaciones">
+          <section class="notification-panel" role="dialog" [attr.aria-label]="'COMMON.LATEST_NOTIFICATIONS' | translate">
             <header class="notification-panel-header">
               <div>
                 <strong>{{ 'COMMON.LATEST_NOTIFICATIONS' | translate }}</strong>
@@ -199,7 +200,7 @@
                     <small>{{ 'COMMON.STOCK' | translate }}</small>
                   </span>
                   <span class="stat">
-                    <strong>{{ riesgo.tiempoAgotamiento }}d</strong>
+                    <strong>{{ riesgo.tiempoAgotamiento }} {{ 'PREDICTIVE_DASHBOARD.UNIT_DAYS_SHORT' | translate }}</strong>
                     <small>{{ 'PREDICTIVE_DASHBOARD.DEPLETION_DAYS' | translate }}</small>
                   </span>
                 </div>

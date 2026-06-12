@@ -163,7 +163,6 @@
   color: #667085;
   font-size: 12px;
   margin: 0;
-  line-height: 1.4;
 }
 
 .notification-panel-footer {
@@ -282,7 +281,7 @@
 
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -607,6 +606,10 @@
 
   .kpi-value {
     font-size: 24px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
   }
 
   .card-header {
