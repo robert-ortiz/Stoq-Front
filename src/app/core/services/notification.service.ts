@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, map, Observable, catchError, of, tap, finalize } from 'rxjs';
-import { ProductosService, ProductoCritico } from './productos.service';
-import { AlertaService } from './alerta.service';
+import { AlertaApi, AlertaService } from './alerta.service';
 
 export type NotificationType = 'critical' | 'warning' | 'info' | 'success';
 
@@ -19,6 +18,7 @@ export interface NotificationItem {
   timestamp: string;
   quantity?: number;
   product?: string;
+  alertId?: string;
 }
 
 export const NOTIFICATION_VISUAL_META: Record<NotificationType, NotificationVisualMeta> = {
@@ -44,43 +44,11 @@ export function getNotificationVisualMeta(type: NotificationType): NotificationV
   return NOTIFICATION_VISUAL_META[type];
 }
 
-const INITIAL_NOTIFICATIONS: NotificationItem[] = [
-  {
-    id: 1,
-    icon: getNotificationVisualMeta('warning').icon,
-    title: 'NOTIFICATIONS.LOW_STOCK',
-    description: 'NOTIFICATIONS.PRODUCT_BELOW_MINIMUM',
-    type: 'warning',
-    timestamp: new Date().toLocaleTimeString(),
-    quantity: 3,
-    product: 'Producto ABC'
-  },
-  {
-    id: 2,
-    icon: getNotificationVisualMeta('success').icon,
-    title: 'NOTIFICATIONS.STOCK_UPDATED',
-    description: 'NOTIFICATIONS.INVENTORY_MOVEMENT_COMPLETED',
-    type: 'success',
-    timestamp: new Date(Date.now() - 300000).toLocaleTimeString(),
-    quantity: 50,
-    product: 'Producto XYZ'
-  },
-  {
-    id: 3,
-    icon: getNotificationVisualMeta('info').icon,
-    title: 'NOTIFICATIONS.NEW_MOVEMENT',
-    description: 'NOTIFICATIONS.RECENT_INVENTORY_ACTIVITY',
-    type: 'info',
-    timestamp: new Date(Date.now() - 600000).toLocaleTimeString()
-  }
-];
-
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private readonly notificationsSubject = new BehaviorSubject<NotificationItem[]>(INITIAL_NOTIFICATIONS);
-  private productosService = inject(ProductosService);
+  private readonly notificationsSubject = new BehaviorSubject<NotificationItem[]>([]);
   private alertaService = inject(AlertaService);
 
   private readonly loadingSubject = new BehaviorSubject<boolean>(false);
@@ -111,24 +79,12 @@ export class NotificationService {
     return this.notificationsSubject.value.length;
   }
 
-  /**
-   * Refresh summary counts: unread notifications and critical products.
-   * Unread count is read from AlertaService.getResumen().notificacionesSinLeer
-   * Critical count is derived from ProductosService.getProductosCriticos().length
-   */
   refreshAllCounts(): void {
-    // refresh unread notifications
     this.alertaService.getResumen().pipe(
       catchError(() => of({ productosCriticos: 0, notificacionesSinLeer: 0, totalAlertas: 0 }))
     ).subscribe((res) => {
       this.unreadCountSubject.next(res.notificacionesSinLeer ?? 0);
-    });
-
-    // refresh critical products count
-    this.productosService.getProductosCriticos().pipe(
-      catchError(() => of([] as ProductoCritico[]))
-    ).subscribe((items) => {
-      this.criticalCountSubject.next(items?.length ?? 0);
+      this.criticalCountSubject.next(res.productosCriticos ?? 0);
     });
   }
 
@@ -136,32 +92,54 @@ export class NotificationService {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
 
-    return this.productosService.getProductosCriticos().pipe(
-      tap((items: ProductoCritico[]) => {
-        if (!items || items.length === 0) {
-          this.notificationsSubject.next([]);
-          return;
-        }
-
-        const mapped = items.map((p, idx) => ({
-          id: idx + 1,
-          icon: getNotificationVisualMeta('warning').icon,
-          title: 'NOTIFICATIONS.LOW_STOCK',
-          description: `${p.nombre} (${p.codigo}) - ${p.stockActual} / Mín ${p.stockMinimo}`,
-          type: 'warning' as NotificationType,
-          timestamp: new Date().toLocaleTimeString(),
-          quantity: p.stockActual,
-          product: p.nombre
-        }));
-
-        this.notificationsSubject.next(mapped);
+    return this.alertaService.getAlertas().pipe(
+      tap((alertas) => {
+        this.notificationsSubject.next(this.mapAlertasToNotifications(alertas));
       }),
-      catchError((err) => {
+      catchError(() => {
         this.errorSubject.next('No se pudo cargar alertas críticas.');
-        return of([] as ProductoCritico[]);
+        this.notificationsSubject.next([]);
+        return of([] as AlertaApi[]);
       }),
       finalize(() => this.loadingSubject.next(false)),
       map(() => void 0)
     );
+  }
+
+  private mapAlertasToNotifications(alertas: AlertaApi[]): NotificationItem[] {
+    return [...alertas]
+      .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
+      .map((alerta, idx) => {
+        const type = this.getAlertNotificationType(alerta);
+
+        return {
+          id: idx + 1,
+          alertId: alerta.id,
+          icon: getNotificationVisualMeta(type).icon,
+          title: 'NOTIFICATIONS.LOW_STOCK',
+          description: alerta.mensaje,
+          type,
+          timestamp: this.formatAlertTimestamp(alerta.fecha),
+          quantity: alerta.stockActual,
+          product: alerta.productoNombre
+        };
+      });
+  }
+
+  private getAlertNotificationType(alerta: AlertaApi): NotificationType {
+    const stockActual = Number(alerta.stockActual ?? 0);
+    const stockMinimo = Number(alerta.stockMinimo ?? 0);
+
+    return stockActual < stockMinimo ? 'critical' : 'warning';
+  }
+
+  private formatAlertTimestamp(fecha: string): string {
+    const parsedDate = new Date(fecha);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return fecha;
+    }
+
+    return parsedDate.toLocaleString();
   }
 }
