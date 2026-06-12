@@ -71,8 +71,23 @@ export class NotificationService {
   }
 
   dismissNotification(id: number): void {
-    const updatedNotifications = this.notificationsSubject.value.filter((notification) => notification.id !== id);
+    const currentNotifications = this.notificationsSubject.value;
+    const notification = currentNotifications.find((item) => item.id === id);
+    const updatedNotifications = currentNotifications.filter((item) => item.id !== id);
+
     this.notificationsSubject.next(updatedNotifications);
+
+    if (!notification?.alertId) {
+      return;
+    }
+
+    this.alertaService.marcarComoLeida(notification.alertId).subscribe({
+      next: () => this.refreshAllCounts(),
+      error: () => {
+        this.errorSubject.next('No se pudo marcar la alerta como leída.');
+        this.notificationsSubject.next(currentNotifications);
+      }
+    });
   }
 
   getNotificationCount(): number {
@@ -108,6 +123,7 @@ export class NotificationService {
 
   private mapAlertasToNotifications(alertas: AlertaApi[]): NotificationItem[] {
     return [...alertas]
+      .filter((alerta) => !alerta.leida)
       .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
       .map((alerta, idx) => {
         const type = this.getAlertNotificationType(alerta);
