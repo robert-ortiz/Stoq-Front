@@ -52,7 +52,20 @@
     "VIEW": "View",
     "DISMISS": "Close",
     "REPORTS": "Reports",
-    "NOTIFICATIONS": "Notifications"
+    "NOTIFICATIONS": "Notifications",
+    "CRITICAL": "Critical",
+    "HIGH": "High",
+    "MEDIUM": "Medium",
+    "LOW": "Low",
+    "PREDICTIVE": "Predictive",
+    "LATEST_NOTIFICATIONS": "Latest notifications",
+    "PENDING": "Pending",
+    "NO_NEW_NOTIFICATIONS": "No new notifications",
+    "READ": "Read",
+    "VIEW_ALL": "View all",
+    "CLEAR": "Clear",
+    "STOCK": "Stock",
+    "NO_PENDING_REQUESTS": "No pending requests"
   },
   "LANGUAGE": {
     "LABEL": "Language",
@@ -515,6 +528,28 @@
     "ENTRADA_SAIDA": "Entries / exits",
     "EXPORT_PDF": "Export PDF",
     "EXPORT_EXCEL": "Export Excel",
+    "EXPORTING": "Exporting...",
+    "PREDICTIVE_DASHBOARD": "Predictive Dashboard"
+  },
+  "PREDICTIVE_DASHBOARD": {
+    "TITLE": "Predictive Dashboard",
+    "SUBTITLE": "Intelligent risk and inventory trend analysis",
+    "KPI_CRITICAL_RISK": "Critical Products",
+    "KPI_HIGH_RISK": "High Risk Products",
+    "KPI_PENDING_REQUESTS": "Pending Requests",
+    "KPI_AVG_DEPLETION": "Average Depletion Time",
+    "TRENDS_TITLE": "Net Balance Trend",
+    "TRENDS_SUBTITLE": "Evolution of balance during the selected period",
+    "RISK_DISTRIBUTION_TITLE": "Risk Distribution",
+    "RISK_DISTRIBUTION_SUBTITLE": "Product classification by risk level",
+    "TOP_RISKS_TITLE": "Top 5 Products at Risk",
+    "TOP_RISKS_SUBTITLE": "Products requiring immediate attention",
+    "PENDING_REQUESTS_TITLE": "5 Latest Pending Requests",
+    "PENDING_REQUESTS_SUBTITLE": "Recommended replenishments in progress",
+    "DEPLETION_DAYS": "Days until depleted",
+    "RECOMMENDED_QTY": "Recommended Quantity",
+    "TREND_BALANCE": "Net balance"
+  },
     "EXPORTING": "Exporting..."
   },
   "NOTIFICATIONS": {
