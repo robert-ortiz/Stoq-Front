@@ -3,21 +3,51 @@ import { BehaviorSubject, map, Observable, catchError, of, tap, finalize } from 
 import { ProductosService, ProductoCritico } from './productos.service';
 import { AlertaService } from './alerta.service';
 
+export type NotificationType = 'critical' | 'warning' | 'info' | 'success';
+
+export interface NotificationVisualMeta {
+  icon: string;
+  labelKey: string;
+}
+
 export interface NotificationItem {
   id: number;
   icon: string;
   title: string;
   description: string;
-  type: 'warning' | 'info' | 'success';
+  type: NotificationType;
   timestamp: string;
   quantity?: number;
   product?: string;
 }
 
+export const NOTIFICATION_VISUAL_META: Record<NotificationType, NotificationVisualMeta> = {
+  critical: {
+    icon: '🚨',
+    labelKey: 'NOTIFICATIONS.CRITICAL'
+  },
+  warning: {
+    icon: '⚠️',
+    labelKey: 'NOTIFICATIONS.WARNING'
+  },
+  info: {
+    icon: 'ℹ️',
+    labelKey: 'NOTIFICATIONS.INFO'
+  },
+  success: {
+    icon: '✅',
+    labelKey: 'NOTIFICATIONS.SUCCESS'
+  }
+};
+
+export function getNotificationVisualMeta(type: NotificationType): NotificationVisualMeta {
+  return NOTIFICATION_VISUAL_META[type];
+}
+
 const INITIAL_NOTIFICATIONS: NotificationItem[] = [
   {
     id: 1,
-    icon: '⚠️',
+    icon: getNotificationVisualMeta('warning').icon,
     title: 'NOTIFICATIONS.LOW_STOCK',
     description: 'NOTIFICATIONS.PRODUCT_BELOW_MINIMUM',
     type: 'warning',
@@ -27,7 +57,7 @@ const INITIAL_NOTIFICATIONS: NotificationItem[] = [
   },
   {
     id: 2,
-    icon: '✅',
+    icon: getNotificationVisualMeta('success').icon,
     title: 'NOTIFICATIONS.STOCK_UPDATED',
     description: 'NOTIFICATIONS.INVENTORY_MOVEMENT_COMPLETED',
     type: 'success',
@@ -37,7 +67,7 @@ const INITIAL_NOTIFICATIONS: NotificationItem[] = [
   },
   {
     id: 3,
-    icon: 'ℹ️',
+    icon: getNotificationVisualMeta('info').icon,
     title: 'NOTIFICATIONS.NEW_MOVEMENT',
     description: 'NOTIFICATIONS.RECENT_INVENTORY_ACTIVITY',
     type: 'info',
@@ -115,10 +145,10 @@ export class NotificationService {
 
         const mapped = items.map((p, idx) => ({
           id: idx + 1,
-          icon: '⚠️',
+          icon: getNotificationVisualMeta('warning').icon,
           title: 'NOTIFICATIONS.LOW_STOCK',
           description: `${p.nombre} (${p.codigo}) - ${p.stockActual} / Mín ${p.stockMinimo}`,
-          type: 'warning' as const,
+          type: 'warning' as NotificationType,
           timestamp: new Date().toLocaleTimeString(),
           quantity: p.stockActual,
           product: p.nombre
