@@ -103,7 +103,11 @@
     "DIFFERENCE": "Difference",
 
     "CRITICAL": "CRITICAL",
-    "WARNING": "WARNING"
+    "WARNING": "WARNING",
+    "ERROR_LOAD_SUMMARY": "Could not load the alert summary.",
+    "ERROR_LOAD_ALERTS": "Could not load alerts.",
+    "ERROR_MARK_READ": "Could not mark the alert as read.",
+    "ERROR_MARK_ALL_READ": "Could not mark alerts as read."
   },
 
   "ADMIN": {
@@ -564,12 +568,19 @@
   "NOTIFICATIONS": {
     "ALERTS_SUBTITLE": "Recent alerts to review inventory without hassle.",
     "NO_ALERTS": "There are no alerts right now.",
+    "CRITICAL": "Critical",
+    "WARNING": "Warning",
+    "INFO": "Info",
+    "SUCCESS": "Success",
     "LOW_STOCK": "Low stock",
     "PRODUCT_BELOW_MINIMUM": "The product is below the allowed minimum.",
     "STOCK_UPDATED": "Stock updated",
     "INVENTORY_MOVEMENT_COMPLETED": "The inventory was updated successfully.",
     "NEW_MOVEMENT": "New movement",
-    "RECENT_INVENTORY_ACTIVITY": "Recent inventory activity was recorded."
+    "RECENT_INVENTORY_ACTIVITY": "Recent inventory activity was recorded.",
+    "ERROR_LOAD_ALERTS": "Could not load critical alerts.",
+    "ERROR_MARK_READ": "Could not mark the alert as read.",
+    "ERROR_MARK_ALL_READ": "Could not mark alerts as read."
   },
   "MOVEMENTS": {
     "TITLE": "Inventory Movements",

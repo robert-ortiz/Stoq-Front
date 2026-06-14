@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, catchError, of, tap, finalize } from 'rxjs';
 import { AlertaApi, AlertaService } from './alerta.service';
 
@@ -50,6 +51,7 @@ export function getNotificationVisualMeta(type: NotificationType): NotificationV
 export class NotificationService {
   private readonly notificationsSubject = new BehaviorSubject<NotificationItem[]>([]);
   private alertaService = inject(AlertaService);
+  private translateService = inject(TranslateService);
 
   private readonly loadingSubject = new BehaviorSubject<boolean>(false);
   private readonly errorSubject = new BehaviorSubject<string | null>(null);
@@ -78,7 +80,7 @@ export class NotificationService {
     this.alertaService.marcarTodasComoLeidas().subscribe({
       next: () => this.refreshAllCounts(),
       error: () => {
-        this.errorSubject.next('No se pudieron marcar las alertas como leídas.');
+        this.errorSubject.next(this.translateService.instant('NOTIFICATIONS.ERROR_MARK_ALL_READ'));
         this.notificationsSubject.next(currentNotifications);
       }
     });
@@ -98,7 +100,7 @@ export class NotificationService {
     this.alertaService.marcarComoLeida(notification.alertId).subscribe({
       next: () => this.refreshAllCounts(),
       error: () => {
-        this.errorSubject.next('No se pudo marcar la alerta como leída.');
+        this.errorSubject.next(this.translateService.instant('NOTIFICATIONS.ERROR_MARK_READ'));
         this.notificationsSubject.next(currentNotifications);
       }
     });
@@ -126,7 +128,7 @@ export class NotificationService {
         this.notificationsSubject.next(this.mapAlertasToNotifications(alertas));
       }),
       catchError(() => {
-        this.errorSubject.next('No se pudo cargar alertas críticas.');
+        this.errorSubject.next(this.translateService.instant('NOTIFICATIONS.ERROR_LOAD_ALERTS'));
         this.notificationsSubject.next([]);
         return of([] as AlertaApi[]);
       }),

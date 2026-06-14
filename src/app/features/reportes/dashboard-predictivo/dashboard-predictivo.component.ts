@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Chart from 'chart.js/auto';
 import { finalize } from 'rxjs';
@@ -8,10 +8,9 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { TenantService } from '../../../core/services/tenant.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
-import { NotificationService } from '../../../core/services/notification.service';
-import { combineLatest, map } from 'rxjs';
 import { ReporteDashboardResponse, ReporteService, RecomendacionAutomatica, SolicitudReposicion, ReporteTendenciaMovimiento } from '../../../core/services/reporte.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
+import { NotificationDropdownComponent } from '../../../shared/components/notification-dropdown/notification-dropdown.component';
 
 type RiskLevel = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 
@@ -35,7 +34,7 @@ interface RisgoProducto {
 @Component({
   selector: 'app-dashboard-predictivo',
   standalone: true,
-  imports: [CommonModule, TranslateModule, BrandComponent],
+  imports: [CommonModule, TranslateModule, BrandComponent, NotificationDropdownComponent],
   templateUrl: './dashboard-predictivo.component.html',
   styleUrls: ['./dashboard-predictivo.component.css']
 })
@@ -47,7 +46,6 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   private changeDetector = inject(ChangeDetectorRef);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
-  private notificationService = inject(NotificationService);
   private destroyRef = inject(DestroyRef);
 
   @ViewChild('trendChart') trendChart?: ElementRef<HTMLCanvasElement>;
@@ -57,17 +55,6 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   private riskChartInstance?: InstanceType<typeof Chart>;
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
-  notificationPanelOpen = false;
-  notifications$ = this.notificationService.notifications$;
-  notificationCount$ = this.notificationService.notificationCount$;
-  notificationLoading$ = this.notificationService.loading$;
-  notificationError$ = this.notificationService.error$;
-  unreadCount$ = this.notificationService.unreadCount$;
-  criticalCount$ = this.notificationService.criticalCount$;
-  displayUnread$ = combineLatest([this.unreadCount$, this.criticalCount$]).pipe(
-    map(([unread, critical]) => (critical && critical > 0 ? 0 : unread))
-  );
-
   loading = false;
   errorMessage = '';
 
@@ -132,7 +119,6 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   ngOnInit(): void {
     this.actualizarTextosGraficos();
     this.cargarDashboardPredictivo();
-    this.notificationService.refreshAllCounts();
   }
 
   ngAfterViewInit(): void {
@@ -155,38 +141,6 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
     this.router.navigateByUrl('/gerente');
   }
 
-  toggleNotificationPanel(): void {
-    this.notificationPanelOpen = !this.notificationPanelOpen;
-  }
-
-  closeNotificationPanel(): void {
-    this.notificationPanelOpen = false;
-  }
-
-  verNotificaciones(): void {
-    this.toggleNotificationPanel();
-
-    if (this.notificationPanelOpen) {
-      this.notificationService.refreshCriticalAlerts().subscribe({
-        next: () => {},
-        error: () => {}
-      });
-    }
-  }
-
-  openNotificationsPage(): void {
-    this.closeNotificationPanel();
-    this.router.navigateByUrl('/notificaciones');
-  }
-
-  dismissNotification(id: number): void {
-    this.notificationService.dismissNotification(id);
-  }
-
-  clearNotifications(): void {
-    this.notificationService.clearNotifications();
-  }
-
   getSolicitudEstadoLabel(estado: string): string {
     return `PREDICTIVE_DASHBOARD.REQUEST_STATUS_${this.normalizeKey(estado)}`;
   }
@@ -194,20 +148,6 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   logout(): void {
     this.authService.logout();
     this.router.navigateByUrl('/auth/login');
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement | null;
-
-    if (!target?.closest('.notification-dropdown')) {
-      this.closeNotificationPanel();
-    }
-  }
-
-  @HostListener('document:keydown.escape')
-  onEscapeKey(): void {
-    this.closeNotificationPanel();
   }
 
   private cargarDashboardPredictivo(): void {

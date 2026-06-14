@@ -104,7 +104,11 @@
     "DIFFERENCE": "Diferencia",
 
     "CRITICAL": "CRÍTICO",
-    "WARNING": "ADVERTENCIA"
+    "WARNING": "ADVERTENCIA",
+    "ERROR_LOAD_SUMMARY": "No se pudo cargar el resumen de alertas.",
+    "ERROR_LOAD_ALERTS": "No se pudieron cargar las alertas.",
+    "ERROR_MARK_READ": "No se pudo marcar la alerta como leída.",
+    "ERROR_MARK_ALL_READ": "No se pudieron marcar las alertas como leídas."
   },
 
   "ADMIN": {
@@ -564,12 +568,19 @@
   "NOTIFICATIONS": {
     "ALERTS_SUBTITLE": "Alertas recientes para revisar el inventario sin complicaciones.",
     "NO_ALERTS": "No hay alertas por ahora.",
+    "CRITICAL": "Crítica",
+    "WARNING": "Advertencia",
+    "INFO": "Informativa",
+    "SUCCESS": "Correcta",
     "LOW_STOCK": "Stock bajo",
     "PRODUCT_BELOW_MINIMUM": "El producto está por debajo del mínimo permitido.",
     "STOCK_UPDATED": "Stock actualizado",
     "INVENTORY_MOVEMENT_COMPLETED": "El inventario se actualizó correctamente.",
     "NEW_MOVEMENT": "Nuevo movimiento",
-    "RECENT_INVENTORY_ACTIVITY": "Se registró una actividad reciente en inventario."
+    "RECENT_INVENTORY_ACTIVITY": "Se registró una actividad reciente en inventario.",
+    "ERROR_LOAD_ALERTS": "No se pudo cargar alertas críticas.",
+    "ERROR_MARK_READ": "No se pudo marcar la alerta como leída.",
+    "ERROR_MARK_ALL_READ": "No se pudieron marcar las alertas como leídas."
   },
   "MOVEMENTS": {
     "TITLE": "Movimientos de Inventario",
