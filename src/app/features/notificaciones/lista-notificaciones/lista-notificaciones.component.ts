@@ -3,6 +3,7 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { getAlertIcon, getAlertNotificationType, getAlertTitleKey } from '../../../core/utils/alert-visual';
 import { AuthService } from '../../../core/services/auth.service';
 import { AlertaService, AlertaApi, AlertasResumenApi } from '../../../core/services/alerta.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
@@ -32,6 +33,10 @@ export class ListaNotificacionesComponent implements OnInit {
 
   cargando = false;
   error = '';
+
+  getAlertTitleKey = getAlertTitleKey;
+  getAlertIcon = getAlertIcon;
+  getAlertNotificationType = getAlertNotificationType;
 
   ngOnInit(): void {
     this.cargarDatos();

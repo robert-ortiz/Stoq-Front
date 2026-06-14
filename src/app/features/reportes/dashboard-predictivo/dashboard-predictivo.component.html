@@ -126,6 +126,40 @@
         }
       </article>
 
+      <!-- Productos con mayor rotación -->
+      <article class="card top-rotation">
+        <div class="card-header">
+          <div>
+            <h3>{{ 'PREDICTIVE_DASHBOARD.TOP_ROTATION_TITLE' | translate }}</h3>
+            <p>{{ 'PREDICTIVE_DASHBOARD.TOP_ROTATION_SUBTITLE' | translate }}</p>
+          </div>
+        </div>
+
+        @if (productosMayorRotacion.length > 0) {
+          <div class="rotation-list">
+            @for (producto of productosMayorRotacion; track producto.codigo) {
+              <div class="rotation-item">
+                <div class="rotation-meta">
+                  <strong>{{ producto.nombre }}</strong>
+                  <span class="code">{{ producto.codigo }}</span>
+                </div>
+                <div class="rotation-stats">
+                  <span class="stat">
+                    <strong>{{ producto.consumoPromedioDiario | number:'1.1-2' }}</strong>
+                    <small>{{ 'PREDICTIVE_DASHBOARD.DAILY_CONSUMPTION' | translate }}</small>
+                  </span>
+                  <span class="badge badge-rotacion-{{ producto.rotacion.toLowerCase() }}">
+                    {{ getRotacionLabel(producto.rotacion) | translate }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-message">{{ 'COMMON.NO_DATA' | translate }}</p>
+        }
+      </article>
+
       <!-- Solicitudes pendientes -->
       <article class="card pending-requests">
         <div class="card-header">

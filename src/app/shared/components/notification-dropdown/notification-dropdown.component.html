@@ -61,7 +61,7 @@
                     <strong>{{ notification.title | translate }}</strong>
                     <span>{{ getTypeLabelKey(notification.type) | translate }}</span>
                   </div>
-                  <p>{{ notification.description | translate }}</p>
+                  <p>{{ notification.description }}</p>
                   <small>
                     {{ notification.timestamp }}
                     @if (notification.product) {

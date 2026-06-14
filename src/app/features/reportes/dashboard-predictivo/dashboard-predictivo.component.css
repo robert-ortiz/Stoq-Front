@@ -521,13 +521,57 @@
   margin: 0;
 }
 
+.rotation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rotation-item {
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(226,232,240,0.7);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.rotation-meta {
+  flex: 1;
+}
+
+.rotation-meta strong {
+  display: block;
+  color: #0f172a;
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+
+.rotation-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.badge-rotacion-alta {
+  background: rgba(34, 197, 94, 0.15);
+  color: #166534;
+}
+
+.badge-rotacion-baja {
+  background: rgba(148, 163, 184, 0.2);
+  color: #475467;
+}
+
 .trends {
   grid-column: 1 / 2;
 }
 
 .risks {
   grid-column: 2 / 3;
-  grid-row: 1 / 3;
+  grid-row: 1 / 4;
 }
 
 .top-risks {
@@ -535,8 +579,14 @@
   grid-row: 2 / 3;
 }
 
+.top-rotation {
+  grid-column: 1 / 2;
+  grid-row: 3 / 4;
+}
+
 .pending-requests {
   grid-column: 2 / 3;
+  grid-row: 4 / 5;
 }
 
 @media (max-width: 1024px) {
@@ -547,6 +597,7 @@
   .trends,
   .risks,
   .top-risks,
+  .top-rotation,
   .pending-requests {
     grid-column: 1 / 2 !important;
     grid-row: auto !important;
@@ -621,7 +672,8 @@
   }
 
   .risk-item,
-  .request-item {
+  .request-item,
+  .rotation-item {
     flex-direction: column;
     align-items: flex-start;
   }

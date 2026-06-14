@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, catchError, of, tap, finalize } from 'rxjs';
+import { getAlertIcon, getAlertNotificationType, getAlertTitleKey } from '../utils/alert-visual';
 import { AlertaApi, AlertaService } from './alerta.service';
 
 export type NotificationType = 'critical' | 'warning' | 'info' | 'success';
@@ -142,13 +143,13 @@ export class NotificationService {
       .filter((alerta) => !alerta.leida)
       .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
       .map((alerta, idx) => {
-        const type = this.getAlertNotificationType(alerta);
+        const type = getAlertNotificationType(alerta);
 
         return {
           id: idx + 1,
           alertId: alerta.id,
-          icon: getNotificationVisualMeta(type).icon,
-          title: 'NOTIFICATIONS.LOW_STOCK',
+          icon: getAlertIcon(alerta.tipo),
+          title: getAlertTitleKey(alerta.tipo),
           description: alerta.mensaje,
           type,
           timestamp: this.formatAlertTimestamp(alerta.fecha),
@@ -156,13 +157,6 @@ export class NotificationService {
           product: alerta.productoNombre
         };
       });
-  }
-
-  private getAlertNotificationType(alerta: AlertaApi): NotificationType {
-    const stockActual = Number(alerta.stockActual ?? 0);
-    const stockMinimo = Number(alerta.stockMinimo ?? 0);
-
-    return stockActual < stockMinimo ? 'critical' : 'warning';
   }
 
   private formatAlertTimestamp(fecha: string): string {

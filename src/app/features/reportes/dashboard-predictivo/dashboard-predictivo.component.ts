@@ -8,7 +8,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { TenantService } from '../../../core/services/tenant.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
-import { ReporteDashboardResponse, ReporteService, RecomendacionAutomatica, SolicitudReposicion, ReporteTendenciaMovimiento } from '../../../core/services/reporte.service';
+import {
+  ReporteDashboardResponse,
+  ReporteService,
+  RecomendacionAutomatica,
+  SolicitudReposicion,
+  ReporteTendenciaMovimiento
+} from '../../../core/services/reporte.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 import { NotificationDropdownComponent } from '../../../shared/components/notification-dropdown/notification-dropdown.component';
 
@@ -63,6 +69,7 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   recomendaciones: RecomendacionAutomatica[] = [];
   solicitudes: SolicitudReposicion[] = [];
   riesgosProductos: RisgoProducto[] = [];
+  productosMayorRotacion: RecomendacionAutomatica[] = [];
   tendencias: ReporteTendenciaMovimiento[] = [];
 
   // KPIs
@@ -79,11 +86,21 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
     datasets: [
       {
         data: [] as number[],
-        label: 'PREDICTIVE_DASHBOARD.TREND_BALANCE',
+        label: 'PREDICTIVE_DASHBOARD.TREND_CONSUMPTION',
         tension: 0.3,
-        borderColor: '#0F1724',
-        backgroundColor: 'rgba(15,23,36,0.06)',
-        pointRadius: 0
+        borderColor: '#dc2626',
+        backgroundColor: 'rgba(220,38,38,0.08)',
+        pointRadius: 2,
+        fill: true
+      },
+      {
+        data: [] as number[],
+        label: 'PREDICTIVE_DASHBOARD.TREND_ENTRIES',
+        tension: 0.3,
+        borderColor: '#16a34a',
+        backgroundColor: 'rgba(22,163,74,0.06)',
+        pointRadius: 2,
+        fill: false
       }
     ]
   };
@@ -91,7 +108,7 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   public trendChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
+    plugins: { legend: { position: 'bottom' as const } },
     scales: {
       x: { grid: { display: false }, ticks: { color: '#6B7280' } },
       y: { grid: { color: 'rgba(15,23,36,0.04)' }, ticks: { color: '#6B7280' } }
@@ -185,6 +202,7 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
           this.recomendaciones = [];
           this.solicitudes = [];
           this.riesgosProductos = [];
+          this.productosMayorRotacion = [];
           this.changeDetector.markForCheck();
         }
       });
@@ -206,6 +224,17 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
         return riskOrder[a.riesgo] - riskOrder[b.riesgo];
       })
       .slice(0, 10); // Top 10 riesgos
+
+    this.productosMayorRotacion = [...(this.recomendaciones ?? [])]
+      .filter((rec) => rec.consumoPromedioDiario > 0)
+      .sort((a, b) => b.consumoPromedioDiario - a.consumoPromedioDiario)
+      .slice(0, 5);
+  }
+
+  getRotacionLabel(rotacion: string): string {
+    return rotacion === 'ALTA'
+      ? 'PREDICTIVE_DASHBOARD.ROTATION_HIGH'
+      : 'PREDICTIVE_DASHBOARD.ROTATION_LOW';
   }
 
   private construirKpis(): void {
@@ -231,10 +260,11 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private construirGraficos(): void {
-    // Gráfico de tendencias
+    // Gráfico de tendencias de consumo (salidas) y entradas
     if (this.tendencias.length > 0) {
       this.trendChartData.labels = this.tendencias.map((t) => this.formatDateShort(t.fecha));
-      this.trendChartData.datasets[0].data = this.tendencias.map((t) => t.saldoNeto);
+      this.trendChartData.datasets[0].data = this.tendencias.map((t) => t.salidasCantidad);
+      this.trendChartData.datasets[1].data = this.tendencias.map((t) => t.entradasCantidad);
     }
 
     // Gráfico de distribución de riesgos
@@ -249,7 +279,8 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private actualizarTextosGraficos(): void {
-    this.trendChartData.datasets[0].label = this.translateService.instant('PREDICTIVE_DASHBOARD.TREND_BALANCE');
+    this.trendChartData.datasets[0].label = this.translateService.instant('PREDICTIVE_DASHBOARD.TREND_CONSUMPTION');
+    this.trendChartData.datasets[1].label = this.translateService.instant('PREDICTIVE_DASHBOARD.TREND_ENTRIES');
     this.riskChartData.labels = [
       this.translateService.instant('COMMON.CRITICAL'),
       this.translateService.instant('COMMON.HIGH'),

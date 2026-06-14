@@ -122,15 +122,16 @@
 
           <div
             *ngFor="let alerta of alertas"
-            class="notification-card"
+            class="notification-card notification-type-{{ getAlertNotificationType(alerta) }}"
             [class.read]="alerta.leida"
           >
             <div class="notification-icon">
-              {{ alerta.leida ? '✓' : '!' }}
+              {{ alerta.leida ? '✓' : getAlertIcon(alerta.tipo) }}
             </div>
 
             <div class="notification-info">
-              <strong>{{ alerta.mensaje }}</strong>
+              <strong>{{ getAlertTitleKey(alerta.tipo) | translate }}</strong>
+              <p>{{ alerta.mensaje }}</p>
               <span>{{ alerta.fecha | date:'yyyy-MM-dd HH:mm' }}</span>
             </div>
 
