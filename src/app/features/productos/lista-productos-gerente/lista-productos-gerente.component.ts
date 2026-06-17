@@ -424,4 +424,9 @@ export class ListaProductosGerenteComponent implements OnInit {
   get isGerente(): boolean {
     return this.authService.getRole() === 'GERENTE';
   }
+
+  irASolicitudes(): void {
+  this.router.navigateByUrl('/gerente/solicitudes');
+  }
+
 }

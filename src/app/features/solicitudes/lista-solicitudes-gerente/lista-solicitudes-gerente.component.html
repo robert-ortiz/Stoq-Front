@@ -1,0 +1,72 @@
+<section class="solicitudes-page">
+  <header class="topbar">
+    <div>
+      <h1>Solicitudes de Reposición</h1>
+      <p>Revisa y actualiza el estado de las solicitudes internas.</p>
+    </div>
+
+    <button type="button" class="back-btn" (click)="volverAProductos()">
+      ← Volver a Productos
+    </button>
+  </header>
+
+  <main class="content-card">
+    @if (cargando) {
+      <p class="state-message">Cargando solicitudes...</p>
+    } @else if (error) {
+      <p class="state-message error">{{ error }}</p>
+    } @else if (!solicitudes.length) {
+      <p class="state-message">No hay solicitudes registradas.</p>
+    } @else {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Código</th>
+              <th>Cantidad</th>
+              <th>Prioridad</th>
+              <th>Rotación</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Actualizar estado</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (solicitud of solicitudes; track solicitud.id) {
+              <tr>
+                <td>{{ solicitud.productoNombre }}</td>
+                <td>{{ solicitud.productoCodigo }}</td>
+                <td>{{ solicitud.cantidadRecomendada }}</td>
+                <td>
+                  <span class="priority-badge">
+                    {{ solicitud.prioridad }}
+                  </span>
+                </td>
+                <td>{{ solicitud.rotacion }}</td>
+                <td>
+                  <span class="status-badge">
+                    {{ solicitud.estado }}
+                  </span>
+                </td>
+                <td>{{ solicitud.fechaSolicitud | date:'short' }}</td>
+                <td>
+                  <select
+                    class="estado-select"
+                    [value]="solicitud.estado"
+                    (change)="cambiarEstado(solicitud.id, $any($event.target).value)"
+                  >
+                    @for (estado of estados; track estado) {
+                      <option [value]="estado">{{ estado }}</option>
+                    }
+                  </select>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </main>
+</section>
