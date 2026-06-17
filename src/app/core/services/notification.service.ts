@@ -1,57 +1,58 @@
 import { Injectable, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, catchError, of, tap, finalize } from 'rxjs';
-import { ProductosService, ProductoCritico } from './productos.service';
-import { AlertaService } from './alerta.service';
+import { getAlertIcon, getAlertNotificationType, getAlertTitleKey } from '../utils/alert-visual';
+import { AlertaApi, AlertaService } from './alerta.service';
+
+export type NotificationType = 'critical' | 'warning' | 'info' | 'success';
+
+export interface NotificationVisualMeta {
+  icon: string;
+  labelKey: string;
+}
 
 export interface NotificationItem {
   id: number;
   icon: string;
   title: string;
   description: string;
-  type: 'warning' | 'info' | 'success';
+  type: NotificationType;
   timestamp: string;
   quantity?: number;
   product?: string;
+  alertId?: string;
 }
 
-const INITIAL_NOTIFICATIONS: NotificationItem[] = [
-  {
-    id: 1,
+export const NOTIFICATION_VISUAL_META: Record<NotificationType, NotificationVisualMeta> = {
+  critical: {
+    icon: '🚨',
+    labelKey: 'NOTIFICATIONS.CRITICAL'
+  },
+  warning: {
     icon: '⚠️',
-    title: 'NOTIFICATIONS.LOW_STOCK',
-    description: 'NOTIFICATIONS.PRODUCT_BELOW_MINIMUM',
-    type: 'warning',
-    timestamp: new Date().toLocaleTimeString(),
-    quantity: 3,
-    product: 'Producto ABC'
+    labelKey: 'NOTIFICATIONS.WARNING'
   },
-  {
-    id: 2,
-    icon: '✅',
-    title: 'NOTIFICATIONS.STOCK_UPDATED',
-    description: 'NOTIFICATIONS.INVENTORY_MOVEMENT_COMPLETED',
-    type: 'success',
-    timestamp: new Date(Date.now() - 300000).toLocaleTimeString(),
-    quantity: 50,
-    product: 'Producto XYZ'
-  },
-  {
-    id: 3,
+  info: {
     icon: 'ℹ️',
-    title: 'NOTIFICATIONS.NEW_MOVEMENT',
-    description: 'NOTIFICATIONS.RECENT_INVENTORY_ACTIVITY',
-    type: 'info',
-    timestamp: new Date(Date.now() - 600000).toLocaleTimeString()
+    labelKey: 'NOTIFICATIONS.INFO'
+  },
+  success: {
+    icon: '✅',
+    labelKey: 'NOTIFICATIONS.SUCCESS'
   }
-];
+};
+
+export function getNotificationVisualMeta(type: NotificationType): NotificationVisualMeta {
+  return NOTIFICATION_VISUAL_META[type];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private readonly notificationsSubject = new BehaviorSubject<NotificationItem[]>(INITIAL_NOTIFICATIONS);
-  private productosService = inject(ProductosService);
+  private readonly notificationsSubject = new BehaviorSubject<NotificationItem[]>([]);
   private alertaService = inject(AlertaService);
+  private translateService = inject(TranslateService);
 
   private readonly loadingSubject = new BehaviorSubject<boolean>(false);
   private readonly errorSubject = new BehaviorSubject<string | null>(null);
@@ -69,36 +70,53 @@ export class NotificationService {
   readonly notificationCount$ = this.notifications$.pipe(map((notifications) => notifications.length));
 
   clearNotifications(): void {
+    const currentNotifications = this.notificationsSubject.value;
+
+    if (!currentNotifications.length) {
+      return;
+    }
+
     this.notificationsSubject.next([]);
+
+    this.alertaService.marcarTodasComoLeidas().subscribe({
+      next: () => this.refreshAllCounts(),
+      error: () => {
+        this.errorSubject.next(this.translateService.instant('NOTIFICATIONS.ERROR_MARK_ALL_READ'));
+        this.notificationsSubject.next(currentNotifications);
+      }
+    });
   }
 
   dismissNotification(id: number): void {
-    const updatedNotifications = this.notificationsSubject.value.filter((notification) => notification.id !== id);
+    const currentNotifications = this.notificationsSubject.value;
+    const notification = currentNotifications.find((item) => item.id === id);
+    const updatedNotifications = currentNotifications.filter((item) => item.id !== id);
+
     this.notificationsSubject.next(updatedNotifications);
+
+    if (!notification?.alertId) {
+      return;
+    }
+
+    this.alertaService.marcarComoLeida(notification.alertId).subscribe({
+      next: () => this.refreshAllCounts(),
+      error: () => {
+        this.errorSubject.next(this.translateService.instant('NOTIFICATIONS.ERROR_MARK_READ'));
+        this.notificationsSubject.next(currentNotifications);
+      }
+    });
   }
 
   getNotificationCount(): number {
     return this.notificationsSubject.value.length;
   }
 
-  /**
-   * Refresh summary counts: unread notifications and critical products.
-   * Unread count is read from AlertaService.getResumen().notificacionesSinLeer
-   * Critical count is derived from ProductosService.getProductosCriticos().length
-   */
   refreshAllCounts(): void {
-    // refresh unread notifications
     this.alertaService.getResumen().pipe(
       catchError(() => of({ productosCriticos: 0, notificacionesSinLeer: 0, totalAlertas: 0 }))
     ).subscribe((res) => {
       this.unreadCountSubject.next(res.notificacionesSinLeer ?? 0);
-    });
-
-    // refresh critical products count
-    this.productosService.getProductosCriticos().pipe(
-      catchError(() => of([] as ProductoCritico[]))
-    ).subscribe((items) => {
-      this.criticalCountSubject.next(items?.length ?? 0);
+      this.criticalCountSubject.next(res.productosCriticos ?? 0);
     });
   }
 
@@ -106,32 +124,48 @@ export class NotificationService {
     this.loadingSubject.next(true);
     this.errorSubject.next(null);
 
-    return this.productosService.getProductosCriticos().pipe(
-      tap((items: ProductoCritico[]) => {
-        if (!items || items.length === 0) {
-          this.notificationsSubject.next([]);
-          return;
-        }
-
-        const mapped = items.map((p, idx) => ({
-          id: idx + 1,
-          icon: '⚠️',
-          title: 'NOTIFICATIONS.LOW_STOCK',
-          description: `${p.nombre} (${p.codigo}) - ${p.stockActual} / Mín ${p.stockMinimo}`,
-          type: 'warning' as const,
-          timestamp: new Date().toLocaleTimeString(),
-          quantity: p.stockActual,
-          product: p.nombre
-        }));
-
-        this.notificationsSubject.next(mapped);
+    return this.alertaService.getAlertas().pipe(
+      tap((alertas) => {
+        this.notificationsSubject.next(this.mapAlertasToNotifications(alertas));
       }),
-      catchError((err) => {
-        this.errorSubject.next('No se pudo cargar alertas críticas.');
-        return of([] as ProductoCritico[]);
+      catchError(() => {
+        this.errorSubject.next(this.translateService.instant('NOTIFICATIONS.ERROR_LOAD_ALERTS'));
+        this.notificationsSubject.next([]);
+        return of([] as AlertaApi[]);
       }),
       finalize(() => this.loadingSubject.next(false)),
       map(() => void 0)
     );
+  }
+
+  private mapAlertasToNotifications(alertas: AlertaApi[]): NotificationItem[] {
+    return [...alertas]
+      .filter((alerta) => !alerta.leida)
+      .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
+      .map((alerta, idx) => {
+        const type = getAlertNotificationType(alerta);
+
+        return {
+          id: idx + 1,
+          alertId: alerta.id,
+          icon: getAlertIcon(alerta.tipo),
+          title: getAlertTitleKey(alerta.tipo),
+          description: alerta.mensaje,
+          type,
+          timestamp: this.formatAlertTimestamp(alerta.fecha),
+          quantity: alerta.stockActual,
+          product: alerta.productoNombre
+        };
+      });
+  }
+
+  private formatAlertTimestamp(fecha: string): string {
+    const parsedDate = new Date(fecha);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return fecha;
+    }
+
+    return parsedDate.toLocaleString();
   }
 }

@@ -127,6 +127,15 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'reportes/dashboard-predictivo',
+    canActivate: [roleGuard],
+    data: { roles: ['GERENTE'] },
+    loadComponent: () =>
+      import('./features/reportes/dashboard-predictivo/dashboard-predictivo.component').then(
+        (m) => m.DashboardPredictivoComponent
+      )
+  },
+  {
     path: 'notificaciones',
     canActivate: [roleGuard],
     data: { roles: ['GERENTE'] },
@@ -153,8 +162,29 @@ export const routes: Routes = [
       }
     ]
   },
+
+  {
+  path: 'gerente/solicitudes',
+  canActivate: [roleGuard],
+  data: { roles: ['GERENTE'] },
+  loadComponent: () =>
+    import('./features/solicitudes/lista-solicitudes-gerente/lista-solicitudes-gerente.component')
+      .then(m => m.ListaSolicitudesGerenteComponent)
+},
+
+{
+  path: 'operador/solicitudes',
+  canActivate: [roleGuard],
+  data: { roles: ['OPERADOR'] },
+  loadComponent: () =>
+    import('./features/solicitudes/lista-solicitudes-operador/lista-solicitudes-operador.component')
+      .then(m => m.ListaSolicitudesOperadorComponent)
+},
+
+
   {
     path: '**',
     redirectTo: ''
-  }
+  },
+
 ];

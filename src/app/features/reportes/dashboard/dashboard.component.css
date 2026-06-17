@@ -24,17 +24,18 @@
   pointer-events: none;
   filter: blur(16px);
   opacity: 0.55;
+  will-change: transform;
 }
 
 .ambient-left {
   top: 140px;
-  left: -140px;
+  left: -120px;
   background: radial-gradient(circle, rgba(15, 23, 42, 0.12), transparent 65%);
 }
 
 .ambient-right {
-  right: -120px;
-  bottom: 120px;
+  right: -100px;
+  bottom: 100px;
   background: radial-gradient(circle, rgba(14, 165, 233, 0.12), transparent 65%);
 }
 
@@ -71,7 +72,10 @@
 .reports-content {
   position: relative;
   z-index: 1;
-  padding: 28px 32px 24px;
+  padding: 24px 16px 20px;
+  max-width: 1120px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .brand {
@@ -548,7 +552,7 @@
 
 @media (max-width: 768px) {
   .report-dashboard {
-    padding: 16px;
+    padding: 12px;
   }
 
   .topbar,
@@ -590,4 +594,5 @@
   .activity-list .when {
     margin-left: 0;
   }
+  .ambient { display: none; }
 }

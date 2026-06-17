@@ -4,8 +4,12 @@ import { FormBuilder, ReactiveFormsModule, FormControl, Validators } from '@angu
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { LanguageCode,LanguageService } from '../../../core/services/language.service';
+
+import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { TenantService } from '../../../core/services/tenant.service';
+import { SolicitudReposicionService } from '../../../core/services/solicitud-reposicion.service';
 
 import {
   ProductoService,
@@ -14,7 +18,7 @@ import {
   UnidadApi,
   CreateProductoRequest
 } from '../../../core/services/producto.service';
-import { AuthService } from '../../../core/services/auth.service';
+
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 
 @Component({
@@ -26,12 +30,15 @@ import { BrandComponent } from '../../../shared/components/brand/brand.component
 })
 export class ListaProductosOperadorComponent implements OnInit {
   readonly productoService = inject(ProductoService);
+
   private authService = inject(AuthService);
+  private tenantService = inject(TenantService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
   private languageService = inject(LanguageService);
   private movimientoService = inject(MovimientoService);
+  private solicitudReposicionService = inject(SolicitudReposicionService);
 
   productos: ProductoApi[] = [];
   productosFiltrados: ProductoApi[] = [];
@@ -49,9 +56,13 @@ export class ListaProductosOperadorComponent implements OnInit {
   mostrarModalEntrada = false;
   mostrarModalSalida = false;
   mostrarModalCrear = false;
+  mostrarModalSolicitud = false;
 
   mostrarModalEliminar = false;
   productoAEliminar: ProductoApi | null = null;
+
+  currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
+  readonly companyName = this.tenantService.getEmpresa() || '';
 
   entradaForm = this.fb.group({
     productoId: ['', Validators.required],
@@ -67,6 +78,11 @@ export class ListaProductosOperadorComponent implements OnInit {
     motivo: ['']
   });
 
+  solicitudForm = this.fb.group({
+    productoId: ['', Validators.required],
+    cantidadSolicitada: [1, [Validators.required, Validators.min(1)]],
+  });
+
   createForm = this.fb.group({
     codigo: ['', Validators.required],
     nombre: ['', [Validators.required, Validators.minLength(2)]],
@@ -76,14 +92,6 @@ export class ListaProductosOperadorComponent implements OnInit {
     stock_inicial: [0, [Validators.required, Validators.min(0)]],
     stock_minimo: [0, [Validators.required, Validators.min(0)]]
   });
-
-  currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
-  readonly companyName = this.authService.getCompany() || '';
-
-  onLanguageChange(language: string): void {
-    this.languageService.setLanguage(language as LanguageCode);
-    this.currentLanguage = this.languageService.getCurrentLanguage();
-  }
 
   ngOnInit(): void {
     if (!this.companyName) {
@@ -96,6 +104,11 @@ export class ListaProductosOperadorComponent implements OnInit {
     this.searchControl.valueChanges.subscribe(() => {
       this.filtrarProductos();
     });
+  }
+
+  onLanguageChange(language: string): void {
+    this.languageService.setLanguage(language as LanguageCode);
+    this.currentLanguage = this.languageService.getCurrentLanguage();
   }
 
   cargarDatos(): void {
@@ -122,7 +135,6 @@ export class ListaProductosOperadorComponent implements OnInit {
         this.categorias = categorias;
         this.cdr.markForCheck();
       }
-    
     });
 
     this.productoService.getUnidades().subscribe({
@@ -138,7 +150,7 @@ export class ListaProductosOperadorComponent implements OnInit {
 
     this.productosFiltrados = this.productos.filter((producto) => {
       const categoria = producto.categoria?.nombre ?? '';
-      const unidad = producto.unidad?.nombre ?? '';
+      const unidad = producto.unidad?.nombre ?? producto.unidad?.abreviatura ?? '';
 
       return (
         producto.codigo?.toLowerCase().includes(query) ||
@@ -191,8 +203,6 @@ export class ListaProductosOperadorComponent implements OnInit {
     this.entradaForm.reset({
       productoId: '',
       cantidad: 1,
-      fecha: '',
-      motivo: ''
     });
   }
 
@@ -209,6 +219,44 @@ export class ListaProductosOperadorComponent implements OnInit {
       motivo: ''
     });
   }
+
+  abrirModalSolicitud(): void {
+    this.mostrarModalSolicitud = true;
+  }
+
+  cerrarModalSolicitud(): void {
+    this.mostrarModalSolicitud = false;
+    this.solicitudForm.reset({
+      productoId: '',
+      cantidadSolicitada: 1,
+    });
+  }
+
+  crearSolicitudReposicion(): void {
+  if (this.solicitudForm.invalid) {
+    this.solicitudForm.markAllAsTouched();
+    return;
+  }
+
+  const value = this.solicitudForm.getRawValue();
+
+  const payload = {
+    productoId: value.productoId ?? '',
+    cantidadSolicitada: value.cantidadSolicitada ?? 1
+  };
+
+  this.solicitudReposicionService.crearSolicitud(payload).subscribe({
+    next: () => {
+      this.cerrarModalSolicitud();
+      this.error = '';
+      this.cdr.markForCheck();
+    },
+    error: () => {
+      this.error = 'No se pudo registrar la solicitud de reposición.';
+      this.cdr.markForCheck();
+    }
+  });
+}
 
   abrirModalCrearProducto(): void {
     this.mostrarModalCrear = true;
@@ -252,6 +300,7 @@ export class ListaProductosOperadorComponent implements OnInit {
       },
       error: () => {
         this.error = 'No se pudo crear el producto.';
+        this.cdr.markForCheck();
       }
     });
   }
@@ -277,6 +326,7 @@ export class ListaProductosOperadorComponent implements OnInit {
       },
       error: () => {
         this.error = 'No se pudo registrar la entrada.';
+        this.cdr.markForCheck();
       }
     });
   }
@@ -302,8 +352,9 @@ export class ListaProductosOperadorComponent implements OnInit {
       },
       error: () => {
         this.error = 'No se pudo registrar la salida.';
+        this.cdr.markForCheck();
       }
-    }); 
+    });
   }
 
   irAEditar(producto: ProductoApi): void {
@@ -330,6 +381,7 @@ export class ListaProductosOperadorComponent implements OnInit {
       },
       error: () => {
         this.error = 'No se pudo eliminar el producto.';
+        this.cdr.markForCheck();
       }
     });
   }
@@ -348,4 +400,8 @@ export class ListaProductosOperadorComponent implements OnInit {
     this.authService.logout();
     this.router.navigateByUrl('/auth/login');
   }
+
+  irASolicitudes(): void {
+  this.router.navigateByUrl('/operador/solicitudes');
+}
 }

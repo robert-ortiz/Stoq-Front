@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,18 +18,21 @@ import {
 } from '../../../core/services/producto.service';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { TenantService } from '../../../core/services/tenant.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
+import { NotificationDropdownComponent } from '../../../shared/components/notification-dropdown/notification-dropdown.component';
 
 @Component({
   selector: 'app-lista-productos-gerente',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, BrandComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, BrandComponent, NotificationDropdownComponent],
   templateUrl: './lista-productos-gerente.component.html',
   styleUrl: './lista-productos-gerente.component.css'
 })
 export class ListaProductosGerenteComponent implements OnInit {
   readonly productoService = inject(ProductoService);
   private authService = inject(AuthService);
+  private tenantService = inject(TenantService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
@@ -55,19 +58,12 @@ export class ListaProductosGerenteComponent implements OnInit {
   mostrarModalCrear = false;
   mostrarModalEditar = false;
   mostrarModalEliminar = false;
-  notificationPanelOpen = false;
 
   productoAEliminar: ProductoApi | null = null;
   productoEditando: ProductoApi | null = null;
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
-  readonly companyName = this.authService.getCompany() || '';
-  notifications$ = this.notificationService.notifications$;
-  notificationCount$ = this.notificationService.notificationCount$;
-  notificationLoading$ = this.notificationService.loading$;
-  notificationError$ = this.notificationService.error$;
-  unreadCount$ = this.notificationService.unreadCount$;
-  criticalCount$ = this.notificationService.criticalCount$;
+  readonly companyName = this.tenantService.getEmpresa() || '';
 
   entradaForm = this.fb.group({
     productoId: ['', Validators.required],
@@ -111,9 +107,6 @@ export class ListaProductosGerenteComponent implements OnInit {
 
     this.cargarDatos();
 
-    // refresh global counts for header badges
-    this.notificationService.refreshAllCounts();
-
     this.searchControl.valueChanges.subscribe(() => {
       this.filtrarProductos();
     });
@@ -122,41 +115,6 @@ export class ListaProductosGerenteComponent implements OnInit {
   onLanguageChange(language: string): void {
     this.languageService.setLanguage(language as LanguageCode);
     this.currentLanguage = this.languageService.getCurrentLanguage();
-  }
-
-  toggleNotificationPanel(): void {
-    this.notificationPanelOpen = !this.notificationPanelOpen;
-  }
-
-  closeNotificationPanel(): void {
-    this.notificationPanelOpen = false;
-  }
-
-  openNotificationsPage(): void {
-    this.closeNotificationPanel();
-    this.router.navigateByUrl('/notificaciones');
-  }
-
-  dismissNotification(id: number): void {
-    this.notificationService.dismissNotification(id);
-  }
-
-  clearNotifications(): void {
-    this.notificationService.clearNotifications();
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement | null;
-
-    if (!target?.closest('.notification-dropdown')) {
-      this.closeNotificationPanel();
-    }
-  }
-
-  @HostListener('document:keydown.escape')
-  onEscapeKey(): void {
-    this.closeNotificationPanel();
   }
 
   cargarDatos(): void {
@@ -454,18 +412,6 @@ export class ListaProductosGerenteComponent implements OnInit {
     this.router.navigateByUrl('/reportes');
   }
 
-  verNotificaciones(): void {
-    this.toggleNotificationPanel();
-
-    // If opening panel, refresh critical alerts
-    if (this.notificationPanelOpen) {
-      this.notificationService.refreshCriticalAlerts().subscribe({
-        next: () => {},
-        error: () => {}
-      });
-    }
-  }
-
   logout(): void {
     this.authService.logout();
     this.router.navigateByUrl('/auth/login');
@@ -478,4 +424,9 @@ export class ListaProductosGerenteComponent implements OnInit {
   get isGerente(): boolean {
     return this.authService.getRole() === 'GERENTE';
   }
+
+  irASolicitudes(): void {
+  this.router.navigateByUrl('/gerente/solicitudes');
+  }
+
 }

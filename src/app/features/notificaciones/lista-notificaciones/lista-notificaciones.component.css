@@ -285,6 +285,11 @@
   background: #f8fafc;
 }
 
+.notification-card.read .notification-icon {
+  background: #dcfce7;
+  color: #15803d;
+}
+
 .notification-icon {
   width: 34px;
   height: 34px;

@@ -7,6 +7,11 @@
         📄 {{ 'COMMON.REPORTS' | translate }}
       </button>
 
+      <button type="button" class="report-btn" (click)="irASolicitudes()">
+      📦 Solicitudes
+      </button>
+
+
       <select
         class="language-select"
         [value]="currentLanguage"
@@ -16,91 +21,7 @@
         <option value="pt">{{ 'LANGUAGE.PT' | translate }}</option>
       </select>
 
-      <div class="notification-dropdown" [class.open]="notificationPanelOpen">
-        <button
-          type="button"
-          class="report-btn notification-btn"
-          (click)="verNotificaciones()"
-          [attr.aria-expanded]="notificationPanelOpen"
-          aria-haspopup="dialog"
-        >
-          🔔 {{ 'COMMON.NOTIFICATIONS' | translate }}
-          @if (unreadCount$ | async; as unread) {
-            <span class="notification-badge">{{ unread }}</span>
-          }
-          @if (notificationLoading$ | async) {
-            <span class="notification-loading">⏳</span>
-          }
-          @if (notificationError$ | async; as err) {
-            <span class="notification-error" title="{{ err }}">⚠</span>
-          }
-          @if (criticalCount$ | async; as critical) {
-            @if (isGerente || isAdmin) {
-              <span class="critical-badge" title="Productos críticos">{{ critical }}</span>
-            }
-          }
-        </button>
-
-        @if (notificationPanelOpen) {
-          <section class="notification-panel" role="dialog" aria-label="Últimas notificaciones">
-            <header class="notification-panel-header">
-              <div>
-                <strong>Últimas notificaciones</strong>
-                @if (notificationCount$ | async; as notificationCount) {
-                  <span>{{ notificationCount }} pendientes</span>
-                }
-              </div>
-
-              <button type="button" class="notification-panel-close" (click)="closeNotificationPanel()">
-                ×
-              </button>
-            </header>
-
-            <div class="notification-panel-body">
-              @if (notifications$ | async; as notifications) {
-                @if (!notifications.length) {
-                  <p class="notification-empty">No hay notificaciones nuevas.</p>
-                } @else {
-                  @for (notification of notifications.slice(0, 4); track notification.id) {
-                    <article class="notification-item notification-type-{{ notification.type }}">
-                      <div class="notification-item-icon">{{ notification.icon }}</div>
-
-                      <div class="notification-item-content">
-                        <strong>{{ notification.title | translate }}</strong>
-                        <p>{{ notification.description | translate }}</p>
-                        <span>
-                          {{ notification.timestamp }}
-                          @if (notification.product) {
-                            · {{ notification.product }}
-                          }
-                        </span>
-                      </div>
-
-                      <button
-                        type="button"
-                        class="notification-item-action"
-                        (click)="dismissNotification(notification.id)"
-                      >
-                        Leída
-                      </button>
-                    </article>
-                  }
-                }
-              }
-            </div>
-
-            <footer class="notification-panel-footer">
-              <button type="button" class="panel-link-btn" (click)="openNotificationsPage()">
-                Ver todas
-              </button>
-
-              <button type="button" class="panel-link-btn secondary" (click)="clearNotifications()">
-                Vaciar
-              </button>
-            </footer>
-          </section>
-        }
-      </div>
+      <app-notification-dropdown [showCriticalBadge]="isGerente || isAdmin"></app-notification-dropdown>
 
       <button type="button" class="logout-btn" (click)="logout()">
         ↪ {{ 'COMMON.LOGOUT' | translate }}

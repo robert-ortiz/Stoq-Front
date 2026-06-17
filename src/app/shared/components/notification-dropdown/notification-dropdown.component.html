@@ -1,0 +1,97 @@
+<div class="notification-dropdown" [class.open]="panelOpen">
+  <button
+    type="button"
+    class="notification-trigger"
+    (click)="togglePanel()"
+    [attr.aria-expanded]="panelOpen"
+    aria-haspopup="dialog"
+  >
+    <span class="trigger-icon">🔔</span>
+    <span>{{ 'COMMON.NOTIFICATIONS' | translate }}</span>
+
+    @if (displayUnread$ | async; as unread) {
+      @if (unread > 0) {
+        <span class="notification-badge">{{ unread }}</span>
+      }
+    }
+
+    @if (loading$ | async) {
+      <span class="notification-loading">⏳</span>
+    }
+
+    @if (error$ | async; as err) {
+      <span class="notification-error" [title]="err">⚠</span>
+    }
+
+    @if (showCriticalBadge) {
+      @if (criticalCount$ | async; as critical) {
+        @if (critical > 0) {
+          <span class="critical-badge" [title]="criticalBadgeLabelKey | translate">{{ critical }}</span>
+        }
+      }
+    }
+  </button>
+
+  @if (panelOpen) {
+    <section class="notification-panel" role="dialog" [attr.aria-label]="'COMMON.LATEST_NOTIFICATIONS' | translate">
+      <header class="notification-panel-header">
+        <div>
+          <strong>{{ 'COMMON.LATEST_NOTIFICATIONS' | translate }}</strong>
+          @if (notificationCount$ | async; as notificationCount) {
+            <span>{{ notificationCount }} {{ 'COMMON.PENDING' | translate }}</span>
+          }
+        </div>
+
+        <button type="button" class="notification-panel-close" (click)="closePanel()">
+          ×
+        </button>
+      </header>
+
+      <div class="notification-panel-body">
+        @if (notifications$ | async; as notifications) {
+          @if (!notifications.length) {
+            <p class="notification-empty">{{ 'COMMON.NO_NEW_NOTIFICATIONS' | translate }}</p>
+          } @else {
+            @for (notification of notifications.slice(0, 5); track notification.id) {
+              <article class="notification-item notification-type-{{ notification.type }}">
+                <div class="notification-item-icon">{{ notification.icon }}</div>
+
+                <div class="notification-item-content">
+                  <div class="notification-item-title">
+                    <strong>{{ notification.title | translate }}</strong>
+                    <span>{{ getTypeLabelKey(notification.type) | translate }}</span>
+                  </div>
+                  <p>{{ notification.description }}</p>
+                  <small>
+                    {{ notification.timestamp }}
+                    @if (notification.product) {
+                      · {{ notification.product }}
+                    }
+                  </small>
+                </div>
+
+                <button
+                  type="button"
+                  class="notification-item-action"
+                  (click)="dismissNotification(notification.id)"
+                >
+                  {{ 'COMMON.READ' | translate }}
+                </button>
+              </article>
+            }
+          }
+        }
+      </div>
+
+      <footer class="notification-panel-footer">
+        <button type="button" class="panel-link-btn" (click)="openNotificationsPage()">
+          {{ 'COMMON.VIEW_ALL' | translate }}
+        </button>
+
+        <button type="button" class="panel-link-btn secondary" (click)="clearNotifications()">
+          {{ 'COMMON.CLEAR' | translate }}
+        </button>
+      </footer>
+    </section>
+  }
+</div>

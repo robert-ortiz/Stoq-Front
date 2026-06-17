@@ -1,0 +1,195 @@
+<section class="predictive-dashboard">
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+
+  <header class="topbar">
+    <app-brand [cssClass]="'brand'" [target]="'/home'" [size]="44" [ariaLabel]="('HOME.BRAND_ARIA' | translate)"></app-brand>
+
+    <div class="header-actions">
+      <button type="button" class="report-btn" (click)="irAProductos()">
+        📄 {{ 'COMMON.PRODUCTS' | translate }}
+      </button>
+
+      <select
+        class="language-select"
+        [value]="currentLanguage"
+        [attr.aria-label]="'LANGUAGE.LABEL' | translate"
+        (change)="onLanguageChange(($any($event.target).value))"
+      >
+        <option value="es">{{ 'LANGUAGE.ES' | translate }}</option>
+        <option value="en">{{ 'LANGUAGE.EN' | translate }}</option>
+        <option value="pt">{{ 'LANGUAGE.PT' | translate }}</option>
+      </select>
+
+      <app-notification-dropdown></app-notification-dropdown>
+
+      <button type="button" class="logout-btn" (click)="logout()">
+        ↪ {{ 'COMMON.LOGOUT' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <main class="predictive-content">
+    <!-- Hero section -->
+    <section class="hero-card" *ngIf="!loading && !errorMessage">
+      <div class="hero-copy">
+        <div class="hero-label">{{ 'COMMON.PREDICTIVE' | translate }}</div>
+        <h1>{{ 'PREDICTIVE_DASHBOARD.TITLE' | translate }}</h1>
+        <p>{{ 'PREDICTIVE_DASHBOARD.SUBTITLE' | translate }}</p>
+      </div>
+
+      <div class="hero-actions">
+        <button type="button" class="button-secondary">{{ 'COMMON.EXPORT_PDF' | translate }}</button>
+      </div>
+    </section>
+
+    <!-- Loading / Error states -->
+    <div *ngIf="loading" class="status-banner">{{ 'COMMON.LOADING' | translate }}</div>
+    <div *ngIf="errorMessage && !loading" class="status-banner error">{{ errorMessage | translate }}</div>
+
+    <!-- KPI Grid -->
+    <section class="kpi-grid" *ngIf="!loading && !errorMessage && dashboardData">
+      <ng-container *ngFor="let k of kpisPredictivos">
+        <article class="card kpi" [ngClass]="'risk-' + (k.riskLevel || 'low')">
+          <div class="kpi-icon">{{ k.icon }}</div>
+          <div class="kpi-copy">
+            <div class="kpi-title">{{ k.title | translate }}</div>
+            <div class="kpi-value">{{ k.value }}</div>
+            @if (k.unit) {
+              <div class="kpi-unit">{{ k.unit | translate }}</div>
+            }
+          </div>
+        </article>
+      </ng-container>
+    </section>
+
+    <!-- Main content grid -->
+    <section class="main-grid" *ngIf="!loading && !errorMessage && dashboardData">
+      <!-- Tendencias -->
+      <article class="card trends">
+        <div class="card-header">
+          <div>
+            <h3>{{ 'PREDICTIVE_DASHBOARD.TRENDS_TITLE' | translate }}</h3>
+            <p>{{ 'PREDICTIVE_DASHBOARD.TRENDS_SUBTITLE' | translate }}</p>
+          </div>
+        </div>
+        <div class="chart-placeholder">
+          <canvas #trendChart></canvas>
+        </div>
+      </article>
+
+      <!-- Distribución de riesgos -->
+      <article class="card risks">
+        <div class="card-header">
+          <div>
+            <h3>{{ 'PREDICTIVE_DASHBOARD.RISK_DISTRIBUTION_TITLE' | translate }}</h3>
+            <p>{{ 'PREDICTIVE_DASHBOARD.RISK_DISTRIBUTION_SUBTITLE' | translate }}</p>
+          </div>
+        </div>
+        <div class="chart-placeholder small">
+          <canvas #riskChart></canvas>
+        </div>
+      </article>
+
+      <!-- Productos con mayor riesgo -->
+      <article class="card top-risks">
+        <div class="card-header">
+          <div>
+            <h3>{{ 'PREDICTIVE_DASHBOARD.TOP_RISKS_TITLE' | translate }}</h3>
+            <p>{{ 'PREDICTIVE_DASHBOARD.TOP_RISKS_SUBTITLE' | translate }}</p>
+          </div>
+        </div>
+
+        @if (riesgosProductos.length > 0) {
+          <div class="risk-list">
+            @for (riesgo of riesgosProductos.slice(0, 5); track riesgo.codigo) {
+              <div class="risk-item" [ngClass]="'risk-level-' + riesgo.riesgo.toLowerCase()">
+                <div class="risk-meta">
+                  <strong>{{ riesgo.nombre }}</strong>
+                  <span class="code">{{ riesgo.codigo }}</span>
+                </div>
+                <div class="risk-stats">
+                  <span class="stat">
+                    <strong>{{ riesgo.stockActual }}</strong>
+                    <small>{{ 'COMMON.STOCK' | translate }}</small>
+                  </span>
+                  <span class="stat">
+                    <strong>{{ riesgo.tiempoAgotamiento }} {{ 'PREDICTIVE_DASHBOARD.UNIT_DAYS_SHORT' | translate }}</strong>
+                    <small>{{ 'PREDICTIVE_DASHBOARD.DEPLETION_DAYS' | translate }}</small>
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-message">{{ 'COMMON.NO_DATA' | translate }}</p>
+        }
+      </article>
+
+      <!-- Productos con mayor rotación -->
+      <article class="card top-rotation">
+        <div class="card-header">
+          <div>
+            <h3>{{ 'PREDICTIVE_DASHBOARD.TOP_ROTATION_TITLE' | translate }}</h3>
+            <p>{{ 'PREDICTIVE_DASHBOARD.TOP_ROTATION_SUBTITLE' | translate }}</p>
+          </div>
+        </div>
+
+        @if (productosMayorRotacion.length > 0) {
+          <div class="rotation-list">
+            @for (producto of productosMayorRotacion; track producto.codigo) {
+              <div class="rotation-item">
+                <div class="rotation-meta">
+                  <strong>{{ producto.nombre }}</strong>
+                  <span class="code">{{ producto.codigo }}</span>
+                </div>
+                <div class="rotation-stats">
+                  <span class="stat">
+                    <strong>{{ producto.consumoPromedioDiario | number:'1.1-2' }}</strong>
+                    <small>{{ 'PREDICTIVE_DASHBOARD.DAILY_CONSUMPTION' | translate }}</small>
+                  </span>
+                  <span class="badge badge-rotacion-{{ producto.rotacion.toLowerCase() }}">
+                    {{ getRotacionLabel(producto.rotacion) | translate }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-message">{{ 'COMMON.NO_DATA' | translate }}</p>
+        }
+      </article>
+
+      <!-- Solicitudes pendientes -->
+      <article class="card pending-requests">
+        <div class="card-header">
+          <div>
+            <h3>{{ 'PREDICTIVE_DASHBOARD.PENDING_REQUESTS_TITLE' | translate }}</h3>
+            <p>{{ 'PREDICTIVE_DASHBOARD.PENDING_REQUESTS_SUBTITLE' | translate }}</p>
+          </div>
+        </div>
+
+        @if (solicitudes.length > 0) {
+          <div class="requests-list">
+            @for (solicitud of solicitudes.slice(0, 5); track solicitud.id) {
+              <div class="request-item">
+                <div class="request-header">
+                  <strong>{{ solicitud.productoNombre }}</strong>
+                  <span class="badge badge-{{ solicitud.estado.toLowerCase() }}">
+                    {{ getSolicitudEstadoLabel(solicitud.estado) | translate }}
+                  </span>
+                </div>
+                <div class="request-details">
+                  <span>{{ 'COMMON.CODE' | translate }}: {{ solicitud.productoCodigo }}</span>
+                  <span>{{ 'PREDICTIVE_DASHBOARD.RECOMMENDED_QTY' | translate }}: {{ solicitud.cantidadRecomendada }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-message">{{ 'COMMON.NO_PENDING_REQUESTS' | translate }}</p>
+        }
+      </article>
+    </section>
+  </main>
+</section>

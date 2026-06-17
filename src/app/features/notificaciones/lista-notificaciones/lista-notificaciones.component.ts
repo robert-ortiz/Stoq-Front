@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { getAlertIcon, getAlertNotificationType, getAlertTitleKey } from '../../../core/utils/alert-visual';
 import { AuthService } from '../../../core/services/auth.service';
 import { AlertaService, AlertaApi, AlertasResumenApi } from '../../../core/services/alerta.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
@@ -19,6 +20,7 @@ export class ListaNotificacionesComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private translateService = inject(TranslateService);
 
   alertas: AlertaApi[] = [];
   productosCriticos: AlertaApi[] = [];
@@ -31,6 +33,10 @@ export class ListaNotificacionesComponent implements OnInit {
 
   cargando = false;
   error = '';
+
+  getAlertTitleKey = getAlertTitleKey;
+  getAlertIcon = getAlertIcon;
+  getAlertNotificationType = getAlertNotificationType;
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -48,7 +54,7 @@ export class ListaNotificacionesComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error resumen alertas:', err);
-        this.error = 'No se pudo cargar el resumen de alertas.';
+        this.error = this.translateService.instant('ALERTS.ERROR_LOAD_SUMMARY');
         this.cdr.markForCheck();
       }
     });
@@ -68,7 +74,7 @@ export class ListaNotificacionesComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error alertas:', err);
-        this.error = 'No se pudieron cargar las alertas.';
+        this.error = this.translateService.instant('ALERTS.ERROR_LOAD_ALERTS');
         this.cargando = false;
         this.cdr.markForCheck();
       }
@@ -89,7 +95,7 @@ export class ListaNotificacionesComponent implements OnInit {
     this.alertaService.marcarComoLeida(alertaId).subscribe({
       next: () => this.cargarDatos(),
       error: () => {
-        this.error = 'No se pudo marcar la alerta como leída.';
+        this.error = this.translateService.instant('ALERTS.ERROR_MARK_READ');
         this.cdr.markForCheck();
       }
     });
@@ -99,7 +105,7 @@ export class ListaNotificacionesComponent implements OnInit {
     this.alertaService.marcarTodasComoLeidas().subscribe({
       next: () => this.cargarDatos(),
       error: () => {
-        this.error = 'No se pudieron marcar las alertas como leídas.';
+        this.error = this.translateService.instant('ALERTS.ERROR_MARK_ALL_READ');
         this.cdr.markForCheck();
       }
     });

@@ -1,55 +1,44 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, HostListener, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../core/services/auth.service';
+import { TenantService } from '../../../core/services/tenant.service';
 import { LanguageCode, LanguageService } from '../../../core/services/language.service';
 import { ReporteCategoriaResumen, ReporteCategoriasResponse, ReporteService } from '../../../core/services/reporte.service';
 import { MovimientoService } from '../../../core/services/movimiento.service';
-import { NotificationService } from '../../../core/services/notification.service';
-import { combineLatest, map } from 'rxjs';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 import { ReportePdfService } from '../../../core/services/reporte-pdf.service';
+import { NotificationDropdownComponent } from '../../../shared/components/notification-dropdown/notification-dropdown.component';
 
 @Component({
   selector: 'app-lista-reportes',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslateModule, BrandComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslateModule, BrandComponent, NotificationDropdownComponent],
   templateUrl: './lista-reportes.component.html',
   styleUrl: './lista-reportes.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListaReportesComponent implements OnInit {
   private authService = inject(AuthService);
+  private tenantService = inject(TenantService);
   private router = inject(Router);
   private translateService = inject(TranslateService);
   private languageService = inject(LanguageService);
   private reportService = inject(ReporteService);
   private reportePdfService = inject(ReportePdfService);
   private movimientoService = inject(MovimientoService);
-  private notificationService = inject(NotificationService);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
   private fb = inject(FormBuilder);
 
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
-  notificationPanelOpen = false;
-  notifications$ = this.notificationService.notifications$;
-  notificationCount$ = this.notificationService.notificationCount$;
-  notificationLoading$ = this.notificationService.loading$;
-  notificationError$ = this.notificationService.error$;
-  unreadCount$ = this.notificationService.unreadCount$;
-  criticalCount$ = this.notificationService.criticalCount$;
-  // show unread badge only when there are no critical alerts to avoid duplicated bubbles
-  displayUnread$ = combineLatest([this.unreadCount$, this.criticalCount$]).pipe(
-    map(([unread, critical]) => (critical && critical > 0 ? 0 : unread))
-  );
   cargando = false;
   errorMessage = '';
-  companyContext: string | null = this.authService.getCompany();
+  companyContext: string | null = this.tenantService.getEmpresa();
   reporte: ReporteCategoriasResponse | null = null;
   categorias: ReporteCategoriaResumen[] = [];
 
@@ -65,7 +54,6 @@ export class ListaReportesComponent implements OnInit {
     this.currentLanguage = this.languageService.getCurrentLanguage();
     this.cargarReporte();
     this.escucharActualizacionesMovimientos();
-    this.notificationService.refreshAllCounts();
   }
 
   onLanguageChange(language: string): void {
@@ -77,36 +65,8 @@ export class ListaReportesComponent implements OnInit {
     this.router.navigateByUrl('/gerente');
   }
 
-  toggleNotificationPanel(): void {
-    this.notificationPanelOpen = !this.notificationPanelOpen;
-  }
-
-  closeNotificationPanel(): void {
-    this.notificationPanelOpen = false;
-  }
-
-  verNotificaciones(): void {
-    this.toggleNotificationPanel();
-
-    if (this.notificationPanelOpen) {
-      this.notificationService.refreshCriticalAlerts().subscribe({
-        next: () => {},
-        error: () => {}
-      });
-    }
-  }
-
-  openNotificationsPage(): void {
-    this.closeNotificationPanel();
-    this.router.navigateByUrl('/notificaciones');
-  }
-
-  dismissNotification(id: number): void {
-    this.notificationService.dismissNotification(id);
-  }
-
-  clearNotifications(): void {
-    this.notificationService.clearNotifications();
+  irADashboardPredictivo(): void {
+    this.router.navigateByUrl('/reportes/dashboard-predictivo');
   }
 
   goBack(): void {
@@ -180,12 +140,12 @@ export class ListaReportesComponent implements OnInit {
     this.errorMessage = '';
 
     this.reportService
-      .getReporteCategorias(inicio, fin)
+      .getReporteCategorias(inicio, fin, this.companyContext ?? this.tenantService.getEmpresa())
       .pipe(finalize(() => (this.cargando = false)))
       .subscribe({
         next: (response) => {
           this.reporte = response;
-          this.companyContext = response.empresa ?? this.authService.getCompany();
+          this.companyContext = response.empresa ?? this.tenantService.getEmpresa();
           this.categorias = [...(response.categorias ?? [])].sort((left, right) => {
             if (right.movimientosTotales !== left.movimientosTotales) {
               return right.movimientosTotales - left.movimientosTotales;
@@ -244,20 +204,6 @@ export class ListaReportesComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigateByUrl('/auth/login');
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement | null;
-
-    if (!target?.closest('.notification-dropdown')) {
-      this.closeNotificationPanel();
-    }
-  }
-
-  @HostListener('document:keydown.escape')
-  onEscapeKey(): void {
-    this.closeNotificationPanel();
   }
 
   private escucharActualizacionesMovimientos(): void {
