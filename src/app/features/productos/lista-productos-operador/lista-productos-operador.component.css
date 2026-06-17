@@ -417,3 +417,25 @@ tr.zero-stock { background: rgba(255, 230, 230, 0.9); }
   background: white;
   cursor: pointer;
 }
+
+
+
+.right-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.request-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+}
+
+.request-btn:hover {
+  background: #1d4ed8;
+}
+
+.movement-btn.request {
+  background: #1e293b;
+}

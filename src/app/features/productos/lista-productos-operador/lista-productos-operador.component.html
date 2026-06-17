@@ -1,23 +1,27 @@
 <section class="operator-products-page">
   <header class="topbar">
-    <app-brand [cssClass]="'brand'" [target]="'/home'" [size]="44" [ariaLabel]="('HOME.BRAND_ARIA' | translate)"></app-brand>
+    <app-brand
+      [cssClass]="'brand'"
+      [target]="'/home'"
+      [size]="44"
+      [ariaLabel]="('HOME.BRAND_ARIA' | translate)">
+    </app-brand>
 
     <div class="header-actions">
-    <select
-      class="language-select"
-      [value]="currentLanguage"
-      (change)="onLanguageChange(($any($event.target).value))"
-    >
-      <option value="es">{{ 'LANGUAGE.ES' | translate }}</option>
-      <option value="en">{{ 'LANGUAGE.EN' | translate }}</option>
-      <option value="pt">{{ 'LANGUAGE.PT' | translate }}</option>
-    </select>
+      <select
+        class="language-select"
+        [value]="currentLanguage"
+        (change)="onLanguageChange(($any($event.target).value))"
+      >
+        <option value="es">{{ 'LANGUAGE.ES' | translate }}</option>
+        <option value="en">{{ 'LANGUAGE.EN' | translate }}</option>
+        <option value="pt">{{ 'LANGUAGE.PT' | translate }}</option>
+      </select>
 
-    <button type="button" class="logout-btn" (click)="logout()">
-      ↪ {{ 'COMMON.LOGOUT' | translate }}
-    </button>
-  </div>
-
+      <button type="button" class="logout-btn" (click)="logout()">
+        ↪ {{ 'COMMON.LOGOUT' | translate }}
+      </button>
+    </div>
   </header>
 
   <main class="operator-content">
@@ -30,14 +34,24 @@
         <button type="button" class="movement-btn exit" (click)="abrirModalSalida()">
           ↑ {{ 'COMMON.REGISTER_EXIT' | translate }}
         </button>
+
+        <button type="button" class="movement-btn request" (click)="irASolicitudes()">
+    📦 Mis solicitudes
+  </button>
+
       </div>
 
-      @if (puedeCrearProductos) {
-        <button type="button" class="new-product-btn" (click)="abrirModalCrearProducto()">
-          + {{ 'PRODUCTS.LIST.NEW_PRODUCT' | translate }}
+      <div class="right-actions">
+        <button type="button" class="new-product-btn request-btn" (click)="abrirModalSolicitud()">
+          + Solicitud
         </button>
-      }
 
+        @if (puedeCrearProductos) {
+          <button type="button" class="new-product-btn" (click)="abrirModalCrearProducto()">
+            + {{ 'PRODUCTS.LIST.NEW_PRODUCT' | translate }}
+          </button>
+        }
+      </div>
     </section>
 
     <section class="products-card">
@@ -77,33 +91,55 @@
                 <th>{{ 'PRODUCTS.LIST.CURRENT_STOCK' | translate }}</th>
                 <th>{{ 'PRODUCTS.LIST.MIN_STOCK' | translate }}</th>
                 <th>{{ 'COMMON.STATUS' | translate }}</th>
+
                 @if (puedeEditarEliminarProductos) {
-                    <th>{{ 'COMMON.ACTION' | translate }}</th>
+                  <th>{{ 'COMMON.ACTION' | translate }}</th>
                 }
-            </tr>
+              </tr>
             </thead>
 
             <tbody>
               @for (producto of productosPaginados; track producto.id) {
-                <tr [class.low-stock]="(producto.stockActual || 0) <= (producto.stockMinimo || 0) && (producto.stockActual || 0) > 0" [class.zero-stock]="(producto.stockActual || 0) === 0">
+                <tr
+                  [class.low-stock]="(producto.stockActual || 0) <= (producto.stockMinimo || 0) && (producto.stockActual || 0) > 0"
+                  [class.zero-stock]="(producto.stockActual || 0) === 0"
+                >
                   <td>{{ producto.codigo }}</td>
                   <td>{{ producto.nombre }}</td>
                   <td>{{ productoService.getCategoryTranslationKey(producto.categoria?.nombre) | translate }}</td>
                   <td>{{ producto.unidad?.abreviatura || producto.unidad?.nombre || 'Sin unidad' }}</td>
+
                   <td>
                     <div class="stock-cell">
                       <span class="stock-value">{{ producto.stockActual }}</span>
-                      <span *ngIf="(producto.stockActual || 0) === 0" class="stock-badge zero" aria-label="Stock cero">&#9888;</span>
-                      <span *ngIf="(producto.stockActual || 0) > 0 && (producto.stockActual || 0) <= (producto.stockMinimo || 0)" class="stock-badge low" aria-label="Stock bajo">&#9888;</span>
+
+                      <span
+                        *ngIf="(producto.stockActual || 0) === 0"
+                        class="stock-badge zero"
+                        aria-label="Stock cero"
+                      >
+                        &#9888;
+                      </span>
+
+                      <span
+                        *ngIf="(producto.stockActual || 0) > 0 && (producto.stockActual || 0) <= (producto.stockMinimo || 0)"
+                        class="stock-badge low"
+                        aria-label="Stock bajo"
+                      >
+                        &#9888;
+                      </span>
                     </div>
                   </td>
+
                   <td>{{ producto.stockMinimo }}</td>
+
                   <td>
                     <span class="status-badge" [class.inactive]="!producto.estado">
                       {{ producto.estado ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
                     </span>
                   </td>
-                  @if(puedeEditarEliminarProductos) {
+
+                  @if (puedeEditarEliminarProductos) {
                     <td>
                       <div class="row-actions">
                         <button type="button" class="edit-btn" (click)="irAEditar(producto)">
@@ -145,6 +181,63 @@
     </section>
   </main>
 
+  <!-- Modal Solicitud de Reposición -->
+  @if (mostrarModalSolicitud) {
+    <div class="modal-backdrop" (click)="cerrarModalSolicitud()">
+      <section class="movement-modal" (click)="$event.stopPropagation()">
+        <button type="button" class="close-btn" (click)="cerrarModalSolicitud()">×</button>
+
+        <div class="modal-title-row">
+          <div class="modal-icon product">📦</div>
+          <div>
+            <h2>Solicitud de reposición</h2>
+            <p>Registra una solicitud interna de reabastecimiento.</p>
+          </div>
+        </div>
+
+        <form [formGroup]="solicitudForm" (ngSubmit)="crearSolicitudReposicion()" class="modal-form">
+  <div class="field">
+    <label>Producto *</label>
+    <select formControlName="productoId">
+      <option value="">Selecciona un producto</option>
+      @for (producto of productos; track producto.id) {
+        <option [value]="producto.id">
+          {{ producto.nombre }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Cantidad solicitada *</label>
+    <input
+      type="number"
+      formControlName="cantidadSolicitada"
+      placeholder="Ej. 20"
+    />
+  </div>
+
+  <div class="field">
+    <label>Estado</label>
+    <input type="text" value="Pendiente" disabled />
+  </div>
+
+  <div class="modal-actions">
+    <button type="button" class="cancel-btn" (click)="cerrarModalSolicitud()">
+      Cancelar
+    </button>
+
+    <button type="submit" class="submit-btn product">
+      Guardar solicitud
+    </button>
+  </div>
+</form>
+
+
+      </section>
+    </div>
+  }
+
   <!-- Modal Entrada -->
   @if (mostrarModalEntrada) {
     <div class="modal-backdrop" (click)="cerrarModalEntrada()">
@@ -172,7 +265,11 @@
 
           <div class="field">
             <label>{{ 'COMMON.QUANTITY' | translate }} *</label>
-            <input type="number" formControlName="cantidad" [placeholder]="'ENTRY.MODAL.QUANTITY_PLACEHOLDER' | translate" />
+            <input
+              type="number"
+              formControlName="cantidad"
+              [placeholder]="'ENTRY.MODAL.QUANTITY_PLACEHOLDER' | translate"
+            />
           </div>
 
           <div class="field">
@@ -182,13 +279,17 @@
 
           <div class="field">
             <label>{{ 'COMMON.NOTES' | translate }}</label>
-            <textarea formControlName="motivo" [placeholder]="'COMMON.OPTIONAL_NOTES' | translate"></textarea>
+            <textarea
+              formControlName="motivo"
+              [placeholder]="'COMMON.OPTIONAL_NOTES' | translate">
+            </textarea>
           </div>
 
           <div class="modal-actions">
             <button type="button" class="cancel-btn" (click)="cerrarModalEntrada()">
               {{ 'COMMON.CANCEL' | translate }}
             </button>
+
             <button type="submit" class="submit-btn entry">
               {{ 'COMMON.REGISTER_ENTRY' | translate }}
             </button>
@@ -225,7 +326,11 @@
 
           <div class="field">
             <label>{{ 'COMMON.QUANTITY' | translate }} *</label>
-            <input type="number" formControlName="cantidad" [placeholder]="'EXIT.MODAL.QUANTITY_PLACEHOLDER' | translate" />
+            <input
+              type="number"
+              formControlName="cantidad"
+              [placeholder]="'EXIT.MODAL.QUANTITY_PLACEHOLDER' | translate"
+            />
           </div>
 
           <div class="field">
@@ -235,13 +340,17 @@
 
           <div class="field">
             <label>{{ 'COMMON.NOTES' | translate }}</label>
-            <textarea formControlName="motivo" [placeholder]="'COMMON.OPTIONAL_NOTES' | translate"></textarea>
+            <textarea
+              formControlName="motivo"
+              [placeholder]="'COMMON.OPTIONAL_NOTES' | translate">
+            </textarea>
           </div>
 
           <div class="modal-actions">
             <button type="button" class="cancel-btn" (click)="cerrarModalSalida()">
               {{ 'COMMON.CANCEL' | translate }}
             </button>
+
             <button type="submit" class="submit-btn exit">
               {{ 'COMMON.REGISTER_EXIT' | translate }}
             </button>
@@ -270,12 +379,20 @@
         <form [formGroup]="createForm" (ngSubmit)="crearProducto()" class="create-grid">
           <div class="field">
             <label>{{ 'COMMON.CODE' | translate }}</label>
-            <input type="text" formControlName="codigo" [placeholder]="'PRODUCTS.LIST.CODE_PLACEHOLDER' | translate" />
+            <input
+              type="text"
+              formControlName="codigo"
+              [placeholder]="'PRODUCTS.LIST.CODE_PLACEHOLDER' | translate"
+            />
           </div>
 
           <div class="field">
             <label>{{ 'COMMON.NAME' | translate }}</label>
-            <input type="text" formControlName="nombre" [placeholder]="'PRODUCTS.LIST.NAME_PLACEHOLDER' | translate" />
+            <input
+              type="text"
+              formControlName="nombre"
+              [placeholder]="'PRODUCTS.LIST.NAME_PLACEHOLDER' | translate"
+            />
           </div>
 
           <div class="field">
@@ -296,7 +413,7 @@
               <option value="">{{ 'PRODUCTS.LIST.SELECT_UNIT' | translate }}</option>
               @for (unidad of unidades; track unidad.id) {
                 <option [value]="unidad.id">
-                {{ unidad.abreviatura }} - {{ unidad.nombre }}
+                  {{ unidad.abreviatura }} - {{ unidad.nombre }}
                 </option>
               }
             </select>
