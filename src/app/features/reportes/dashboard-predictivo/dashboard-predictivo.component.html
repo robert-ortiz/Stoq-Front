@@ -38,9 +38,7 @@
         <p>{{ 'PREDICTIVE_DASHBOARD.SUBTITLE' | translate }}</p>
       </div>
 
-      <div class="hero-actions">
-        <button type="button" class="button-secondary">{{ 'COMMON.EXPORT_PDF' | translate }}</button>
-      </div>
+    
     </section>
 
     <!-- Loading / Error states -->
@@ -114,7 +112,7 @@
                     <small>{{ 'COMMON.STOCK' | translate }}</small>
                   </span>
                   <span class="stat">
-                    <strong>{{ riesgo.tiempoAgotamiento }} {{ 'PREDICTIVE_DASHBOARD.UNIT_DAYS_SHORT' | translate }}</strong>
+                    <strong>{{ riesgo.tiempoAgotamiento === 9999 ? 'N/D' : riesgo.tiempoAgotamiento + ' ' + ('PREDICTIVE_DASHBOARD.UNIT_DAYS_SHORT' | translate) }}</strong>
                     <small>{{ 'PREDICTIVE_DASHBOARD.DEPLETION_DAYS' | translate }}</small>
                   </span>
                 </div>

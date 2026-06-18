@@ -22,7 +22,7 @@ type RiskLevel = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 
 interface KpiPredictivo {
   title: string;
-  value: number;
+  value: number | string;
   icon: string;
   riskLevel?: RiskLevel;
   unit?: string;
@@ -189,7 +189,9 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
           this.dashboardData = dashboard;
           this.recomendaciones = recomendaciones;
           this.solicitudes = solicitudes;
-          this.tendencias = dashboard.tendencias ?? [];
+          this.tendencias = [...(dashboard.tendencias ?? [])].sort((a, b) => 
+            new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
+          );
 
           this.procesarDatosPredictivos();
           this.construirKpis();
@@ -245,13 +247,14 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
     const criticos = riesgos.filter((riesgo) => riesgo === 'CRITICAL').length;
     const altos = riesgos.filter((riesgo) => riesgo === 'HIGH').length;
     const solicitudesPendientes = this.solicitudes.filter((s) => s.estado === 'PENDIENTE').length;
+    const recomConDatos = this.recomendaciones.filter((r) => r.tiempoAgotamiento !== 9999);
     const tiempoPromedio =
-      this.recomendaciones.length > 0
+      recomConDatos.length > 0
         ? Math.round(
-            this.recomendaciones.reduce((sum, r) => sum + r.tiempoAgotamiento, 0) /
-              this.recomendaciones.length
+            recomConDatos.reduce((sum, r) => sum + r.tiempoAgotamiento, 0) /
+              recomConDatos.length
           )
-        : 0;
+        : '-';
 
     this.kpisPredictivos[0].value = criticos;
     this.kpisPredictivos[1].value = altos;
