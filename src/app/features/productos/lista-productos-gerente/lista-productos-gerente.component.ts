@@ -429,4 +429,7 @@ export class ListaProductosGerenteComponent implements OnInit {
   this.router.navigateByUrl('/gerente/solicitudes');
   }
 
+  irARecomendaciones(): void {
+  this.router.navigateByUrl('/gerente/recomendaciones');
+}
 }

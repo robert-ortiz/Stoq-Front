@@ -181,6 +181,15 @@ export const routes: Routes = [
       .then(m => m.ListaSolicitudesOperadorComponent)
 },
 
+{
+  path: 'gerente/recomendaciones',
+  canActivate: [roleGuard],
+  data: { roles: ['GERENTE'] },
+  loadComponent: () =>
+    import('./features/recomendaciones/lista-recomendaciones/lista-recomendaciones.component')
+      .then(m => m.ListaRecomendacionesComponent)
+},
+
 
   {
     path: '**',

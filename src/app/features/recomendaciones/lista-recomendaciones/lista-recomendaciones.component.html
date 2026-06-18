@@ -1,0 +1,68 @@
+<section class="recomendaciones-page">
+  <header class="topbar">
+    <div>
+      <h1>Recomendaciones Inteligentes</h1>
+      <p>Sugerencias automáticas según stock, consumo promedio y rotación.</p>
+    </div>
+
+    <button type="button" class="back-btn" (click)="volverAProductos()">
+      ← Volver a Productos
+    </button>
+  </header>
+
+  <main class="content-card">
+    @if (cargando) {
+      <p class="state-message">Cargando recomendaciones...</p>
+    } @else if (error) {
+      <p class="state-message error">{{ error }}</p>
+    } @else if (!recomendaciones.length) {
+      <p class="state-message">No hay recomendaciones disponibles.</p>
+    } @else {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Código</th>
+              <th>Stock actual</th>
+              <th>Stock mínimo</th>
+              <th>Consumo promedio</th>
+              <th>Tiempo agotamiento</th>
+              <th>Rotación</th>
+              <th>Cantidad recomendada</th>
+              <th>Prioridad</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (recomendacion of recomendaciones; track recomendacion.productoId) {
+              <tr>
+                <td>{{ recomendacion.nombre }}</td>
+                <td>{{ recomendacion.codigo }}</td>
+                <td>{{ recomendacion.stockActual }}</td>
+                <td>{{ recomendacion.stockMinimo }}</td>
+                <td>{{ recomendacion.consumoPromedioDiario | number:'1.0-2' }}</td>
+                <td>
+                  @if (recomendacion.tiempoAgotamiento >= 9999) {
+                    Sin historial
+                  } @else {
+                    {{ recomendacion.tiempoAgotamiento }} días
+                  }
+                </td>
+                <td>{{ recomendacion.rotacion }}</td>
+                <td>
+                  <strong>{{ recomendacion.cantidadRecomendada }}</strong>
+                </td>
+                <td>
+                  <span class="priority-badge" [ngClass]="recomendacion.prioridad.toLowerCase()">
+                    {{ recomendacion.prioridad }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </main>
+</section>
