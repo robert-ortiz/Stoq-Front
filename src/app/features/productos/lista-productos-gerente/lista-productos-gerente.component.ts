@@ -62,6 +62,9 @@ export class ListaProductosGerenteComponent implements OnInit {
   productoAEliminar: ProductoApi | null = null;
   productoEditando: ProductoApi | null = null;
 
+   menuOpen = false;
+
+
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
   readonly companyName = this.tenantService.getEmpresa() || '';
 
@@ -432,4 +435,12 @@ export class ListaProductosGerenteComponent implements OnInit {
   irARecomendaciones(): void {
   this.router.navigateByUrl('/gerente/recomendaciones');
 }
+
+
+toggleMenu(): void {
+  this.menuOpen = !this.menuOpen;
+  this.cdr.markForCheck();
+}
+
+
 }

@@ -2,7 +2,12 @@
   <header class="topbar">
     <app-brand [cssClass]="'brand'" [target]="'/home'" [size]="44" [ariaLabel]="('HOME.BRAND_ARIA' | translate)"></app-brand>
 
-    <div class="header-actions">
+    <button type="button" class="menu-toggle" (click)="toggleMenu()">
+      ☰
+    </button>
+
+
+    <div class="header-actions" [class.open]="menuOpen">
       <button type="button" class="report-btn" (click)="irAReportes()">
         📄 {{ 'COMMON.REPORTS' | translate }}
       </button>

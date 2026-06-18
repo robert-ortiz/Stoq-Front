@@ -61,6 +61,10 @@ export class ListaProductosOperadorComponent implements OnInit {
   mostrarModalEliminar = false;
   productoAEliminar: ProductoApi | null = null;
 
+  menuOpen = false;
+
+
+
   currentLanguage: LanguageCode = this.languageService.getCurrentLanguage();
   readonly companyName = this.tenantService.getEmpresa() || '';
 
@@ -404,4 +408,10 @@ export class ListaProductosOperadorComponent implements OnInit {
   irASolicitudes(): void {
   this.router.navigateByUrl('/operador/solicitudes');
 }
+
+toggleMenu(): void {
+  this.menuOpen = !this.menuOpen;
+  this.cdr.markForCheck();
+}
+
 }
