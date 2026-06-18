@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Chart from 'chart.js/auto';
-import { finalize } from 'rxjs';
+import { forkJoin, finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -15,6 +15,7 @@ import {
   SolicitudReposicion,
   ReporteTendenciaMovimiento
 } from '../../../core/services/reporte.service';
+import { ProductoService } from '../../../core/services/producto.service';
 import { BrandComponent } from '../../../shared/components/brand/brand.component';
 import { NotificationDropdownComponent } from '../../../shared/components/notification-dropdown/notification-dropdown.component';
 
@@ -49,6 +50,7 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
   private tenantService = inject(TenantService);
   private router = inject(Router);
   private reportService = inject(ReporteService);
+  private productoService = inject(ProductoService);
   private changeDetector = inject(ChangeDetectorRef);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
@@ -179,15 +181,38 @@ export class DashboardPredictivoComponent implements OnInit, AfterViewInit, OnDe
     const fin = this.formatDate(today);
     const empresa = this.tenantService.getEmpresa();
 
-    this.reportService.getReportePredictivo(inicio, fin, empresa)
-      .pipe(
+    forkJoin({
+      predictivo: this.reportService.getReportePredictivo(inicio, fin, empresa),
+      productos: this.productoService.getProductos()
+    }).pipe(
         finalize(() => (this.loading = false)),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
-        next: ({ dashboard, recomendaciones, solicitudes }) => {
+        next: ({ predictivo, productos }) => {
+          const { dashboard, recomendaciones, solicitudes } = predictivo;
+          
           this.dashboardData = dashboard;
-          this.recomendaciones = recomendaciones;
+          
+          // Capturar productos inactivos con bajo stock (que el backend no incluye)
+          const productosInactivosConBajoStock = productos.filter(
+            p => !p.estado && p.stockActual != null && p.stockMinimo != null && p.stockActual <= p.stockMinimo
+          );
+          
+          const recomendacionesExtra: RecomendacionAutomatica[] = productosInactivosConBajoStock.map(p => ({
+            productoId: p.id,
+            codigo: p.codigo,
+            nombre: p.nombre,
+            stockActual: p.stockActual!,
+            stockMinimo: p.stockMinimo!,
+            consumoPromedioDiario: 0,
+            tiempoAgotamiento: 9999,
+            rotacion: 'BAJA',
+            cantidadRecomendada: Math.max(0, (p.stockMinimo! * 2) - p.stockActual!),
+            prioridad: 'ALTA'
+          }));
+
+          this.recomendaciones = [...recomendaciones, ...recomendacionesExtra];
           this.solicitudes = solicitudes;
           this.tendencias = [...(dashboard.tendencias ?? [])].sort((a, b) => 
             new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
